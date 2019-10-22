@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/white">
+    <item>
+        <selector>
+            <item
+                android:drawable="@drawable/ic_delete"
+                android:state_checked="false" />
+            <item
+                android:drawable="@drawable/ic_close"
+                android:state_checked="true" />
+            <item android:drawable="@drawable/ic_delete" />
+        </selector>
+    </item>
+
+</ripple>

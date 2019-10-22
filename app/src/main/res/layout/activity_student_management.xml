@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:toolbar="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_project_studetn_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:elevation="4dp"
+                android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                toolbar:titleTextColor="@color/white"
+                app:titleTextAppearance="@style/ActionBarTitle">
+            </android.support.v7.widget.Toolbar>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@color/white" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_below="@id/toolbar_project_studetn_group">
+
+                <RelativeLayout
+                    android:id="@+id/relativelayout_top_student_management"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_alignParentTop="true" >
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Student Management"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        style="@style/NewProjectElementTitle"
+                        android:layout_toStartOf="@id/button_help_student" />
+
+                    <Button
+                        android:id="@+id/button_addstudent_instudentgroup"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="20dp"
+                        android:layout_alignBaseline="@id/textView3"
+                        android:layout_toStartOf="@id/button_editStudent_instudentgroup"
+                        android:background="@drawable/ic_add_marker"
+                        android:onClick="addStudent" />
+
+                    <Button
+                        android:id="@+id/button_editStudent_instudentgroup"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="20dp"
+                        android:layout_alignBaseline="@id/textView3"
+                        android:layout_toStartOf="@id/button_deleteStudent_instudentgroup"
+                        android:background="@drawable/ic_edit_student"
+                        android:onClick="editStudent_inStudentManagement" />
+
+                    <Button
+                        android:id="@+id/button_deleteStudent_instudentgroup"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="20dp"
+                        android:layout_alignBaseline="@id/textView3"
+                        android:background="@drawable/ic_delete_user"
+                        android:onClick="deleteStudent" />
+
+                    <Button
+                        android:id="@+id/button_import_instudentgroup"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_centerVertical="true"
+                        android:layout_alignBaseline="@id/textView3"
+                        android:layout_toStartOf="@id/button_addstudent_instudentgroup"
+                        android:background="@drawable/ic_excel"
+                        android:onClick="importStudentManagement" />
+
+                    <Button
+                        android:id="@+id/button_help_student"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_alignBaseline="@id/textView3"
+                        android:layout_centerVertical="true"
+                        android:layout_toStartOf="@id/button_import_instudentgroup"
+                        android:background="@drawable/ic_help"
+                        android:onClick="helpStudentUpload"/>
+
+                    <View
+                        android:id="@+id/divider10"
+                        android:layout_width="match_parent"
+                        android:layout_height="5dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_below="@id/textView3"
+                        android:background="@color/colorPrimary"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/divider10"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@color/translusentPrimary"
+                        android:id="@+id/heading_student_management"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/black"/>
+
+                        <TextView
+                            android:id="@+id/textView_groupnum_instudentlist"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:clickable="false"
+                            android:text="Group No."
+                            android:padding="5dp"
+                            android:textSize="20sp"
+                            android:textColor="@color/black" />
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/black"/>
+
+                        <TextView
+                            android:id="@+id/textView_studentID_instudentlist"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="7"
+                            android:clickable="false"
+                            android:text="Student ID"
+                            android:padding="5dp"
+                            android:textSize="20sp"
+                            android:textColor="@color/black"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/black"/>
+
+                        <TextView
+                            android:id="@+id/textView_fullname_instudentlist"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="6"
+                            android:clickable="false"
+                            android:text="Student Name"
+                            android:padding="5dp"
+                            android:textSize="20sp"
+                            android:textColor="@color/black"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/black"/>
+
+                        <TextView
+                            android:id="@+id/textView_email_instudentlist"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"
+                            android:clickable="false"
+                            android:text="Email"
+                            android:padding="5dp"
+                            android:textSize="20sp"
+                            android:textColor="@color/black"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/black"/>
+
+                    </LinearLayout>
+
+                    <ListView
+                        android:id="@+id/listView_ingroupStudent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_below="@id/heading_student_management"
+                        android:choiceMode="multipleChoice"
+                        android:divider="@color/black"
+                        android:dividerHeight="1dp"
+                        android:scrollbars="vertical"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@id/listView_ingroupStudent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@color/black"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayout_bottom_student_management"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:layout_alignParentBottom="true"
+                    android:layout_below="@id/relativelayout_top_student_management">
+
+                    <Button
+                        android:id="@+id/button_save_student_management"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:textSize="20sp"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginEnd="50dp"
+                        android:layout_marginBottom="50dp"
+                        android:background="@drawable/ripple_round_button"
+                        android:onClick="saveStudentManagement"
+                        android:text="@string/save_button"
+                        android:textColor="@color/white"/>
+
+                </RelativeLayout>
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:toolbar="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity_Assessment_Preparation">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_send_report_individual"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            toolbar:titleTextColor="@color/white"
+            app:titleTextAppearance="@style/ActionBarTitle">
+        </android.support.v7.widget.Toolbar>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:background="@color/translusentPrimary">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="10">
+
+                <TextView
+                    android:id="@+id/textView_totalMark_sendReportIndividual"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Mark:72%"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="40dp"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    app:autoSizeTextType="uniform"
+                    app:autoSizeMinTextSize="10dp"
+                    app:autoSizeMaxTextSize="28dp"
+                    app:autoSizeStepGranularity="2dp"/>
+
+                <Button
+                    android:id = "@+id/button_record_individual"
+                    android:layout_width = "wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
+                    android:text="Record Audio"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:paddingRight="16dp"
+                    android:paddingLeft="16dp"
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"
+                    android:background="@drawable/ripple_round_button"/>
+
+                <Button
+                    android:id="@+id/button_sendStudent_sendReportIndividual"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
+                    android:text="Send to student"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:paddingRight="16dp"
+                    android:paddingLeft="16dp"
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"
+                    android:background="@drawable/ripple_round_button"/>
+
+                <Button
+                    android:id="@+id/button_sendBoth_sendReportIndividual"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:text="Send to both"
+                    android:singleLine="true"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"
+                    android:background="@drawable/ripple_round_button"/>
+
+                <Button
+                    android:id="@+id/btn_finish_sendReportIndividual"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
+                    android:text="Finish"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:paddingRight="16dp"
+                    android:paddingLeft="16dp"
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"
+                    android:background="@drawable/ripple_round_button"/>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ScrollView
+                    android:layout_width="1024dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:layout_centerHorizontal="true">
+
+                    <TextView
+                        android:id="@+id/textView_pdfContent_sendReportIndividual"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="TextView"
+                        android:textSize="20sp"
+                        android:textColor="@color/black"
+                        android:padding="10dp"/>
+                </ScrollView>
+            </RelativeLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

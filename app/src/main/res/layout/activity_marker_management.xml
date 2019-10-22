@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:toolbar="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_project_marker_management"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:elevation="4dp"
+                android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                toolbar:titleTextColor="@color/white"
+                app:titleTextAppearance="@style/ActionBarTitle">
+            </android.support.v7.widget.Toolbar>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@color/white" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_below="@id/toolbar_project_marker_management">
+
+                <RelativeLayout
+                    android:id="@+id/relativelayout_top_marker_management"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_alignParentTop="true" >
+
+                    <TextView
+                        android:id="@+id/textView_marker_management"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_toStartOf="@id/button_marker_add_management"
+                        android:text="Marker Management"
+                        style="@style/NewProjectElementTitle" />
+
+                    <Button
+                        android:id="@+id/button_marker_add_management"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginTop="25dp"
+                        android:layout_toStartOf="@id/cb_marker_delete_management"
+                        android:background="@drawable/ripple_add_marker" />
+
+                    <CheckBox
+                        android:id="@+id/cb_marker_delete_management"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="25dp"
+                        android:layout_marginEnd="20dp"
+                        android:button="@null"
+                        android:background="@drawable/ripple_delete_marker" />
+
+                    <View
+                        android:id="@+id/divider10"
+                        android:layout_width="match_parent"
+                        android:layout_height="5dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_below="@id/textView_marker_management"
+                        android:background="@color/colorPrimary"/>
+
+                    <ListView
+                        android:id="@+id/listView_marker_management"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/divider10"
+                        android:choiceMode="multipleChoice"
+                        android:scrollbars="vertical"
+                        android:padding="10dp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayout_bottom_marker_management"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:layout_alignParentBottom="true"
+                    android:layout_below="@id/relativelayout_top_marker_management">
+
+                    <Button
+                        android:id="@+id/button_next_marker_management"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:textSize="20sp"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginEnd="50dp"
+                        android:layout_marginBottom="50dp"
+                        android:background="@drawable/ripple_round_button"
+                        android:onClick="nextMarkerManagement"
+                        android:text="next"
+                        android:textColor="@color/white"/>
+
+                </RelativeLayout>
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+</android.support.constraint.ConstraintLayout>

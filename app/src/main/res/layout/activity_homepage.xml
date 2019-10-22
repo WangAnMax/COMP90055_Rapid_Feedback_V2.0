@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:toolbar="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/login_white">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <pl.droidsonroids.gif.GifImageView
+                android:id="@+id/geogif"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/src_anim"
+                />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_homepage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:elevation="4dp"
+                android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                toolbar:titleTextColor="@color/white"
+                app:titleTextAppearance="@style/ActionBarTitle">
+            </android.support.v7.widget.Toolbar>
+
+            <Button
+                android:id="@+id/button_part1_homepage"
+                android:layout_width="445dp"
+                android:layout_height="90dp"
+                android:layout_above="@id/button_part2_homepage"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="30dp"
+                android:background="@drawable/ripple_button"
+                android:onClick="toPart1"
+                android:text="Assessment Preparation"
+                android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.AppCompat.Button"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:textStyle="bold"/>
+
+            <Button
+                android:id="@+id/button_part2_homepage"
+                android:layout_width="445dp"
+                android:layout_height="90dp"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="30dp"
+                android:background="@drawable/ripple_button"
+                android:onClick="toPart2"
+                android:text="Realtime Assessment"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:textStyle="bold"/>
+
+            <Button
+                android:id="@+id/button_Part3_homepage"
+                android:layout_width="445dp"
+                android:layout_height="90dp"
+                android:layout_below="@id/button_part2_homepage"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/ripple_button"
+                android:onClick="toPart3"
+                android:text="Review and Report"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:textStyle="bold"/>
+        </RelativeLayout>
+    </ScrollView>
+</android.support.constraint.ConstraintLayout>

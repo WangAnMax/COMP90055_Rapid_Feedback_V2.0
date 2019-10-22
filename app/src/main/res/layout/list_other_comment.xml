@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/tv_other_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="5dp"
+        android:text="TextView" />
+
+    <EditText
+        android:id="@+id/et_other_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_other_comment"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/rounded_box"
+        android:gravity="top|left"
+        android:hint="Please enter other comments."
+        android:minHeight="100dp"
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/btn_assessment_save"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_below="@+id/et_other_comment"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="30dp"
+        android:textSize="20sp"
+        android:paddingRight="16dp"
+        android:paddingLeft="16dp"
+        android:background="@drawable/ripple_round_button"
+        android:text="Save"
+        android:textColor="@color/white"/>
+</RelativeLayout>

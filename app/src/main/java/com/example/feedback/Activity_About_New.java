@@ -1,6 +1,5 @@
 package com.example.feedback;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,9 +17,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import dbclass.ProjectInfo;
 import main.AllFunctions;
+import newdbclass.Project;
 
 public class Activity_About_New extends AppCompatActivity {
 
@@ -31,7 +29,7 @@ public class Activity_About_New extends AppCompatActivity {
     private String projectName, subjectName, subjectCode, projectDesc;
     private String index;
     private String buttonFlag;
-    private ProjectInfo project;
+    private Project project;
     private Handler handler;
     private AlertDialog dialog;
     private EditText editText_projectName;
@@ -51,6 +49,8 @@ public class Activity_About_New extends AppCompatActivity {
     private Button button_minus_warning_minutes;
     private Button button_plus_warning_seconds;
     private Button button_minus_warning_seconds;
+    private int totalDurationSec;
+    private int totalWarningSec;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +72,7 @@ public class Activity_About_New extends AppCompatActivity {
                 discardWarning();
             }
         });
-//        mToolbar.inflateMenu(R.menu.menu_toolbar);
-        mToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
+        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
@@ -229,30 +228,28 @@ public class Activity_About_New extends AppCompatActivity {
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
-                    case 201:
-                        Log.d("EEEE", "Successfully update the information of the project.");
+                    case 108:
                         Toast.makeText(Activity_About_New.this,
-                                "Successfully update the information of the project.", Toast.LENGTH_SHORT).show();
-                        AllFunctions.getObject().projectTimer(project, durationMin, durationSec, warningMin, warningSec);
-                        break;
-                    case 202:
-                        Log.d("EEEE", "Fail to update the information of the project.");
-                        Toast.makeText(Activity_About_New.this,
-                                "Fail to update the information of the project.", Toast.LENGTH_SHORT).show();
-                        break;
-                    case 203:
-                        Log.d("EEEE", "Successfully update the time setting of the project.");
-                        Toast.makeText(Activity_About_New.this,
-                                "Successfully update the time setting of the project.", Toast.LENGTH_SHORT).show();
+                                "Sync success.", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(Activity_About_New.this, Activity_Criteria.class);
                         intent.putExtra("index", String.valueOf(index));
                         intent.putExtra("from", Activity_Assessment_Preparation.FROMNEWPROJECT);
                         startActivity(intent);
                         break;
-                    case 204:
-                        Log.d("EEEE", "Fail to update the time setting of the project.");
+                    case 109:
                         Toast.makeText(Activity_About_New.this,
-                                "Fail to update the time setting of the project.", Toast.LENGTH_SHORT).show();
+                                "Server error. Please try again", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 110:
+                        Log.d("EEEE", "Successfully create the information of the project.");
+                        Toast.makeText(Activity_About_New.this,
+                                "Successfully create the new project.", Toast.LENGTH_SHORT).show();
+                        AllFunctions.getObject().syncProjectList();
+                        break;
+                    case 111:
+                        Log.d("EEEE", "Fail to create the information of the project.");
+                        Toast.makeText(Activity_About_New.this,
+                                "Fail to create the new project.", Toast.LENGTH_SHORT).show();
                         break;
                     default:
                         break;
@@ -349,10 +346,11 @@ public class Activity_About_New extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Subject name cannot be empty", Toast.LENGTH_SHORT).show();
         } else {
             if(checkTimeSetting()) {
+                totalDurationSec = 60 * durationMin + durationSec;
+                totalWarningSec = 60 * warningMin + warningSec;
                 Log.d("EEEE", "save with index = -999 " + Integer.parseInt(index));
-                AllFunctions.getObject().createProject(projectName, subjectName, subjectCode, projectDesc);
+                AllFunctions.getObject().updateProject(projectName, subjectName, subjectCode, projectDesc, totalDurationSec, totalDurationSec);
                 int indextToSend = AllFunctions.getObject().getProjectList().size() - 1;
-                project = AllFunctions.getObject().getProjectList().get(indextToSend);
                 index = String.valueOf(indextToSend);
             }
         }

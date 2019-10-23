@@ -1,6 +1,5 @@
 package com.example.feedback;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ClipData;
@@ -9,15 +8,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -36,18 +32,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
-import dbclass.Criteria;
-import dbclass.DefaultCriteriaList;
-import dbclass.ProjectInfo;
 import main.AllFunctions;
+import newdbclass.Criterion;
+import newdbclass.Project;
+import util.DefaultCriteriaList;
 import util.FileUtils;
 
 public class Activity_Criteria extends AppCompatActivity {
 
-    private ProjectInfo project;
+    private Project project;
     private int indexOfProject;
     private String path;
-    private ArrayList<Criteria> defaultCriteriaList;
+    private ArrayList<Criterion> defaultCriteriaList;
     private ListView listView_criteriaDefault;
     private ListView listView_marketCriteria;
     private Handler handler;
@@ -74,7 +70,7 @@ public class Activity_Criteria extends AppCompatActivity {
 
     private void initToolbar() {
         mToolbar = findViewById(R.id.toolbar_project_criteria);
-        mToolbar.setTitle(project.getProjectName() +  " -- Welcome, " + AllFunctions.getObject().getUsername());
+        mToolbar.setTitle(project.getName() +  " -- Welcome, " + AllFunctions.getObject().getUsername());
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -87,7 +83,7 @@ public class Activity_Criteria extends AppCompatActivity {
                 }
             }
         });
-        mToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
+        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
@@ -123,24 +119,24 @@ public class Activity_Criteria extends AppCompatActivity {
         handler = new Handler() {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
-                    case 210:
+                    case 108:
                         Toast.makeText(Activity_Criteria.this,
                                 "Sync success", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                         finish();
                         break;
-                    case 211:
+                    case 109:
                         Toast.makeText(Activity_Criteria.this,
                                 "Server error. Please try again", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                         break;
-                    case 205:
+                    case 112:
                         Log.d("EEEE", "Successfully delete the project.");
                         Toast.makeText(Activity_Criteria.this,
                                 "Successfully delete the project.", Toast.LENGTH_SHORT).show();
                         finish();
                         break;
-                    case 206:
+                    case 113:
                         Log.d("EEEE", "Fail to delete the project.");
                         Toast.makeText(Activity_Criteria.this,
                                 "Fail to delete the project. Please try again.", Toast.LENGTH_SHORT).show();
@@ -152,13 +148,12 @@ public class Activity_Criteria extends AppCompatActivity {
         AllFunctions.getObject().setHandler(handler);
         project = AllFunctions.getObject().getProjectList().get(indexOfProject);
         defaultCriteriaList = DefaultCriteriaList.getDefaultCriteriaList();
-        defaultCriteriaList.removeAll(project.getCriteria());
-        defaultCriteriaList.removeAll(project.getCommentList());
+        defaultCriteriaList.removeAll(project.getCriterionList());
         listView_criteriaDefault = findViewById(R.id.listView_CriteriaList_inCriteriaList);
         listView_marketCriteria = findViewById(R.id.listView_markingCriteria_inCriteriaList);
 
         myAdapter1 = new MyAdapter_criteriaListDefault(defaultCriteriaList, this);
-        myAdapter2 = new MyAdapter_criteriaListDefault(project.getCriteria(), this);
+        myAdapter2 = new MyAdapter_criteriaListDefault(project.getCriterionList(), this);
 
         listView_criteriaDefault.setAdapter(myAdapter1);
         listView_marketCriteria.setAdapter(myAdapter2);
@@ -171,8 +166,8 @@ public class Activity_Criteria extends AppCompatActivity {
 
     //button next.
     public void nextCriteria(View view) {
-        Log.d("EEEE", project.getCriteria() + "");
-        if(project.getCriteria().size() == 0){
+        Log.d("EEEE", project.getCriterionList() + "");
+        if(project.getCriterionList().size() == 0){
             Log.d("EEEE", "empty criteria list.");
             Toast.makeText(Activity_Criteria.this, "Marking criteria cannot be empty", Toast.LENGTH_SHORT).show();
         } else {
@@ -218,9 +213,9 @@ public class Activity_Criteria extends AppCompatActivity {
                         String newCriteriaName = editText_newCriteriaName.getText().toString();
 
                         if (findWhichCriteriaList_itbelongs(newCriteriaName) == -999) {
-                            Criteria criteria = new Criteria();
+                            Criterion criteria = new Criterion();
                             criteria.setName(newCriteriaName);
-                            project.getCriteria().add(criteria);
+                            project.getCriterionList().add(criteria);
                             init();
                         } else {
                             Toast.makeText(Activity_Criteria.this, "Criteria " + newCriteriaName + " has been existed.", Toast.LENGTH_SHORT).show();
@@ -238,9 +233,9 @@ public class Activity_Criteria extends AppCompatActivity {
 
     public class MyAdapter_criteriaListDefault extends BaseAdapter {
         private Context mContext;
-        private ArrayList<Criteria> criteriaList;
+        private ArrayList<Criterion> criteriaList;
 
-        public MyAdapter_criteriaListDefault(ArrayList<Criteria> criteriaListList, Context context) {
+        public MyAdapter_criteriaListDefault(ArrayList<Criterion> criteriaListList, Context context) {
             this.criteriaList = criteriaListList;
             this.mContext = context;
         }
@@ -323,9 +318,9 @@ public class Activity_Criteria extends AppCompatActivity {
                             break;
                         case 1:
                             Log.d("EEEE", "1->0");
-                            Criteria criteria_Temporary = project.getCriteria().get(source_criteriaIndex);
+                            Criterion criteria_Temporary = project.getCriterionList().get(source_criteriaIndex);
                             Log.d("EEEE", criteria_Temporary.getName());
-                            project.getCriteria().remove(source_criteriaIndex);
+                            project.getCriterionList().remove(source_criteriaIndex);
                             defaultCriteriaList.add(criteria_Temporary);
                             for(int i = 0; i < defaultCriteriaList.size(); i++) {
                                 Log.d("EEEE", "default criteria list: " + defaultCriteriaList.get(i).getName());
@@ -391,9 +386,9 @@ public class Activity_Criteria extends AppCompatActivity {
                     switch (whichList) {
                         case 0:
                             Log.d("EEEE", "0->1");
-                            Criteria criteria_Temporary = defaultCriteriaList.get(source_criteriaIndex);
+                            Criterion criteria_Temporary = defaultCriteriaList.get(source_criteriaIndex);
                             defaultCriteriaList.remove(source_criteriaIndex);
-                            project.getCriteria().add(criteria_Temporary);
+                            project.getCriterionList().add(criteria_Temporary);
                             break;
                         case 1:
                             break;
@@ -423,11 +418,11 @@ public class Activity_Criteria extends AppCompatActivity {
 
     //0 means defaultCriteriaList, 1 means marking criteriaList
     private int findWhichCriteriaList_itbelongs(String criteriaName) {
-        for (Criteria c : defaultCriteriaList) {
+        for (Criterion c : defaultCriteriaList) {
             if (c.getName().equals(criteriaName))
                 return 0;
         }
-        for (Criteria c : project.getCriteria()) {
+        for (Criterion c : project.getCriterionList()) {
             if (c.getName().equals(criteriaName))
                 return 1;
         }
@@ -521,26 +516,26 @@ public class Activity_Criteria extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case FILE_SELECT_CODE:
-                if (resultCode == RESULT_OK) {
-                    // Get the Uri of the selected file
-                    Uri uri = data.getData();
-                    Log.d("EEEE", "File Uri: " + uri.toString());
-                    // Get the path
-                    path = FileUtils.getPath(this, uri);
-                    ArrayList<Criteria> uploadCriteriaList = new ArrayList<>();
-                    uploadCriteriaList = AllFunctions.getObject().readCriteriaExcel(project, path);
-                    Log.d("EEEE", "call the readCriteriaExcel method: " + path);
-                    defaultCriteriaList.addAll(uploadCriteriaList);
-                    myAdapter1.notifyDataSetChanged();
-                }
-                break;
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        switch (requestCode) {
+//            case FILE_SELECT_CODE:
+//                if (resultCode == RESULT_OK) {
+//                    // Get the Uri of the selected file
+//                    Uri uri = data.getData();
+//                    Log.d("EEEE", "File Uri: " + uri.toString());
+//                    // Get the path
+//                    path = FileUtils.getPath(this, uri);
+//                    ArrayList<Criterion> uploadCriteriaList = new ArrayList<>();
+//                    uploadCriteriaList = AllFunctions.getObject().readCriteriaExcel(project, path);
+//                    Log.d("EEEE", "call the readCriteriaExcel method: " + path);
+//                    defaultCriteriaList.addAll(uploadCriteriaList);
+//                    myAdapter1.notifyDataSetChanged();
+//                }
+//                break;
+//        }
+//        super.onActivityResult(requestCode, resultCode, data);
+//    }
 
     public void onBackPressed() {
         if (from.equals(Activity_Assessment_Preparation.FROMPREVIOUSPROJECT)) {

@@ -19,16 +19,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import dbclass.ProjectInfo;
 import main.AllFunctions;
+import newdbclass.Project;
 
 public class Activity_About extends AppCompatActivity {
 
     private int durationMin, durationSec, warningMin, warningSec;
     private String projectName, subjectName, subjectCode, projectDes;
     private String index;
-    private ProjectInfo project;
+    private Project project;
     private Handler handler;
     private AlertDialog dialog;
     private EditText editText_projectName;
@@ -49,6 +48,8 @@ public class Activity_About extends AppCompatActivity {
     private Button button_plus_warning_seconds;
     private Button button_minus_warning_seconds;
     private Button button_next;
+    private int totalDurationSec;
+    private int totalWarningSec;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +73,7 @@ public class Activity_About extends AppCompatActivity {
             }
         });
 //        mToolbar.inflateMenu(R.menu.menu_toolbar);
-        mToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
+        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
@@ -226,8 +227,8 @@ public class Activity_About extends AppCompatActivity {
         initToolbar();
         bindView();
         getTimeOfProject();
-        mToolbar.setTitle(project.getProjectName());
-        editText_projectName.setText(project.getProjectName());
+        mToolbar.setTitle(project.getName());
+        editText_projectName.setText(project.getName());
         editText_projectName.setEnabled(false);
         editText_subjectName.setText(project.getSubjectName());
         editText_subjectCode.setText(project.getSubjectCode());
@@ -243,39 +244,26 @@ public class Activity_About extends AppCompatActivity {
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
-                    case 201:
+                    case 108:
+                        Toast.makeText(Activity_About.this,
+                                "Sync success.", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Activity_About.this, Activity_Assessment_Preparation.class);
+                        startActivity(intent);
+                        break;
+                    case 109:
+                        Toast.makeText(Activity_About.this,
+                                "Server error. Please try again", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 110:
                         Log.d("EEEE", "Successfully update the information of the project.");
                         Toast.makeText(Activity_About.this,
-                                "Successfully update the information of the project.", Toast.LENGTH_SHORT).show();
-                        AllFunctions.getObject().projectTimer(project, durationMin, durationSec, warningMin, warningSec);
+                                "Successfully update the project.", Toast.LENGTH_SHORT).show();
+                        AllFunctions.getObject().syncProjectList();
                         break;
-                    case 202:
+                    case 111:
                         Log.d("EEEE", "Fail to update the information of the project.");
                         Toast.makeText(Activity_About.this,
-                                "Server error. Please try again.", Toast.LENGTH_SHORT).show();
-                        break;
-                    case 203:
-                        Log.d("EEEE", "Successfully update the time setting of the project.");
-                        Toast.makeText(Activity_About.this,
-                                "Successfully update the time setting of the project.", Toast.LENGTH_SHORT).show();
-                        setResult(Activity.RESULT_OK);
-                        finish( );
-                        break;
-                    case 204:
-                        Log.d("EEEE", "Fail to update the time setting of the project.");
-                        Toast.makeText(Activity_About.this,
-                                "Server error. Please try again.", Toast.LENGTH_SHORT).show();
-                        break;
-                    case 210:
-                        Toast.makeText(Activity_About.this,
-                                "Sync success", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
-                        finish();
-                        break;
-                    case 211:
-                        Toast.makeText(Activity_About.this,
-                                "Server error. Please try again.", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
+                                "Fail to update the project.", Toast.LENGTH_SHORT).show();
                         break;
                     default:
                         break;
@@ -380,9 +368,11 @@ public class Activity_About extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Subject name cannot be empty", Toast.LENGTH_SHORT).show();
         } else {
             if(checkTimeSetting()) {
+                totalDurationSec = 60 * durationMin + durationSec;
+                totalWarningSec = 60 * warningMin + warningSec;
                 Log.d("EEEE", "save with index != -999 " + Integer.parseInt(index));
                 project = AllFunctions.getObject().getProjectList().get(Integer.parseInt(index));
-                AllFunctions.getObject().updateProject(project, projectName, subjectName, subjectCode, projectDes);
+                AllFunctions.getObject().updateProject(projectName, subjectName, subjectCode, projectDes, totalDurationSec, totalWarningSec);
             }
         }
     }

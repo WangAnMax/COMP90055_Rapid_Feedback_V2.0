@@ -14,38 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity_Send_Report_Group"></activity>
-        <activity android:name=".Activity_Editable_Group_Report" />
-        <activity android:name=".Activity_Show_Comment_Mark_Allocation" />
-        <activity android:name=".Activity_Send_Report_Individual" />
-        <activity android:name=".Activity_Editable_Individual_Report" />
-        <activity
-            android:name=".Activity_Review_Report"
-            android:launchMode="singleTask"/>
-        <activity
-            android:name=".Activity_Display_Mark"
-            android:launchMode="singleTask"/>
-        <activity
-            android:name=".Activity_Realtime_Assessment"
-            android:launchMode="singleTask"/>
         <activity
             android:name=".Activity_Homepage"
             android:launchMode="singleTask" />
-        <activity android:name=".Activity_Mark_Allocation" />
-        <activity
-            android:name=".Activity_Criteria"
-            android:launchMode="singleTask"/>
-        <activity android:name=".Activity_About" />
-        <activity android:name=".Activity_About_New" />
-        <activity android:name=".Activity_Marker_Management" />
-        <activity
-            android:name=".Activity_Assessment"
-            android:launchMode="singleTop" />
-        <activity
-            android:name=".Activity_Assessment_Preparation"
-            android:launchMode="singleTask" />
         <activity android:name=".Activity_Signup" />
-        <activity android:name=".Activity_Student_Management" />
 
         <activity android:name=".Activity_Login"
             android:label="@string/app_name"
@@ -56,12 +28,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".Activity_Assessment_Comment">
-        </activity>
-        <activity android:name=".Activity_Record_Voice"
+            android:name=".Activity_Assessment_Preparation"
             android:launchMode="singleTask" />
-        <service android:name=".RecordingService" />
+
+        <activity android:name=".Activity_Mark_Allocation" />
+        <activity
+            android:name=".Activity_Criteria"
+            android:launchMode="singleTask"/>
+        <activity android:name=".Activity_About" />
+        <activity android:name=".Activity_About_New" />
+        <activity android:name=".Activity_Marker_Management" />
+        <activity android:name=".Activity_Student_Management" />
+        <activity android:name=".Activity_Show_Comment_Mark_Allocation" />
 
         <meta-data
             android:name="preloaded_fonts"

@@ -45,7 +45,6 @@ public class Activity_Login extends AppCompatActivity {
     private EditText mEmailText;
     private EditText mPasswordText;
     private TextView mSignupTextView;
-    //    private Switch switchRem;
     private CheckBox mEyeCheckBox;
     private CheckBox mDropdownCheckBox;
     private ImageView mClearEmail;
@@ -74,13 +73,19 @@ public class Activity_Login extends AppCompatActivity {
         handler = new Handler() {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
-                    case 100:
-                        Toast.makeText(Activity_Login.this, "The email and password are not correct. Please check and try again.", Toast.LENGTH_SHORT).show();
-                        break;
-                    case 101: //means mLoginButton successfully and go to next page
+                    case 104: // login success
                         Log.d("EEEE", "login!!!!!");
                         Intent intent = new Intent(Activity_Login.this, Activity_Homepage.class);
                         startActivityForResult(intent, 1);
+                        break;
+                    case 105: // worng password
+                        Toast.makeText(Activity_Login.this, "The email and password do not match. Please check and try again.", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 106:
+                        Toast.makeText(Activity_Login.this, "The email is not registered. Please check and try again.", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 107:
+                        Toast.makeText(Activity_Login.this, "Server error. Please check and try again.", Toast.LENGTH_SHORT).show();
                         break;
                     default:
                         break;
@@ -90,7 +95,6 @@ public class Activity_Login extends AppCompatActivity {
         AllFunctions.getObject().setHandler(handler);
     }
 
-    // 1、检查是否有读写sdcard的权限
     private void checkWriteAndReadPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
@@ -98,7 +102,6 @@ public class Activity_Login extends AppCompatActivity {
                 String[] permissions = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
                 requestPermissions(permissions, 1000);
             }
-
         }
     }
 
@@ -117,13 +120,8 @@ public class Activity_Login extends AppCompatActivity {
         checkWriteAndReadPermission();
 
         Log.d("EEEE", "start!!!!!");
-//        Full screen - no status bar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-//        no actionbar
-//        getActionBar().hide();
-//        getSupportActionBar().hide();
 
         initVideoView();
 
@@ -143,22 +141,6 @@ public class Activity_Login extends AppCompatActivity {
                 startActivityForResult(intent, 2);
             }
         });
-
-//        switchRem = (Switch)findViewById(R.id.switch_rem);
-//        if(switchRem.isChecked()) {
-//            extractMemInfo(mEmailText, mPasswordText);
-//        }
-//        switchRem.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if (isChecked) {
-//                    extractMemInfo(mEmailText, mPasswordText);
-//                } else {
-//                    mEmailText.setText("");
-//                    mPasswordText.setText("");
-//                }
-//            }
-//        });
 
         mClearEmail = findViewById(R.id.iv_clear_account);
         mClearEmail.setOnClickListener(new View.OnClickListener() {
@@ -221,7 +203,6 @@ public class Activity_Login extends AppCompatActivity {
         mDropDownInvisibleViews = new ArrayList<>();
         mDropDownInvisibleViews.add(mPasswordLayout);
         mDropDownInvisibleViews.add(mPasswordText);
-//        mDropDownInvisibleViews.add(switchRem);
         mDropDownInvisibleViews.add(mLoginButton);
     }
 
@@ -235,26 +216,6 @@ public class Activity_Login extends AppCompatActivity {
         Log.d("EEEE", "click login!!!!");
         AllFunctions.getObject().setHandler(handler);
 
-//        if(switchRem.isChecked()) {
-//            Log.d("CCC", "come");
-//            String email = mEmailText.getText().toString();
-//            String password = mPasswordText.getText().toString();
-//            memInfo(email, password);
-//
-//            String emailPattern = "[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\\.+[a-z]+";
-//
-//            if (email.matches(emailPattern)) {
-//                allFunctions.mLoginButton(email, password);
-//            } else {
-//                Toast.makeText(getApplicationContext(), "Invalid email address", Toast.LENGTH_SHORT).show();
-//            }
-//        } else {
-//            Log.d("CCC", "go");
-//            SharedPreferences.Editor editor = getSharedPreferences("data", 0).edit();
-//            editor.clear();
-//            editor.commit();
-//        }
-
         String email = mEmailText.getText().toString();
         String password = mPasswordText.getText().toString();
         String emailPattern = "[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\\.+[a-z]+";
@@ -264,22 +225,6 @@ public class Activity_Login extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Invalid email address", Toast.LENGTH_SHORT).show();
         }
     }
-
-//    public void memInfo(String email, String password) {
-//        SharedPreferences sp = getSharedPreferences("data", Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sp.edit();
-//        editor.putString("email", email);
-//        editor.putString("password", password);
-//        editor.commit();
-//    }
-//
-//    public void extractMemInfo() {
-//        SharedPreferences sp = getSharedPreferences("data", Context.MODE_PRIVATE);
-//        String email = sp.getString("email", "");
-//        String password = sp.getString("password", "");
-//        mEmailText.setText(email);
-//        mPasswordText.setText(password);
-//    }
 
     private void showDropDownWindow() {
         final PopupWindow window = new PopupWindow(mDropdownCheckBox);
@@ -303,7 +248,6 @@ public class Activity_Login extends AppCompatActivity {
                 window.dismiss();
             }
         });
-//        userListView.addFooterView(new TextView(this));
 
         window.setContentView(userListView);
         window.setAnimationStyle(0);
@@ -335,11 +279,4 @@ public class Activity_Login extends AppCompatActivity {
             }
         }
     }
-
-//    public static UserInfoOperator getObject() {
-//        if (mUserInfoOpertor == null) {
-//            mUserInfoOpertor = new UserInfoOperator();
-//        }
-//        return mUserInfoOpertor;
-//    }
 }

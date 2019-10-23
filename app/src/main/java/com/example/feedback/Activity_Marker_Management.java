@@ -28,18 +28,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
-
-import dbclass.ProjectInfo;
 import main.AllFunctions;
+import newdbclass.Marker;
+import newdbclass.Project;
 
 public class Activity_Marker_Management extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
-    private ArrayList<ProjectInfo> projectList;
+    private ArrayList<Project> projectList;
     private AdapterForMarkerDeletion adapterForMarkers;
     private Handler handler;
     private String index;
     private int indexOfProject;
-    private ProjectInfo project;
+    private Project project;
     private CheckBox mCheckBoxDeleteMarker;
     private Button mButtonInviteMarker;
     private ListView mListViewMarkers;
@@ -112,9 +112,9 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
         if (from.equals(Activity_Assessment_Preparation.FROMPREVIOUSPROJECT)) {
             mButtonNextMarkers.setVisibility(View.INVISIBLE);
         }
-        mToolbar.setTitle(project.getProjectName());
+        mToolbar.setTitle(project.getName());
         AdapterForMarkerDisplay mAdapterDisplayMarkers = new AdapterForMarkerDisplay(
-                project.getAssistant(), Activity_Marker_Management.this);
+                project.getMarkerList(), Activity_Marker_Management.this);
         mListViewMarkers.setAdapter(mAdapterDisplayMarkers);
         mListViewMarkers.setOnItemClickListener(this);
 
@@ -122,7 +122,7 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if(isChecked) {
-                    adapterForMarkers = new AdapterForMarkerDeletion(project.getAssistant(),
+                    adapterForMarkers = new AdapterForMarkerDeletion(project.getMarkerList(),
                             Activity_Marker_Management.this);
                     mListViewMarkers.setAdapter(adapterForMarkers);
                     mButtonInviteMarker.setEnabled(false);
@@ -130,7 +130,7 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
                     mButtonNextMarkers.setEnabled(false);
                 } else {
                     AdapterForMarkerDisplay mAdapterDisplayMarkers = new AdapterForMarkerDisplay(
-                            project.getAssistant(), Activity_Marker_Management.this);
+                            project.getMarkerList(), Activity_Marker_Management.this);
                     mListViewMarkers.setAdapter(mAdapterDisplayMarkers);
                     mListViewMarkers.setOnItemClickListener(Activity_Marker_Management.this);
                     mButtonInviteMarker.setEnabled(true);
@@ -176,8 +176,7 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
                             Toast.makeText(Activity_Marker_Management.this,
                                     "The email of an invitee cannot be empty.", Toast.LENGTH_SHORT).show();
                         else {
-                            AllFunctions.getObject().inviteAssessor(projectList.get(Integer.parseInt(index)),
-                                    mEditTextInvitee.getText().toString());
+                            AllFunctions.getObject().inviteMarker(Integer.parseInt(mEditTextInvitee.getText().toString()));
                             mProgressbarInvitation.setVisibility(View.VISIBLE);
                         }
                     }
@@ -211,7 +210,7 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
             }
         });
 //        mToolbar.inflateMenu(R.menu.menu_toolbar);
-        mToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
+        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
@@ -236,10 +235,10 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
     }
 
     public class AdapterForMarkerDisplay extends BaseAdapter {
-        private ArrayList<String> mMarkerList;
+        private ArrayList<Marker> mMarkerList;
         private Context mContext;
 
-        public AdapterForMarkerDisplay(ArrayList<String> assistantList, Context mContext) {
+        public AdapterForMarkerDisplay(ArrayList<Marker> assistantList, Context mContext) {
             this.mMarkerList = assistantList;
             this.mContext = mContext;
         }
@@ -263,16 +262,20 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_default, parent, false);
             TextView textView_listItem = convertView.findViewById(R.id.textView_defaultView);
-            textView_listItem.setText(mMarkerList.get(position));
+            if (mMarkerList.get(position).getMiddleName().equals("")) {
+                textView_listItem.setText(mMarkerList.get(position).getFirstName() + " " + mMarkerList.get(position).getLastName());
+            } else {
+                textView_listItem.setText(mMarkerList.get(position).getFirstName() + " " + mMarkerList.get(position).getMiddleName() + " " + mMarkerList.get(position).getLastName());
+            }
             return convertView;
         }
     }
 
     public class AdapterForMarkerDeletion extends BaseAdapter {
-        private ArrayList<String> mMarkerList;
+        private ArrayList<Marker> mMarkerList;
         private Context mContext;
 
-        public AdapterForMarkerDeletion(ArrayList<String> assistantList, Context mContext) {
+        public AdapterForMarkerDeletion(ArrayList<Marker> assistantList, Context mContext) {
             this.mMarkerList = assistantList;
             this.mContext = mContext;
         }
@@ -296,12 +299,16 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_markers, parent, false);
             TextView textView_listItem = convertView.findViewById(R.id.textView_markerName);
-            textView_listItem.setText(mMarkerList.get(position));
+            if (mMarkerList.get(position).getMiddleName().equals("")) {
+                textView_listItem.setText(mMarkerList.get(position).getFirstName() + " " + mMarkerList.get(position).getLastName());
+            } else {
+                textView_listItem.setText(mMarkerList.get(position).getFirstName() + " " + mMarkerList.get(position).getMiddleName() + " " + mMarkerList.get(position).getLastName());
+            }
             Button button = convertView.findViewById(R.id.button_deleteMarker);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    AllFunctions.getObject().deleteAssessor(projectList.get(indexOfProject), mMarkerList.get(position));
+                    AllFunctions.getObject().deleteMarker(mMarkerList.get(position).getId());
                     deleteIndex = position;
                     mMarkerList.remove(position);
                     adapterForMarkers.notifyDataSetChanged();
@@ -316,10 +323,10 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
         }
     }
 
-    public void nextMarkerManagement(View view) {
-        Intent intent = new Intent(Activity_Marker_Management.this, Activity_Student_Management.class);
-        intent.putExtra("index", index);
-        intent.putExtra("from", Activity_Assessment_Preparation.FROMNEWPROJECT);
-        startActivity(intent);
-    }
+//    public void nextMarkerManagement(View view) {
+//        Intent intent = new Intent(Activity_Marker_Management.this, Activity_Student_Management.class);
+//        intent.putExtra("index", index);
+//        intent.putExtra("from", Activity_Assessment_Preparation.FROMNEWPROJECT);
+//        startActivity(intent);
+//    }
 }

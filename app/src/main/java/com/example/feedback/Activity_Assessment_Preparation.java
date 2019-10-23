@@ -5,9 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -28,19 +28,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
-
-import dbclass.Criteria;
-import dbclass.ProjectInfo;
 import main.AllFunctions;
+import newdbclass.Criterion;
+import newdbclass.Project;
 
 public class Activity_Assessment_Preparation extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     private ListView listView;
     private AllFunctions allFunctions = AllFunctions.getObject();
-    private ArrayList<ProjectInfo> projectList;
+    private ArrayList<Project> projectList;
     private MyAdapterForListView myAdapter;
     private int indexToSend = -999;
-    private ProjectInfo project;
+    private Project project;
     private Handler handler;
     private Toolbar mToolbar;
     private CheckBox mDeleteCheckbox;
@@ -67,7 +66,6 @@ public class Activity_Assessment_Preparation extends AppCompatActivity implement
         setContentView(R.layout.activity_assessment_preparation_);
         init();
         Log.d("EEEE", "Preparation: onCreate has been called!");
-
     }
 
     protected void onNewIntent(Intent intent) {
@@ -84,14 +82,12 @@ public class Activity_Assessment_Preparation extends AppCompatActivity implement
         handler = new Handler() {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
-                    case 201: //创建新项目成功
-                        break;
-                    case 210:
+                    case 108: //sync success
                         Toast.makeText(Activity_Assessment_Preparation.this,
                                 "Sync success.", Toast.LENGTH_SHORT).show();
                         updateProjectList();
                         break;
-                    case 211:
+                    case 109: // sync fail
                         Toast.makeText(Activity_Assessment_Preparation.this,
                                 "Server error. Please try again", Toast.LENGTH_SHORT).show();
                         break;
@@ -171,8 +167,7 @@ public class Activity_Assessment_Preparation extends AppCompatActivity implement
                 finish();
             }
         });
-//        mToolbar.inflateMenu(R.menu.menu_toolbar);
-        mToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
+        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
@@ -216,32 +211,32 @@ public class Activity_Assessment_Preparation extends AppCompatActivity implement
     }
 
     public void showOtherInfo(int index) {
-        ProjectInfo projectInfo = allFunctions.getProjectList().get(index);
+        Project project = allFunctions.getProjectList().get(index);
         textView_projectName = findViewById(R.id.project_name_inpreparation);
-        textView_projectName.setText(projectInfo.getProjectName());
+        textView_projectName.setText(project.getName());
         textView_aboutDetail = findViewById(R.id.about_detail_inpreparation);
-        textView_aboutDetail.setText("Subject Name: " + projectInfo.getSubjectName() + "\n" +
-                "Subject Code: " + projectInfo.getSubjectCode() + "\n" +
-                "Description: " + projectInfo.getDescription() + "\n" +
-                "Assessment duration: " + projectInfo.getDurationMin() + ":" + projectInfo.getDurationSec() + "\n" +
-                "Warning time: " + projectInfo.getWarningMin() + ":" + projectInfo.getWarningSec() + "\n");
+        textView_aboutDetail.setText("Subject Name: " + project.getSubjectName() + "\n" +
+                "Subject Code: " + project.getSubjectCode() + "\n" +
+                "Description: " + project.getDescription() + "\n" +
+                "Assessment Duration: " + project.getDurationMin() + ":" + project.getDurationSec() + "\n" +
+                "Warning Time: " + project.getWarningMin() + ":" + project.getWarningSec() + "\n");
         textView_criteriaDetail = findViewById(R.id.criteria_detail__inpreparation);
         String criteriaDetailString = "";
-        for (Criteria c : projectInfo.getCriteria()) {
+        for (Criterion c : project.getCriterionList()) {
             criteriaDetailString = criteriaDetailString + c.getName() + "\n";
-            criteriaDetailString = criteriaDetailString + "Maximum mark: " + c.getMaximunMark() + "\n";
-            criteriaDetailString = criteriaDetailString + "Mark increments: " + c.getMarkIncrement() + "\n\n";
+            criteriaDetailString = criteriaDetailString + "Maximum Mark: " + c.getMaximumMark() + "\n";
+            criteriaDetailString = criteriaDetailString + "Mark Increments: " + c.getMarkIncrement() + "\n\n";
         }
         textView_criteriaDetail.setText(criteriaDetailString);
         textView_asseccorDetail = findViewById(R.id.asseccor_detail__inpreparation);
         String assessorDetailString = new String();
-        for (int i = 0; i < projectInfo.getAssistant().size(); i++)
-            assessorDetailString = assessorDetailString + projectInfo.getAssistant().get(i) + "\n";
+        for (int i = 0; i < project.getMarkerList().size(); i++)
+            assessorDetailString = assessorDetailString + project.getMarkerList().get(i) + "\n";
         textView_asseccorDetail.setText(assessorDetailString);
-        project = AllFunctions.getObject().getProjectList().get(index);
-        Log.d("EEEE", "project's head marker: " + project.getUsername());
-        Log.d("EEEE", "username: " + AllFunctions.getObject().getUsername());
-        if(!project.getUsername().equals(AllFunctions.getObject().getMyEmail())) {
+        this.project = AllFunctions.getObject().getProjectList().get(index);
+        Log.d("EEEE", "project's head marker id: " + this.project.getId());
+        Log.d("EEEE", "user id: " + AllFunctions.getObject().getId());
+        if(this.project.getPrincipalId() != AllFunctions.getObject().getId()) {
             button_about.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -283,18 +278,18 @@ public class Activity_Assessment_Preparation extends AppCompatActivity implement
                     criteriaManagementAssessmentPreparation(view);
                 }
             });
-            button_assessor.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    markerManagementAssessmentPreparation(view);
-                }
-            });
-            button_student.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    studentManagementAssessmentPreparation(view);
-                }
-            });
+//            button_assessor.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    markerManagementAssessmentPreparation(view);
+//                }
+//            });
+//            button_student.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    studentManagementAssessmentPreparation(view);
+//                }
+//            });
         }
     }
 
@@ -353,12 +348,12 @@ public class Activity_Assessment_Preparation extends AppCompatActivity implement
         Log.d("EEEE", "strat activity for result 3");
     }
 
-    public void studentManagementAssessmentPreparation(View view) {
-        Intent intent = new Intent(this, Activity_Student_Management.class);
-        intent.putExtra("index", String.valueOf(indexToSend));
-        intent.putExtra("from", FROMPREVIOUSPROJECT);
-        startActivity(intent);
-    }
+//    public void studentManagementAssessmentPreparation(View view) {
+//        Intent intent = new Intent(this, Activity_Student_Management.class);
+//        intent.putExtra("index", String.valueOf(indexToSend));
+//        intent.putExtra("from", FROMPREVIOUSPROJECT);
+//        startActivity(intent);
+//    }
 
     public void criteriaManagementAssessmentPreparation(View view) {
         Intent intent = new Intent(this, Activity_Criteria.class);
@@ -367,19 +362,19 @@ public class Activity_Assessment_Preparation extends AppCompatActivity implement
         startActivity(intent);
     }
 
-    public void markerManagementAssessmentPreparation(View view) {
-        Intent intent = new Intent(this, Activity_Marker_Management.class);
-        intent.putExtra("index", String.valueOf(indexToSend));
-        intent.putExtra("from", FROMPREVIOUSPROJECT);
-        startActivityForResult(intent, 1);
-    }
+//    public void markerManagementAssessmentPreparation(View view) {
+//        Intent intent = new Intent(this, Activity_Marker_Management.class);
+//        intent.putExtra("index", String.valueOf(indexToSend));
+//        intent.putExtra("from", FROMPREVIOUSPROJECT);
+//        startActivityForResult(intent, 1);
+//    }
 
     public class MyAdapterDefaultlistView extends BaseAdapter {
 
-        private ArrayList<ProjectInfo> mProjectList;
+        private ArrayList<Project> mProjectList;
         private Context mContext;
 
-        public MyAdapterDefaultlistView(Context context, ArrayList<ProjectInfo> projectList) {
+        public MyAdapterDefaultlistView(Context context, ArrayList<Project> projectList) {
             this.mProjectList = projectList;
             this.mContext = context;
         }
@@ -403,7 +398,7 @@ public class Activity_Assessment_Preparation extends AppCompatActivity implement
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_default, parent, false);
             TextView textView_listItem = convertView.findViewById(R.id.textView_defaultView);
-            textView_listItem.setText(mProjectList.get(position).getProjectName());
+            textView_listItem.setText(mProjectList.get(position).getName());
             return convertView;
         }
     }
@@ -411,10 +406,10 @@ public class Activity_Assessment_Preparation extends AppCompatActivity implement
 
     public class MyAdapterForListView extends BaseAdapter {
 
-        private ArrayList<ProjectInfo> mProjectList;
+        private ArrayList<Project> mProjectList;
         private Context mContext;
 
-        public MyAdapterForListView(ArrayList<ProjectInfo> projectList, Context context) {
+        public MyAdapterForListView(ArrayList<Project> projectList, Context context) {
             this.mProjectList = projectList;
             this.mContext = context;
         }
@@ -438,13 +433,13 @@ public class Activity_Assessment_Preparation extends AppCompatActivity implement
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_projectlist_withdelete, parent, false);
             TextView textView_listItem = convertView.findViewById(R.id.textView_inlistView);
-            textView_listItem.setText(mProjectList.get(position).getProjectName());
+            textView_listItem.setText(mProjectList.get(position).getName());
             Button button = convertView.findViewById(R.id.Bt_delete_inlist);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     myAdapter.notifyDataSetChanged();
-                    allFunctions.deleteProject(position);
+                    allFunctions.deleteProject(mProjectList.get(position).getId());
                 }
             });
             return convertView;

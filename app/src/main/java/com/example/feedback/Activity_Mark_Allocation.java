@@ -22,21 +22,21 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
-
-import dbclass.Criteria;
-import dbclass.ProjectInfo;
-import dbclass.ShortText;
-import dbclass.SubSection;
 import main.AllFunctions;
+import newdbclass.Comment;
+import newdbclass.Criterion;
+import newdbclass.ExpandedComment;
+import newdbclass.Field;
+import newdbclass.Project;
 
 
 public class Activity_Mark_Allocation extends AppCompatActivity {
     private int indexOfProject;
     private GridView gridView;
     private Handler handler;
-    private ProjectInfo project;
-    private ArrayList<Criteria> markingCriteriaList;
-    ArrayList<Criteria> allCriteriaList;
+    private Project project;
+    private ArrayList<Criterion> markingCriteriaList;
+    ArrayList<Criterion> allCriteriaList;
     private int markedCriteriaNum;
     private Toolbar mToolbar;
     private Button saveButton;
@@ -58,7 +58,16 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
-                    case 401:
+                    case 108:
+                        Toast.makeText(Activity_Mark_Allocation.this,
+                                "Sync success", Toast.LENGTH_SHORT).show();
+                        finish();
+                        break;
+                    case 109:
+                        Toast.makeText(Activity_Mark_Allocation.this,
+                                "Server error. Please try again", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 114:
                         Log.d("EEEE", "Successfully update the criteria of the project.");
                         Toast.makeText(Activity_Mark_Allocation.this,
                                 "Successfully update the criteria of the project.", Toast.LENGTH_SHORT).show();
@@ -73,7 +82,7 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
                             startActivity(intent);
                         }
                         break;
-                    case 402:
+                    case 115:
                         Log.d("EEEE", "Fail to update the criteria of the project.");
                         Toast.makeText(Activity_Mark_Allocation.this,
                                 "Server error. Please try again.", Toast.LENGTH_SHORT).show();
@@ -89,11 +98,10 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
             saveButton.setText(R.string.save_button);
         }
         project = AllFunctions.getObject().getProjectList().get(indexOfProject);
-        markingCriteriaList = project.getCriteria();
-        markedCriteriaNum = project.getCriteria().size();
+        markingCriteriaList = project.getCriterionList();
+        markedCriteriaNum = project.getCriterionList().size();
         allCriteriaList = new ArrayList<>();
         allCriteriaList.addAll(markingCriteriaList);
-        allCriteriaList.addAll(project.getCommentList());
         initToolbar();
         MyAdapter myAdapter = new MyAdapter(allCriteriaList, this);
         gridView = findViewById(R.id.gridView_CriteriaList_markAllocation);
@@ -102,7 +110,7 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
 
     private void initToolbar() {
         mToolbar = findViewById(R.id.toolbar_project_mark_allocation);
-        mToolbar.setTitle(project.getProjectName() + " -- Welcome, " + AllFunctions.getObject().getUsername());
+        mToolbar.setTitle(project.getName() + " -- Welcome, " + AllFunctions.getObject().getUsername());
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -112,8 +120,7 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
                 finish();
             }
         });
-//        mToolbar.inflateMenu(R.menu.menu_toolbar);
-        mToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
+        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
@@ -145,11 +152,11 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
 
     public boolean isValidIncrementAndMaxMark() {
         for(int i = 0; i < markingCriteriaList.size(); i++){
-            if(markingCriteriaList.get(i).getMarkIncrement() == null) {
-                markingCriteriaList.get(i).setMarkIncrement("1/4");
+            if(markingCriteriaList.get(i).getMarkIncrement() == 0) {
+                markingCriteriaList.get(i).setMarkIncrement(0.25);
             }
 
-            if(markingCriteriaList.get(i).getMaximunMark() == 0) {
+            if(markingCriteriaList.get(i).getMaximumMark() == 0) {
                 Toast.makeText(Activity_Mark_Allocation.this, "Maximum mark cannot be zero.", Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -161,7 +168,7 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
     public void nextMarkAllocation(View view) {
         if(isValidIncrementAndMaxMark() == true) {
             if (isValidCriteriaList()) {
-                AllFunctions.getObject().projectCriteria(project, project.getCriteria(), project.getCommentList());
+                AllFunctions.getObject().updateProjectCriteria(project.getCriterionList());
             } else {
                 Toast.makeText(Activity_Mark_Allocation.this, "Some crieria is not complete. Please check and try again.", Toast.LENGTH_SHORT).show();
             }
@@ -170,19 +177,19 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
 
     public boolean isValidCriteriaList() {
         Log.d("EEEE", "check criteria list");
-        ArrayList<Criteria> criteriaList = AllFunctions.getObject().getProjectList().get(indexOfProject).getCriteria();
+        ArrayList<Criterion> criteriaList = AllFunctions.getObject().getProjectList().get(indexOfProject).getCriterionList();
         for (int i = 0; i < criteriaList.size(); i++) {
-            ArrayList<SubSection> subsectionList = criteriaList.get(i).getSubsectionList();
-            if (subsectionList.size() == 0) {
+            ArrayList<Field> fieldList = criteriaList.get(i).getFieldList();
+            if (fieldList.size() == 0) {
                 return false;
             } else {
-                for (int j = 0; j < subsectionList.size(); j++) {
-                    ArrayList<ShortText> commentList = subsectionList.get(j).getShortTextList();
+                for (int j = 0; j < fieldList.size(); j++) {
+                    ArrayList<Comment> commentList = fieldList.get(j).getCommentList();
                     if (commentList.size() == 0) {
                         return false;
                     } else {
                         for (int m = 0; m < commentList.size(); m++) {
-                            ArrayList<String> expandedCommentList = commentList.get(m).getLongtext();
+                            ArrayList<ExpandedComment> expandedCommentList = commentList.get(m).getExpandedCommentList();
                             if (expandedCommentList.size() == 0) {
                                 Log.d("EEEE", "empty longtext");
                                 return false;
@@ -198,9 +205,9 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
     public class MyAdapter extends BaseAdapter {
 
         private Context mContext;
-        private ArrayList<Criteria> criteriaList;
+        private ArrayList<Criterion> criteriaList;
 
-        public MyAdapter(ArrayList<Criteria> criteriaList, Context context) {
+        public MyAdapter(ArrayList<Criterion> criteriaList, Context context) {
             this.criteriaList = criteriaList;
             this.mContext = context;
         }
@@ -229,28 +236,20 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
                 TextView textView_criteriaName = convertView.findViewById(R.id.textView_criteriaName_gridItem);
                 textView_criteriaName.setText(criteriaList.get(position).getName());
                 EditText editText_maxMark = convertView.findViewById(R.id.editText_maxMark_gridItem);
-                editText_maxMark.setText(String.valueOf(criteriaList.get(position).getMaximunMark()));
-                String markIncrement = criteriaList.get(position).getMarkIncrement();
-                if (markIncrement != null)
-                    switch (markIncrement) {
-//                case "quarter":
-                        case "1/4":
-                            RadioButton radioButton_quarter = convertView.findViewById(R.id.radioButton_quarter_gridItem);
-                            radioButton_quarter.setChecked(true);
-                            break;
-//                case "half":
-                        case "1/2":
-                            RadioButton radioButton_half = convertView.findViewById(R.id.radioButton_half_gridItem);
-                            radioButton_half.setChecked(true);
-                            break;
-//                case "full":
-                        case "1":
-                            RadioButton radioButton_full = convertView.findViewById(R.id.radioButton_full_gridItem);
-                            radioButton_full.setChecked(true);
-                            break;
-                        default:
-                            break;
+                editText_maxMark.setText(String.valueOf((int) criteriaList.get(position).getMaximumMark()));
+                double markIncrement = criteriaList.get(position).getMarkIncrement();
+                if (markIncrement != 0){
+                    if (markIncrement == 0.25) {
+                        RadioButton radioButton_quarter = convertView.findViewById(R.id.radioButton_quarter_gridItem);
+                        radioButton_quarter.setChecked(true);
+                    } else if (markIncrement == 0.5) {
+                        RadioButton radioButton_half = convertView.findViewById(R.id.radioButton_half_gridItem);
+                        radioButton_half.setChecked(true);
+                    } else if (markIncrement == 1) {
+                        RadioButton radioButton_full = convertView.findViewById(R.id.radioButton_full_gridItem);
+                        radioButton_full.setChecked(true);
                     }
+                }
 
                 RadioGroup radioGroup = convertView.findViewById(R.id.radioGroup_markIncrement_gridItem);
                 radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -258,16 +257,13 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
                     public void onCheckedChanged(RadioGroup rG, int checkID) {
                         switch (checkID) {
                             case R.id.radioButton_quarter_gridItem:
-//                            criteriaList.get(position).setMarkIncrement("quarter");
-                                markingCriteriaList.get(position).setMarkIncrement("1/4");
+                                markingCriteriaList.get(position).setMarkIncrement(0.25);
                                 break;
                             case R.id.radioButton_half_gridItem:
-//                            criteriaList.get(position).setMarkIncrement("half");
-                                markingCriteriaList.get(position).setMarkIncrement("1/2");
+                                markingCriteriaList.get(position).setMarkIncrement(0.5);
                                 break;
                             case R.id.radioButton_full_gridItem:
-//                            criteriaList.get(position).setMarkIncrement("full");
-                                markingCriteriaList.get(position).setMarkIncrement("1");
+                                markingCriteriaList.get(position).setMarkIncrement(1);
                                 break;
                             default:
                                 break;
@@ -281,7 +277,7 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
                     public void onClick(View view) {
                         int mark = Integer.parseInt(editText_maxMark.getText().toString());
                         Log.d("EEEE", Integer.parseInt(editText_maxMark.getText().toString()) + "");
-                        markingCriteriaList.get(position).setMaximunMark(mark + 1);
+                        markingCriteriaList.get(position).setMaximumMark(mark + 1);
                         editText_maxMark.setText(String.valueOf(mark + 1));
                     }
                 });
@@ -292,7 +288,7 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
                     public void onClick(View view) {
                         int mark = Integer.parseInt(editText_maxMark.getText().toString());
                         if(mark > 0) {
-                            markingCriteriaList.get(position).setMaximunMark(mark - 1);
+                            markingCriteriaList.get(position).setMaximumMark(mark - 1);
                             editText_maxMark.setText(String.valueOf(mark - 1));
                         }
                     }

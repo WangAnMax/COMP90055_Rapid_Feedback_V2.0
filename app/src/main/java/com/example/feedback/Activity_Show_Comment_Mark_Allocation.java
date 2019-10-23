@@ -29,14 +29,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
-import dbclass.Criteria;
-import dbclass.ProjectInfo;
-import dbclass.ShortText;
-import dbclass.SubSection;
 import main.AllFunctions;
+import newdbclass.Comment;
+import newdbclass.Criterion;
+import newdbclass.ExpandedComment;
+import newdbclass.Field;
+import newdbclass.Project;
 
 public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
-    private Criteria criteria;
+    private Criterion criterion;
     private Toolbar mToolbar;
     private ListView listView_longText;
     private MyAdapterForLongText myAdapterForLongText;
@@ -55,15 +56,8 @@ public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
         Intent intent = getIntent();
         indexOfProject = Integer.parseInt(intent.getStringExtra("indexOfProject"));
         indexOfCriteria = Integer.parseInt(intent.getStringExtra("indexOfCriteria"));
-        ProjectInfo project = AllFunctions.getObject().getProjectList().get(indexOfProject);
-
-        if (indexOfCriteria >= project.getCriteria().size()) {
-            Log.d("EEEE", "large index");
-            criteria = project.getCommentList().get(indexOfCriteria - project.getCriteria().size());
-        } else {
-            Log.d("EEEE", "small index");
-            criteria = project.getCriteria().get(indexOfCriteria);
-        }
+        Project project = AllFunctions.getObject().getProjectList().get(indexOfProject);
+        criterion = project.getCriterionList().get(indexOfCriteria);
         init();
     }
 
@@ -78,7 +72,7 @@ public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
             }
         });
 //        mToolbar.inflateMenu(R.menu.menu_toolbar);
-        mToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
+        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
@@ -104,7 +98,7 @@ public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
 
     private void init() {
         expandableListView_comments_left = findViewById(R.id.expandableListView_showComment);
-        MyAdapterForCommentLeft myAdapterForCommentLeft = new MyAdapterForCommentLeft(this, criteria.getSubsectionList());
+        MyAdapterForCommentLeft myAdapterForCommentLeft = new MyAdapterForCommentLeft(this, criterion.getFieldList());
         expandableListView_comments_left.setAdapter(myAdapterForCommentLeft);
         expandableListView_comments_left.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
@@ -126,7 +120,7 @@ public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
         expandableListView_comments_left.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
             public void onGroupExpand(int groupPosition) {
-                for (int i = 0; i < criteria.getSubsectionList().size(); i++) {
+                for (int i = 0; i < criterion.getFieldList().size(); i++) {
                     if (i != groupPosition && expandableListView_comments_left.isGroupExpanded(groupPosition)) {
                         Log.d("EEEE", "check");
                         expandableListView_comments_left.collapseGroup(i);
@@ -145,15 +139,15 @@ public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
             View view2 = layoutInflater.from(Activity_Show_Comment_Mark_Allocation.this).inflate(R.layout.dialog_edit_comment, null);//获得view对象
 
             final EditText editText_editLongText = view2.findViewById(R.id.editText_editLongText_editComment);//获取控件
-            editText_editLongText.setText(criteria.getSubsectionList().get(indexOfSubsection).getShortTextList().
-                    get(indexOfShortText).getLongtext().get(listView_longText.getCheckedItemPosition()));
+            editText_editLongText.setText(criterion.getFieldList().get(indexOfSubsection).getCommentList().
+                    get(indexOfShortText).getExpandedCommentList().get(listView_longText.getCheckedItemPosition()).getText());
 
             Dialog dialog = new AlertDialog.Builder(Activity_Show_Comment_Mark_Allocation.this).setTitle("Edit Comment").
                     setView(view2).setPositiveButton("Done", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     String newLongText = editText_editLongText.getText().toString();
-                    criteria.getSubsectionList().get(indexOfSubsection).getShortTextList().get(indexOfShortText).getLongtext().
-                            set(listView_longText.getCheckedItemPosition(), newLongText);
+                    criterion.getFieldList().get(indexOfSubsection).getCommentList().get(indexOfShortText).getExpandedCommentList().
+                            get(listView_longText.getCheckedItemPosition()).setText(newLongText);
                     myAdapterForLongText.notifyDataSetChanged();
                 }
             }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -172,7 +166,7 @@ public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
         if (listView_longText.getCheckedItemPosition() == -1)
             Toast.makeText(this, "Please choose a comment.", Toast.LENGTH_SHORT).show();
         else {
-            ArrayList<String> expandedCommentList = criteria.getSubsectionList().get(indexOfSubsection).getShortTextList().get(indexOfShortText).getLongtext();
+            ArrayList<ExpandedComment> expandedCommentList = criterion.getFieldList().get(indexOfSubsection).getCommentList().get(indexOfShortText).getExpandedCommentList();
             if (expandedCommentList.size() == 0) {
                 Toast.makeText(Activity_Show_Comment_Mark_Allocation.this, "No comments to delete", Toast.LENGTH_SHORT).show();
             } else {
@@ -188,7 +182,7 @@ public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
                 inflate(R.layout.dialog_add_comment, null);//获得view对象
 
         final Spinner spinner_subsection = view2.findViewById(R.id.spinner_subsection_addComment);
-        MyAdapterForSubsectionSpinner myAdapterForSubsectionSpinner = new MyAdapterForSubsectionSpinner(view2.getContext(), criteria.getSubsectionList());
+        MyAdapterForSubsectionSpinner myAdapterForSubsectionSpinner = new MyAdapterForSubsectionSpinner(view2.getContext(), criterion.getFieldList());
         spinner_subsection.setAdapter(myAdapterForSubsectionSpinner);
         spinner_subsection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -219,7 +213,7 @@ public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
                         dialog.getWindow().setAttributes(params);
                     }
                 });
-                if (position >= criteria.getSubsectionList().size()) {
+                if (position >= criterion.getFieldList().size()) {
                     spinner_shortText = view2.findViewById(R.id.spinner_shortText_addComment);
                     //MyAdapterForShortTextSpinner myAdapterForShortTextSpinner = new MyAdapterForShortTextSpinner(view2.getContext(), null);
                     spinner_shortText.setAdapter(null);
@@ -232,14 +226,14 @@ public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
                 } else {
                     spinner_shortText = view2.findViewById(R.id.spinner_shortText_addComment);
                     MyAdapterForShortTextSpinner myAdapterForShortTextSpinner = new MyAdapterForShortTextSpinner(view2.getContext(),
-                            criteria.getSubsectionList().get(position).getShortTextList());
+                            criterion.getFieldList().get(position).getCommentList());
                     spinner_shortText.setAdapter(myAdapterForShortTextSpinner);
                     RelativeLayout relativeLayoutNewCommentSpinner = view2.findViewById(R.id.relativelayout_new_comment_spinner);
                     relativeLayoutNewCommentSpinner.setVisibility(View.VISIBLE);
                     RelativeLayout relativeLayoutNewSubsection = view2.findViewById(R.id.relativellayout_new_subsection);
                     relativeLayoutNewSubsection.setVisibility(View.INVISIBLE);
 
-                    int commentListSize = criteria.getSubsectionList().get(position).getShortTextList().size();
+                    int commentListSize = criterion.getFieldList().get(position).getCommentList().size();
                     spinner_shortText.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -290,22 +284,22 @@ public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 int whichSubsection = spinner_subsection.getSelectedItemPosition();
-                if (whichSubsection < criteria.getSubsectionList().size()) {
+                if (whichSubsection < criterion.getFieldList().size()) {
                     int whichShortText = spinner_shortText.getSelectedItemPosition();
-                    if (whichShortText < criteria.getSubsectionList().get(whichSubsection).getShortTextList().size()) {
+                    if (whichShortText < criterion.getFieldList().get(whichSubsection).getCommentList().size()) {
                         EditText editText_longText = view2.findViewById(R.id.editText_longText_addComment);
                         String longText = editText_longText.getText().toString().trim();
                         if (longText.equals("")) {
                             Toast.makeText(Activity_Show_Comment_Mark_Allocation.this, "The Expanded comment cannot be empty", Toast.LENGTH_SHORT).show();
                         } else {
-                            criteria.getSubsectionList().get(whichSubsection).getShortTextList().get(whichShortText).getLongtext().add(longText);
+                            criterion.getFieldList().get(whichSubsection).getCommentList().get(whichShortText).getExpandedCommentList().add(new ExpandedComment(0, longText));
                             init();
                             dialog.dismiss();
                         }
                     } else {
                         EditText editText_shortText = view2.findViewById(R.id.editText_shortText_addComment);
-                        String shortText = editText_shortText.getText().toString().trim();
-                        if (shortText.equals("")) {
+                        String comment = editText_shortText.getText().toString().trim();
+                        if (comment.equals("")) {
                             Toast.makeText(Activity_Show_Comment_Mark_Allocation.this, "The comment cannot be empty", Toast.LENGTH_SHORT).show();
                         } else {
                             EditText editText_shortTextGrade = view2.findViewById(R.id.editText_shortTextgrade_addComment);
@@ -314,15 +308,17 @@ public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
                                 Toast.makeText(Activity_Show_Comment_Mark_Allocation.this, "The comment grade cannot be empty", Toast.LENGTH_SHORT).show();
                             } else {
                                 EditText editText_longText = view2.findViewById(R.id.editText_longText_addComment);
-                                String longText = editText_longText.getText().toString().trim();
-                                if (longText.equals("")) {
+                                String expandedComment = editText_longText.getText().toString().trim();
+                                ExpandedComment newExpandedComment = new ExpandedComment(0, expandedComment);
+                                if (expandedComment.equals("")) {
                                     Toast.makeText(Activity_Show_Comment_Mark_Allocation.this, "The expanded comment cannot be empty", Toast.LENGTH_SHORT).show();
                                 } else {
-                                    ShortText shortText_ls = new ShortText();
-                                    shortText_ls.setName(shortText);
-                                    shortText_ls.setGrade(Integer.parseInt(shortTextGrade));
-                                    shortText_ls.getLongtext().add(longText);
-                                    criteria.getSubsectionList().get(whichSubsection).getShortTextList().add(shortText_ls);
+                                    Comment newComment = new Comment();
+                                    newComment.setId(0);
+                                    newComment.setText(comment);
+                                    newComment.setType(shortTextGrade);
+                                    newComment.getExpandedCommentList().add(newExpandedComment);
+                                    criterion.getFieldList().get(whichSubsection).getCommentList().add(newComment);
                                     init();
                                     dialog.dismiss();
                                 }
@@ -346,18 +342,19 @@ public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
                                 Toast.makeText(Activity_Show_Comment_Mark_Allocation.this, "The comment grade cannot be empty", Toast.LENGTH_SHORT).show();
                             } else {
                                 EditText editText_longText = view2.findViewById(R.id.editText_longText_addComment);
-                                String longText = editText_longText.getText().toString().trim();
-                                if (longText.equals("")) {
+                                String expandedComment = editText_longText.getText().toString().trim();
+                                ExpandedComment newExpandedComment = new ExpandedComment(0, expandedComment);
+                                if (expandedComment.equals("")) {
                                     Toast.makeText(Activity_Show_Comment_Mark_Allocation.this, "The expanded comment cannot be empty", Toast.LENGTH_SHORT).show();
                                 } else {
-                                    ShortText shortText_ls = new ShortText();
-                                    shortText_ls.setName(shortText);
-                                    shortText_ls.setGrade(Integer.parseInt(shortTextGrade));
-                                    shortText_ls.getLongtext().add(longText);
-                                    SubSection subSection_ls = new SubSection();
-                                    subSection_ls.setName(subsectionName);
-                                    subSection_ls.getShortTextList().add(shortText_ls);
-                                    criteria.getSubsectionList().add(subSection_ls);
+                                    Comment newComment = new Comment();
+                                    newComment.setText(shortText);
+                                    newComment.setType(shortTextGrade);
+                                    newComment.getExpandedCommentList().add(newExpandedComment);
+                                    Field field = new Field();
+                                    field.setName(subsectionName);
+                                    field.getCommentList().add(newComment);
+                                    criterion.getFieldList().add(field);
                                     init();
                                     dialog.dismiss();
                                 }
@@ -378,9 +375,9 @@ public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
 
     class MyAdapterForCommentLeft extends BaseExpandableListAdapter {
         private Context mContext;
-        private ArrayList<SubSection> subSections;
+        private ArrayList<Field> subSections;
 
-        public MyAdapterForCommentLeft(Context context, ArrayList<SubSection> subSections) {
+        public MyAdapterForCommentLeft(Context context, ArrayList<Field> subSections) {
             this.mContext = context;
             this.subSections = subSections;
         }
@@ -392,7 +389,7 @@ public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            return subSections.get(groupPosition).getShortTextList().size();
+            return subSections.get(groupPosition).getCommentList().size();
         }
 
         @Override
@@ -425,7 +422,7 @@ public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
             if (convertView == null)
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_subsection_showcomment, null);
             TextView textView_subsection = convertView.findViewById(R.id.textView_subsection_showComment);
-            textView_subsection.setText(criteria.getSubsectionList().get(groupPosition).getName());
+            textView_subsection.setText(criterion.getFieldList().get(groupPosition).getName());
             return convertView;
         }
 
@@ -434,13 +431,13 @@ public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
             if (convertView == null)
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_shorttext_showcomments, null);
             TextView textView_shortText = convertView.findViewById(R.id.textView_shortText_showComments);
-            textView_shortText.setText(criteria.getSubsectionList().get(groupPosition).getShortTextList().get(childPosition).getName());
+            textView_shortText.setText(criterion.getFieldList().get(groupPosition).getCommentList().get(childPosition).getText());
             final View convertView2 = convertView;
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     myAdapterForLongText = new MyAdapterForLongText(Activity_Show_Comment_Mark_Allocation.this,
-                            subSections.get(groupPosition).getShortTextList().get(childPosition).getLongtext());
+                            subSections.get(groupPosition).getCommentList().get(childPosition).getExpandedCommentList());
                     listView_longText.setAdapter(myAdapterForLongText);
                     indexOfSubsection = groupPosition;
                     indexOfShortText = childPosition;
@@ -467,9 +464,9 @@ public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
 
     class MyAdapterForLongText extends BaseAdapter {
         private Context mContext;
-        private ArrayList<String> longTexts;
+        private ArrayList<ExpandedComment> longTexts;
 
-        public MyAdapterForLongText(Context context, ArrayList<String> longTexts) {
+        public MyAdapterForLongText(Context context, ArrayList<ExpandedComment> longTexts) {
             this.mContext = context;
             this.longTexts = longTexts;
         }
@@ -494,7 +491,7 @@ public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
             if (convertView == null)
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_longtext_showcomments, null);
             TextView textView_longText = convertView.findViewById(R.id.textView_longText_showComments);
-            textView_longText.setText(longTexts.get(position));
+            textView_longText.setText(longTexts.get(position).getText());
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -516,9 +513,9 @@ public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
 
     class MyAdapterForSubsectionSpinner extends BaseAdapter {
         private Context mContext;
-        private ArrayList<SubSection> subSections;
+        private ArrayList<Field> subSections;
 
-        public MyAdapterForSubsectionSpinner(Context context, ArrayList<SubSection> subSections) {
+        public MyAdapterForSubsectionSpinner(Context context, ArrayList<Field> subSections) {
             this.mContext = context;
             this.subSections = subSections;
         }
@@ -556,9 +553,9 @@ public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
 
     class MyAdapterForShortTextSpinner extends BaseAdapter {
         private Context mContext;
-        private ArrayList<ShortText> shortTexts;
+        private ArrayList<Comment> shortTexts;
 
-        public MyAdapterForShortTextSpinner(Context context, ArrayList<ShortText> shortTexts) {
+        public MyAdapterForShortTextSpinner(Context context, ArrayList<Comment> shortTexts) {
             this.mContext = context;
             this.shortTexts = shortTexts;
         }
@@ -584,7 +581,7 @@ public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_spinner, null);
             if (position < shortTexts.size()) {
                 TextView textView = convertView.findViewById(R.id.textView_content_spinner);
-                textView.setText(shortTexts.get(position).getName());
+                textView.setText(shortTexts.get(position).getText());
             } else {
                 TextView textView = convertView.findViewById(R.id.textView_content_spinner);
                 textView.setText("Add new comment");

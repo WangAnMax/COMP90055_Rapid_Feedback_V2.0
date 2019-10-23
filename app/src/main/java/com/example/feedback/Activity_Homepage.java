@@ -35,23 +35,22 @@ public class Activity_Homepage extends AppCompatActivity {
         handler = new Handler() {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
-                    case 201: //创建新项目成功
-                        break;
-                    case 210:
+                    case 108:
                         Toast.makeText(Activity_Homepage.this,
                                 "Sync success.", Toast.LENGTH_SHORT).show();
                         if (to.equals("part1")) {
                             Intent intent = new Intent(Activity_Homepage.this, Activity_Assessment_Preparation.class);
                             startActivity(intent);
-                        } else if (to.equals("part2")) {
-                            Intent intent = new Intent(Activity_Homepage.this, Activity_Realtime_Assessment.class);
-                            startActivity(intent);
-                        } else if (to.equals("part3")) {
-                            Intent intent = new Intent(Activity_Homepage.this, Activity_Review_Report.class);
-                            startActivity(intent);
                         }
+//                        } else if (to.equals("part2")) {
+//                            Intent intent = new Intent(Activity_Homepage.this, Activity_Realtime_Assessment.class);
+//                            startActivity(intent);
+//                        } else if (to.equals("part3")) {
+//                            Intent intent = new Intent(Activity_Homepage.this, Activity_Review_Report.class);
+//                            startActivity(intent);
+//                        }
                         break;
-                    case 211:
+                    case 109:
                         Toast.makeText(Activity_Homepage.this,
                                 "Server error. Please try again", Toast.LENGTH_SHORT).show();
                         break;
@@ -68,7 +67,7 @@ public class Activity_Homepage extends AppCompatActivity {
     }
 
     public void initToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar_homepage);
+        mToolbar = findViewById(R.id.toolbar_homepage);
         mToolbar.setTitle("Rapid Feedback -- Welcome, " + AllFunctions.getObject().getUsername());
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_back);

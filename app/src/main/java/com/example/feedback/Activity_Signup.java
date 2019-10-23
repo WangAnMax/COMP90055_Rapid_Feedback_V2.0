@@ -35,16 +35,20 @@ public class Activity_Signup extends Activity {
         handler = new Handler() {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
-                    case 111: //means Sign Up successfully and go to login page
+                    case 101: //Sign Up failed.
+                        Toast.makeText(Activity_Signup.this,
+                                "Server error. Please try again.", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 102:
+                        Toast.makeText(Activity_Signup.this,
+                                "The email address is already occupied. Please try another one.", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 103: //means Sign Up successfully and go to login page
                         Toast.makeText(getApplicationContext(), "Sign Up successfully.", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(Activity_Signup.this, Activity_Login.class)
                                 .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         finish();
-                        break;
-                    case 110: //Sign Up failed.
-                        Toast.makeText(Activity_Signup.this,
-                                "The email address is already occupied. Please try another one.", Toast.LENGTH_SHORT).show();
                         break;
                     default:
                         break;

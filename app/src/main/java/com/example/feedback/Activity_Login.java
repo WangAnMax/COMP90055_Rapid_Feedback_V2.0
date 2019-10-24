@@ -79,12 +79,15 @@ public class Activity_Login extends AppCompatActivity {
                         startActivityForResult(intent, 1);
                         break;
                     case 105: // worng password
+                        Log.d("EEEE", "wrong password");
                         Toast.makeText(Activity_Login.this, "The email and password do not match. Please check and try again.", Toast.LENGTH_SHORT).show();
                         break;
-                    case 106:
+                    case 106: // email not registered
+                        Log.d("EEEE", "email not registered");
                         Toast.makeText(Activity_Login.this, "The email is not registered. Please check and try again.", Toast.LENGTH_SHORT).show();
                         break;
-                    case 107:
+                    case 107: // server error
+                        Log.d("EEEE", "server error");
                         Toast.makeText(Activity_Login.this, "Server error. Please check and try again.", Toast.LENGTH_SHORT).show();
                         break;
                     default:

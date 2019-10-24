@@ -27,9 +27,8 @@ public class CommunicationForClient {
     public static final MediaType MEDIA_TYPE_MARKDOWN = MediaType.parse("audio/mpeg");
 
     public CommunicationForClient(AllFunctions functions) {
-        host = "http://10.13.88.39:8080/RapidFeedback/";
-//        host = "http://192.168.0.13:8080/RapidFeedback/";
-//        host = "http://10.13.216.108:8080/RapidFeedback";
+//        host = "http://10.13.88.39:8080/RapidFeedback/";
+        host = "http://192.168.0.13:8080/RapidFeedback/";
         client = new OkHttpClient();
         this.functions = functions;
     }
@@ -77,21 +76,25 @@ public class CommunicationForClient {
             JSONUtil.write(receive);
             Log.d("EEEE", "Receive: " + receive); //just for test
             JSONObject jsonReceive = JSONObject.parseObject(receive);
-            Activity_Login.mUserInfoOpertor.saveUserInfo(username, password);
-            //get projectlist from jsonReceive
-            String projectListString = jsonReceive.get("projectList").toString();
-            JSONUtil.write(projectListString);
-            String firstName = jsonReceive.getString("firstName");
-            List<Project> projectList = JSONObject.parseArray(projectListString, Project.class);
-            ArrayList<Project> arrayList = new ArrayList();
-            arrayList.addAll(projectList);
-            functions.setUsername(firstName);
-            functions.setUserEmail(username);
-            Log.d("EEEE", "when login firstName received is: " + firstName);
-            token = jsonReceive.getString("token");
             int login_ACK = Integer.parseInt(jsonReceive.get("login_ACK").toString());
-            functions.setId(login_ACK);
-            functions.loginACK(login_ACK);
+            if (login_ACK > 0) {
+                functions.loginACK(login_ACK);
+                Activity_Login.mUserInfoOpertor.saveUserInfo(username, password);
+                //get projectlist from jsonReceive
+                String projectListString = jsonReceive.get("projectList").toString();
+                JSONUtil.write(projectListString);
+                String firstName = jsonReceive.getString("firstName");
+                List<Project> projectList = JSONObject.parseArray(projectListString, Project.class);
+                ArrayList<Project> arrayList = new ArrayList();
+                arrayList.addAll(projectList);
+                functions.setUsername(firstName);
+                functions.setUserEmail(username);
+                Log.d("EEEE", "when login firstName received is: " + firstName);
+                token = jsonReceive.getString("token");
+                functions.setId(login_ACK);
+            } else {
+                functions.loginACK(login_ACK);
+            }
         } catch (Exception e1) {
             e1.printStackTrace();
             AllFunctions.getObject().exceptionWithServer();
@@ -202,6 +205,73 @@ public class CommunicationForClient {
             functions.updateProjectCriteriaACK(updateProject_ACK);
         } catch (Exception e1) {
             e1.printStackTrace();
+            AllFunctions.getObject().exceptionWithServer();
+        }
+    }
+
+    public void inviteMarker(int markerId, int projectId) {
+        //construct JSONObject to send
+        JSONObject jsonSend = new JSONObject();
+        jsonSend.put("token", token);
+        jsonSend.put("projectId", projectId);
+        jsonSend.put("markerId", markerId);
+
+        Log.d("EEEE", "Send: " + jsonSend.toJSONString()); //just for test
+
+        RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
+        Request request = new Request.Builder()
+                .url(host + "InviteAssessorServlet")
+                .post(body)
+                .build();
+
+        //get the JSONObject from response
+        try (Response response = client.newCall(request).execute()) {
+            String receive = response.body().string();
+
+            Log.d("EEEE", "Receive: " + receive); //just for test
+
+            JSONObject jsonReceive = JSONObject.parseObject(receive);
+            String invite_ACK = jsonReceive.get("invite_ACK").toString();
+//            if (invite_ACK.equals("true")) {
+//                AllFunctions.getObject().inviteAssessor_Success(projectName, assessorEmail);
+//            } else {
+//                AllFunctions.getObject().inviteAssessor_Fail();
+//            }
+        } catch (Exception e1) {
+            AllFunctions.getObject().exceptionWithServer();
+        }
+    }
+
+    public void updateMarker(int markerId, int projectId) {
+        //construct JSONObject to send
+        JSONObject jsonSend = new JSONObject();
+        jsonSend.put("token", token);
+        jsonSend.put("projectId", projectId);
+        jsonSend.put("markerId", markerId);
+
+        System.out.println("Send: " + jsonSend.toJSONString()); //just for test
+
+        RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
+        Request request = new Request.Builder()
+                .url(host + "/InviteAssessorServlet")
+                .delete(body)
+                .build();
+
+        //get the JSONObject from response
+        try (Response response = client.newCall(request).execute()) {
+            String receive = response.body().string();
+
+            System.out.println("Receive: " + receive); //just for test
+
+            JSONObject jsonReceive = JSONObject.parseObject(receive);
+            String delete_ACK = jsonReceive.get("delete_ACK").toString();
+            functions.deleteAssessorACK(delete_ACK);
+            if (delete_ACK.equals("true")) {
+                ;
+            } else {
+                //失败跳出
+            }
+        } catch (Exception e1) {
             AllFunctions.getObject().exceptionWithServer();
         }
     }
@@ -385,72 +455,7 @@ public class CommunicationForClient {
 //    }
 //
 //
-//    public void inviteAssessor(String projectName, String assessorEmail) {
-//        //construct JSONObject to send
-//        JSONObject jsonSend = new JSONObject();
-//        jsonSend.put("token", token);
-//        jsonSend.put("projectName", projectName);
-//        jsonSend.put("assessorEmail", assessorEmail);
-//
-//        System.out.println("Send: " + jsonSend.toJSONString()); //just for test
-//
-//        RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
-//        Request request = new Request.Builder()
-//                .url(host + "InviteAssessorServlet")
-//                .post(body)
-//                .build();
-//
-//        //get the JSONObject from response
-//        try (Response response = client.newCall(request).execute()) {
-//            String receive = response.body().string();
-//
-//            System.out.println("Receive: " + receive); //just for test
-//
-//            JSONObject jsonReceive = JSONObject.parseObject(receive);
-//            String invite_ACK = jsonReceive.get("invite_ACK").toString();
-//            if (invite_ACK.equals("true")) {
-//                AllFunctions.getObject().inviteAssessor_Success(projectName, assessorEmail);
-//            } else {
-//                AllFunctions.getObject().inviteAssessor_Fail();
-//            }
-//        } catch (Exception e1) {
-//            AllFunctions.getObject().exceptionWithServer();
-//        }
-//    }
-//
-//    public void deleteAssessor(String projectName, String assessorEmail) {
-//        //construct JSONObject to send
-//        JSONObject jsonSend = new JSONObject();
-//        jsonSend.put("token", token);
-//        jsonSend.put("projectName", projectName);
-//        jsonSend.put("assessorEmail", assessorEmail);
-//
-//        System.out.println("Send: " + jsonSend.toJSONString()); //just for test
-//
-//        RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
-//        Request request = new Request.Builder()
-//                .url(host + "InviteAssessorServlet")
-//                .delete(body)
-//                .build();
-//
-//        //get the JSONObject from response
-//        try (Response response = client.newCall(request).execute()) {
-//            String receive = response.body().string();
-//
-//            System.out.println("Receive: " + receive); //just for test
-//
-//            JSONObject jsonReceive = JSONObject.parseObject(receive);
-//            String delete_ACK = jsonReceive.get("delete_ACK").toString();
-//            functions.deleteAssessorACK(delete_ACK);
-//            if (delete_ACK.equals("true")) {
-//                ;
-//            } else {
-//                //失败跳出
-//            }
-//        } catch (Exception e1) {
-//            AllFunctions.getObject().exceptionWithServer();
-//        }
-//    }
+
 //
 //
 ////    public void getMarks(ProjectInfo project, ArrayList<String> studentIDList) {

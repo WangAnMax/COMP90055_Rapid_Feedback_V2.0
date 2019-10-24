@@ -195,21 +195,20 @@ public class AllFunctions {
         }
     }
 
-    public void inviteMarker(int projectId) {
+    public void inviteMarker(int markerId) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                communication.inviteAssessor(projectName, assessorEmail);
+                communication.updateMarker(markerId, projectId);
             }
         }).start();
     }
 
-    public void deleteMarker(int projectId) {
-        String projectName = project.getProjectName();
+    public void deleteMarker(int markerId) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                communication.deleteAssessor(projectName, assessorEmail);
+                communication.updateMarker(markerId, projectId);
             }
         }).start();
     }

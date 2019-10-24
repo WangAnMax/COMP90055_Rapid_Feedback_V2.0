@@ -348,10 +348,10 @@ public class Activity_About_New extends AppCompatActivity {
             if(checkTimeSetting()) {
                 totalDurationSec = 60 * durationMin + durationSec;
                 totalWarningSec = 60 * warningMin + warningSec;
-                Log.d("EEEE", "save with index = -999 " + Integer.parseInt(index));
                 AllFunctions.getObject().updateProject(projectName, subjectName, subjectCode, projectDesc, totalDurationSec, totalDurationSec);
                 int indextToSend = AllFunctions.getObject().getProjectList().size() - 1;
                 index = String.valueOf(indextToSend);
+                Log.d("EEEE", "save with index = -999 " + Integer.parseInt(index));
             }
         }
     }

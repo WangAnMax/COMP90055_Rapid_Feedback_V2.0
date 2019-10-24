@@ -31,6 +31,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.alibaba.fastjson.JSON;
+
 import java.util.ArrayList;
 import main.AllFunctions;
 import newdbclass.Criterion;
@@ -147,6 +150,7 @@ public class Activity_Criteria extends AppCompatActivity {
         };
         AllFunctions.getObject().setHandler(handler);
         project = AllFunctions.getObject().getProjectList().get(indexOfProject);
+        Log.d("EEEE", "project criteria: " + JSON.toJSONString(project.getCriterionList()));
         defaultCriteriaList = DefaultCriteriaList.getDefaultCriteriaList();
         defaultCriteriaList.removeAll(project.getCriterionList());
         listView_criteriaDefault = findViewById(R.id.listView_CriteriaList_inCriteriaList);

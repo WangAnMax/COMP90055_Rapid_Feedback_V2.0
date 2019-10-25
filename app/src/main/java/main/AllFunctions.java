@@ -182,7 +182,6 @@ public class AllFunctions {
             @Override
             public void run() {
                 communication.criteriaListSend(criteriaList, projectId);
-                Log.d("readExcel", "success");
             }
         }).start();
     }

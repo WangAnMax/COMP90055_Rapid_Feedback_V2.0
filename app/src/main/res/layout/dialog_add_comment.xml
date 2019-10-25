@@ -83,6 +83,29 @@
             android:inputType="textPersonName"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
+        <EditText
+            android:id="@+id/editText_shortTextgrade_addComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/editText_otherSubsection_addComment"
+            android:ems="10"
+            android:hint="Grade"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="negative, neutral or positive"
+            android:layout_below="@id/editText_shortTextgrade_addComment"
+            android:layout_alignLeft="@id/editText_shortTextgrade_addComment"
+            android:layout_marginLeft="3dp"
+            android:textSize="20sp"
+            android:textColor="@color/black" />
+
     </RelativeLayout>
 
     <View
@@ -160,29 +183,6 @@
             android:textColor="@color/black"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-        <EditText
-            android:id="@+id/editText_shortTextgrade_addComment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@id/editText_shortText_addComment"
-            android:ems="10"
-            android:hint="Grade"
-            android:textSize="20sp"
-            android:textColor="@color/black"
-            android:inputType="number"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1 - negative, 2 - mediocre and 3 - positive"
-            android:layout_below="@id/editText_shortTextgrade_addComment"
-            android:layout_alignLeft="@id/editText_shortTextgrade_addComment"
-            android:layout_marginLeft="3dp"
-            android:textSize="20sp"
-            android:textColor="@color/black" />
     </RelativeLayout>
 
 

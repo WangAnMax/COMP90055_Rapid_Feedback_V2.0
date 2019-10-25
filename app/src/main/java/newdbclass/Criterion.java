@@ -77,4 +77,12 @@ public class Criterion {
         this.fieldList = fieldList;
     }
 
+    @Override
+    public boolean equals(Object anObject) {
+        if (!(anObject instanceof Criterion)) {
+            return false;
+        }
+        Criterion otherMember = (Criterion) anObject;
+        return otherMember.getName().equals(getName());
+    }
 }

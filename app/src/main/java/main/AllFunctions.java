@@ -1,6 +1,7 @@
 package main;
 
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -249,35 +250,49 @@ public class AllFunctions {
         return false;
     }
 
-    public void addStudent(int projectId, ArrayList<Student> studentList) {
+    public void addStudent(int projectId, ArrayList<Student> studentList, String action) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                communication.addStudent(projectId, studentList);
+                communication.addStudent(projectId, studentList, action);
             }
         }).start();
     }
 
-    public void addStudentACK(int ack) {
+    public void addStudentACK(int ack, String action) {
         if (ack == 1) { // add student success
             Log.d("EEEE", "add student successfully");
-            handlerAllfunction.sendEmptyMessage(121);
+            if (action.equals("single")) {
+                Message message = new Message();
+                message.what = 121;
+                message.obj = action;
+                handlerAllfunction.sendMessage(message);
+            } else if (action.equals("batch")) {
+                Message message = new Message();
+                message.what = 121;
+                message.obj = action;
+                handlerAllfunction.sendMessage(message);
+            }
         } else if (ack == 0){ // SQL exception
             Log.d("EEEE", "server error");
             handlerAllfunction.sendEmptyMessage(122);
         } else if (ack < 0) { // add student fail
             Log.d("EEEE", "fail to add student");
-            handlerAllfunction.sendEmptyMessage(123);
+//            handlerAllfunction.sendEmptyMessage(123);
+            Message message = new Message();
+            message.what = 123;
+            message.arg1 = -ack;
+            handlerAllfunction.sendMessage(message);
         }
     }
 
     public void editStudent(int studentId, int studentNumber, String firstName,
-                            String middleName, String surname, String email, int groupNumber) {
+                            String middleName, String surname, String email, int groupNumber, int projectId) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 communication.editStudent(studentId, studentNumber, firstName,
-                        middleName, surname, email, groupNumber);
+                        middleName, surname, email, groupNumber, projectId);
                 Log.d("editStudent", "success");
             }
         }).start();
@@ -323,15 +338,6 @@ public class AllFunctions {
             return excelParser.readXlsxCriteria(path);
         }
         return null;
-    }
-
-    public void addStudentsFromExcel(Project project, ArrayList<Student> students) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-//                communication.importStudents(project.getProjectName(), students);
-            }
-        }).start();
     }
 
 

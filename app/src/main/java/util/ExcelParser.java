@@ -395,7 +395,7 @@ public class ExcelParser {
                     if (myCell.getColumnIndex() == 4) {
                         String groupNumber = myCell.toString().trim();
                         if (!groupNumber.equals("")) {
-//                            newStudent.setGroupNumber(Double.valueOf(groupNumber).intValue());
+                            newStudent.setGroup(Double.valueOf(groupNumber).intValue());
                         }
                     }
 
@@ -502,7 +502,7 @@ public class ExcelParser {
                     if (myCell.getColumnIndex() == 4) {
                         String groupNumber = myCell.toString().trim();
                         if (!groupNumber.equals("")) {
-//                            newStudent.setGroupNumber(Double.valueOf(myCell.toString().trim()).intValue());
+                            newStudent.setGroup(Double.valueOf(myCell.toString().trim()).intValue());
                         }
                     }
 

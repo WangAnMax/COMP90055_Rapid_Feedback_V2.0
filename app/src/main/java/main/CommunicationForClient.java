@@ -276,7 +276,7 @@ public class CommunicationForClient {
         }
     }
 
-    public void addStudent(int projectId, ArrayList<Student> studentList) {
+    public void addStudent(int projectId, ArrayList<Student> studentList, String action) {
         //construct JSONObject to send
         JSONObject jsonSend = new JSONObject();
         jsonSend.put("token", token);
@@ -299,14 +299,14 @@ public class CommunicationForClient {
 
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             int updateStudent_ACK = Integer.parseInt(jsonReceive.get("updateStudent_ACK").toString());
-            functions.addStudentACK(updateStudent_ACK);
+            functions.addStudentACK(updateStudent_ACK, action);
         } catch (Exception e1) {
             AllFunctions.getObject().exceptionWithServer();
         }
     }
 
     public void editStudent(int studentId, int studentNumber, String firstName,
-                            String middleName, String lastName, String email, int groupNumber) {
+                            String middleName, String lastName, String email, int groupNumber, int projectId) {
         //construct JSONObject to send
         JSONObject jsonSend = new JSONObject();
         jsonSend.put("token", token);
@@ -317,6 +317,7 @@ public class CommunicationForClient {
         jsonSend.put("lastName", lastName);
         jsonSend.put("email", email);
         jsonSend.put("group", groupNumber);
+        jsonSend.put("projectId", projectId);
 
         System.out.println("Send: " + jsonSend.toJSONString()); //just for test
 

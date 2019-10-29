@@ -103,7 +103,11 @@ public class Activity_Student_Management extends AppCompatActivity {
                         break;
                     case 121:
                         Toast.makeText(getApplicationContext(), "Successfully add a student.", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
+                        String action = msg.obj.toString();
+                        Log.d("EEEE", "action: " + action);
+                        if (action.equals("single")) {
+                            dialog.dismiss();
+                        }
                         Log.d("EEEE", "add student");
                         AllFunctions.getObject().syncProjectList();
                         Collections.sort(project.getStudentList(), new SortByGroup());
@@ -112,7 +116,7 @@ public class Activity_Student_Management extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Server error. Please try again.", Toast.LENGTH_SHORT).show();
                         break;
                     case 123:
-                        Toast.makeText(getApplicationContext(), "Fail to add the student. Please try again.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Fail to add the student " + msg.arg1 + ". Please try again.", Toast.LENGTH_SHORT).show();
                         break;
                     case 124:
                         Toast.makeText(getApplicationContext(), "Successfully edit the info of a student.", Toast.LENGTH_SHORT).show();
@@ -133,16 +137,6 @@ public class Activity_Student_Management extends AppCompatActivity {
                     case 127:
                         Toast.makeText(getApplicationContext(), "Fail to delete the student. Please try again.", Toast.LENGTH_SHORT).show();
                         break;
-//                    case 225:
-//                        Toast.makeText(getApplicationContext(), "Successfully upload the student list.", Toast.LENGTH_SHORT).show();
-//                        AllFunctions.getObject().getProjectList().get(indexOfProject).addStudentList(studentsExcel);
-//                        myAdapter.notifyDataSetChanged();
-//                        Collections.sort(project.getStudentInfo(), new SortByGroup());
-//                        break;
-//                    case 226:
-//                        Toast.makeText(getApplicationContext(), "One or more students already exist. Please check and try again.", Toast.LENGTH_SHORT).show();
-//                        myAdapter.notifyDataSetChanged();
-//                        break;
                     default:
                         break;
                 }
@@ -264,7 +258,6 @@ public class Activity_Student_Management extends AppCompatActivity {
 
             TextView textView_studentID = convertView.findViewById(R.id.textView_studentID_instudentlist);
             textView_studentID.setText(studentList.get(position).getStudentNumber() + "");
-            Log.d("EEEE", JSON.toJSONString(studentList.get(position)));
             TextView textView_studentName = convertView.findViewById(R.id.textView_fullname_instudentlist);
             textView_studentName.setText(studentList.get(position).getFirstName() + " " + studentList.get(position).getMiddleName() + " " + studentList.get(position).getLastName());
             TextView textView_studentEmail = convertView.findViewById(R.id.textView_email_instudentlist);
@@ -363,7 +356,7 @@ public class Activity_Student_Management extends AppCompatActivity {
         Log.d("EEEE", "size of student list: " + students.size());
 
         studentsExcel = students;
-        AllFunctions.getObject().addStudentsFromExcel(project, studentsExcel);
+        AllFunctions.getObject().addStudent(projectId, studentsExcel, "batch");
     }
 
     //button addStudent click.
@@ -428,7 +421,7 @@ public class Activity_Student_Management extends AppCompatActivity {
                         Student student = new Student(firstName, middleName, surname, email,
                                 Integer.parseInt(studentID), Integer.parseInt(groupNumber));
                         studentList.add(student);
-                        AllFunctions.getObject().addStudent(projectId, studentList);
+                        AllFunctions.getObject().addStudent(projectId, studentList, "single");
                     } else {
                         Toast.makeText(getApplicationContext(), "student with ID:" + studentID + " is already exits.", Toast.LENGTH_SHORT).show();
                     }
@@ -549,7 +542,7 @@ public class Activity_Student_Management extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Please input a valid Email", Toast.LENGTH_SHORT).show();
                         } else {
                             AllFunctions.getObject().editStudent(students.get(indexOfStudent).getId(), Integer.parseInt(studentID),
-                                    firstName, middleName, surname, email, Integer.parseInt(groupNumber));
+                                    firstName, middleName, surname, email, Integer.parseInt(groupNumber), projectId);
                         }
                     }
                 });

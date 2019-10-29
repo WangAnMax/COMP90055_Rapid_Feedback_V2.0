@@ -69,7 +69,7 @@ public class Activity_Homepage extends AppCompatActivity {
 
     public void initToolbar() {
         mToolbar = findViewById(R.id.toolbar_homepage);
-        mToolbar.setTitle("Rapid Feedback -- Welcome, " + AllFunctions.getObject().getUsername());
+        mToolbar.setTitle("Rapid Feedback -- Welcome, " + AllFunctions.getObject().getUsername() + " [ID: " + AllFunctions.getObject().getId() + "]");
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {

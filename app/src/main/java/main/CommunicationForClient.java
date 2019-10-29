@@ -78,7 +78,6 @@ public class CommunicationForClient {
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             int login_ACK = Integer.parseInt(jsonReceive.get("login_ACK").toString());
             if (login_ACK > 0) {
-                functions.loginACK(login_ACK);
                 Activity_Login.mUserInfoOpertor.saveUserInfo(username, password);
                 //get projectlist from jsonReceive
                 String projectListString = jsonReceive.get("projectList").toString();
@@ -92,6 +91,7 @@ public class CommunicationForClient {
                 Log.d("EEEE", "when login firstName received is: " + firstName);
                 token = jsonReceive.getString("token");
                 functions.setId(login_ACK);
+                functions.loginACK(login_ACK);
             } else {
                 functions.loginACK(login_ACK);
             }

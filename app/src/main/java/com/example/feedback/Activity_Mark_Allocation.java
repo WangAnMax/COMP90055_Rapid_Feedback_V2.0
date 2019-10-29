@@ -1,5 +1,6 @@
 package com.example.feedback;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -35,6 +36,7 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
     private GridView gridView;
     private Handler handler;
     private Project project;
+    private int projectId;
     private ArrayList<Criterion> markingCriteriaList;
     ArrayList<Criterion> allCriteriaList;
     private int markedCriteriaNum;
@@ -72,8 +74,9 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
                         Toast.makeText(Activity_Mark_Allocation.this,
                                 "Successfully update the criteria of the project.", Toast.LENGTH_SHORT).show();
                         if (from.equals(Activity_Assessment_Preparation.FROMPREVIOUSPROJECT)) {
-                            Intent intent = new Intent(Activity_Mark_Allocation.this, Activity_Assessment_Preparation.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
+//                            Intent intent = new Intent(Activity_Mark_Allocation.this, Activity_Assessment_Preparation.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                            startActivity(intent);
+                            setResult(Activity.RESULT_OK);
                             finish();
                         } else if (from.equals(Activity_Assessment_Preparation.FROMNEWPROJECT)) {
                             Intent intent = new Intent(Activity_Mark_Allocation.this, Activity_Marker_Management.class);
@@ -98,6 +101,7 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
             saveButton.setText(R.string.save_button);
         }
         project = AllFunctions.getObject().getProjectList().get(indexOfProject);
+        projectId = project.getId();
         markingCriteriaList = project.getCriterionList();
         markedCriteriaNum = project.getCriterionList().size();
         allCriteriaList = new ArrayList<>();
@@ -168,7 +172,7 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
     public void nextMarkAllocation(View view) {
         if(isValidIncrementAndMaxMark() == true) {
             if (isValidCriteriaList()) {
-                AllFunctions.getObject().updateProjectCriteria(project.getCriterionList());
+                AllFunctions.getObject().updateProjectCriteria(project.getCriterionList(), projectId);
             } else {
                 Toast.makeText(Activity_Mark_Allocation.this, "Some crieria is not complete. Please check and try again.", Toast.LENGTH_SHORT).show();
             }
@@ -191,7 +195,7 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
                         for (int m = 0; m < commentList.size(); m++) {
                             ArrayList<ExpandedComment> expandedCommentList = commentList.get(m).getExpandedCommentList();
                             if (expandedCommentList.size() == 0) {
-                                Log.d("EEEE", "empty longtext");
+                                Log.d("EEEE", "empty expandedcomment list");
                                 return false;
                             }
                         }

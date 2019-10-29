@@ -232,6 +232,9 @@ public class Activity_About_New extends AppCompatActivity {
                         Toast.makeText(Activity_About_New.this,
                                 "Sync success.", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(Activity_About_New.this, Activity_Criteria.class);
+                        int indextToSend = AllFunctions.getObject().getProjectList().size() - 1;
+                        index = String.valueOf(indextToSend);
+                        Log.d("EEEE", "save with index = -999 " + Integer.parseInt(index));
                         intent.putExtra("index", String.valueOf(index));
                         intent.putExtra("from", Activity_Assessment_Preparation.FROMNEWPROJECT);
                         startActivity(intent);
@@ -348,10 +351,7 @@ public class Activity_About_New extends AppCompatActivity {
             if(checkTimeSetting()) {
                 totalDurationSec = 60 * durationMin + durationSec;
                 totalWarningSec = 60 * warningMin + warningSec;
-                AllFunctions.getObject().updateProject(projectName, subjectName, subjectCode, projectDesc, totalDurationSec, totalDurationSec);
-                int indextToSend = AllFunctions.getObject().getProjectList().size() - 1;
-                index = String.valueOf(indextToSend);
-                Log.d("EEEE", "save with index = -999 " + Integer.parseInt(index));
+                AllFunctions.getObject().updateProject(projectName, subjectName, subjectCode, projectDesc, totalDurationSec, totalDurationSec, 0);
             }
         }
     }

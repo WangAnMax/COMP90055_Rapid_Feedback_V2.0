@@ -63,7 +63,8 @@ public class Activity_Homepage extends AppCompatActivity {
     }
 
     public void onNewIntent(Intent intent) {
-        AllFunctions.getObject().setHandler(handler);
+        initToolbar();
+        init();
     }
 
     public void initToolbar() {

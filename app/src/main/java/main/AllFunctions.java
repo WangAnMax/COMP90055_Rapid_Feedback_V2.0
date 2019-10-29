@@ -2,11 +2,15 @@ package main;
 
 import android.os.Handler;
 import android.util.Log;
-
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import newdbclass.Criterion;
 import newdbclass.Project;
+import newdbclass.ProjectStudent;
+import newdbclass.Student;
+import util.ExcelParser;
 
 public class AllFunctions {
 
@@ -19,7 +23,6 @@ public class AllFunctions {
     private String username;//for welcome message. this is the firstName.
     private String userEmail;
     private int userId;
-    private int projectId;
 
     private AllFunctions() {
         communication = new CommunicationForClient(this);
@@ -118,7 +121,6 @@ public class AllFunctions {
             @Override
             public void run() {
                 communication.syncProjectList(userId);
-                Log.d("syncProjectList", "success");
             }
         }).start();
     }
@@ -126,6 +128,9 @@ public class AllFunctions {
     public void syncACK(boolean ack, ArrayList<Project> projectList) {
         if (ack) { // sync success
             this.projectList = projectList;
+            if (projectList.size() > 0) {
+                sortStudent();
+            }
             handlerAllfunction.sendEmptyMessage(108);
         } else { // succ fail
             handlerAllfunction.sendEmptyMessage(109);
@@ -134,13 +139,13 @@ public class AllFunctions {
 
     public void updateProject(String projectName, String subjectName,
                               String subjectCode, String description,
-                              int durationSec, int warningSec) {
+                              int durationSec, int warningSec, int projectId) {
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                communication.updateProject_About(projectName, subjectName,
-                        subjectCode, description, durationSec, warningSec, userId);
+                communication.updateProjectAbout(projectName, subjectName,
+                        subjectCode, description, durationSec, warningSec, userId, projectId);
                 Log.d("createProject", "create new project success");
             }
         }).start();
@@ -149,7 +154,6 @@ public class AllFunctions {
     public void setAboutACK(boolean ack, int projectId) {
         if (ack) {
             Log.d("EEEE", "set about ack true");
-            this.projectId = projectId;
             handlerAllfunction.sendEmptyMessage(110);
         } else {
             Log.d("EEEE", "set about ack false");
@@ -157,8 +161,7 @@ public class AllFunctions {
         }
     }
 
-    public void deleteProject(int index) {
-        int projectId = this.projectId;
+    public void deleteProject(int index, int projectId) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -177,7 +180,7 @@ public class AllFunctions {
         }
     }
 
-    public void updateProjectCriteria(ArrayList<Criterion> criteriaList) {
+    public void updateProjectCriteria(ArrayList<Criterion> criteriaList, int projectId) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -194,30 +197,141 @@ public class AllFunctions {
         }
     }
 
-    public void inviteMarker(int markerId) {
+    public void inviteMarker(int markerId, int projectId) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                communication.updateMarker(markerId, projectId);
+                communication.inviteMarker(markerId, projectId);
             }
         }).start();
     }
 
-    public void deleteMarker(int markerId) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                communication.updateMarker(markerId, projectId);
-            }
-        }).start();
-    }
-
-    public void deleteAssessorACK(String ack) {
-        if (ack.equals("true")) {
-            handlerAllfunction.sendEmptyMessage(309);
-        } else {
-            handlerAllfunction.sendEmptyMessage(310);
+    public void inviteMarkerACK(int ack) {
+        if (ack == 1) { // add successfully
+            handlerAllfunction.sendEmptyMessage(116);
+        } else if (ack == 0) { // SQL exception
+            handlerAllfunction.sendEmptyMessage(117);
+        } else if (ack == -1) { // marker id invalid
+            handlerAllfunction.sendEmptyMessage(118);
         }
+    }
+
+    public void deleteMarker(int markerId, int projectId) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                communication.deleteMarker(markerId, projectId);
+            }
+        }).start();
+    }
+
+    public void deleteMarkerACK(boolean ack) {
+        if (ack) {
+            handlerAllfunction.sendEmptyMessage(119);
+        } else {
+            handlerAllfunction.sendEmptyMessage(120);
+        }
+    }
+
+    public boolean hasStudent(int projectId, int studentId) {
+        Project project = new Project();
+        for (int i = 0; i < this.projectList.size(); i++) {
+            if (projectList.get(i).getId() == projectId) {
+                project = projectList.get(i);
+            }
+        }
+        ArrayList<ProjectStudent> studentList = project.getStudentList();
+        for (int i = 0; i < studentList.size(); i++) {
+            if (studentList.get(i).getStudentNumber() == studentId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void addStudent(int projectId, ArrayList<Student> studentList) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                communication.addStudent(projectId, studentList);
+            }
+        }).start();
+    }
+
+    public void addStudentACK(int ack) {
+        if (ack == 1) { // add student success
+            Log.d("EEEE", "add student successfully");
+            handlerAllfunction.sendEmptyMessage(121);
+        } else if (ack == 0){ // SQL exception
+            Log.d("EEEE", "server error");
+            handlerAllfunction.sendEmptyMessage(122);
+        } else if (ack < 0) { // add student fail
+            Log.d("EEEE", "fail to add student");
+            handlerAllfunction.sendEmptyMessage(123);
+        }
+    }
+
+    public void editStudent(int studentId, int studentNumber, String firstName,
+                            String middleName, String surname, String email, int groupNumber) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                communication.editStudent(studentId, studentNumber, firstName,
+                        middleName, surname, email, groupNumber);
+                Log.d("editStudent", "success");
+            }
+        }).start();
+    }
+
+    public void editStudentACK(boolean ack) {
+        if (ack) {
+            Log.d("EEEE", "edit student successfully");
+            handlerAllfunction.sendEmptyMessage(124);
+        } else {
+            Log.d("EEEE", "fail to edit student");
+            handlerAllfunction.sendEmptyMessage(125);
+        }
+    }
+
+    public void deleteStudent(int projectId, int studentId) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                communication.deleteStudent(projectId, studentId);
+            }
+        }).start();
+    }
+
+    public void deleteStudentACK(boolean ack) {
+        if (ack) {
+            Log.d("EEEE", "delete student successfully");
+            handlerAllfunction.sendEmptyMessage(126);
+        } else {
+            Log.d("EEEE", "fail to delete student");
+            handlerAllfunction.sendEmptyMessage(127);
+        }
+    }
+
+    public ArrayList<Criterion> readCriteriaExcel(Project project, String path) {
+        ExcelParser excelParser = new ExcelParser();
+        Log.d("EEEE", "path: " + path);
+        if (path.endsWith(".xls")) {
+            Log.d("EEEE", "read xls file.");
+            return excelParser.readXlsCriteria(path);
+        } else if (path.endsWith(".xlsx")) {
+            Log.d("EEEE", "read xlsx file.");
+            return excelParser.readXlsxCriteria(path);
+        }
+        return null;
+    }
+
+    public void addStudentsFromExcel(Project project, ArrayList<Student> students) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+//                communication.importStudents(project.getProjectName(), students);
+            }
+        }).start();
     }
 
 
@@ -251,65 +365,7 @@ public class AllFunctions {
 //            }
 //        }).start();
 //    }
-
 //
-//    public void projectTimer(ProjectInfo project, int durationMin, int durationSec,
-//                             int warningMin, int warningSec) {
-//
-//        project.setDurationMin(durationMin);
-//        project.setDurationSec(durationSec);
-//        project.setWarningMin(warningMin);
-//        project.setWarningSec(warningSec);
-//
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                communication.updateProject_Time(project.getProjectName(), durationMin,
-//                        durationSec, warningMin, warningSec);
-//                Log.d("projectTimer", "success");
-//            }
-//        }).start();
-//    }
-//
-//    public void setTimeACK(String ack) {
-//        if (ack.equals("true")) {
-//            handlerAllfunction.sendEmptyMessage(203);
-//        } else {
-//            handlerAllfunction.sendEmptyMessage(204);
-//        }
-//    }
-//
-
-//
-//    public void inviteAssessor_Success(String projectName, String assessorEmail) {
-//        for (ProjectInfo projectInfo : projectList) {
-//            if (projectInfo.getProjectName().equals(projectName)) {
-//                projectInfo.getAssistant().add(assessorEmail);
-//                handlerAllfunction.sendEmptyMessage(207);
-//                break;
-//            }
-//        }
-//    }
-//
-//    public void inviteAssessor_Fail() {
-//        handlerAllfunction.sendEmptyMessage(208);
-//    }
-//
-//
-
-//
-//
-
-
-//
-//    public void addStudentsFromExcel(ProjectInfo project, ArrayList<StudentInfo> students) {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                communication.importStudents(project.getProjectName(), students);
-//            }
-//        }).start();
-//    }
 //
 //    public void uploadStudentsACK(String ack) {
 //        if (ack.equals("true")) {
@@ -321,101 +377,14 @@ public class AllFunctions {
 //        }
 //    }
 //
-//    public ArrayList<Criteria> readCriteriaExcel(ProjectInfo project, String path) {
-//        ExcelParser excelParser = new ExcelParser();
-//        Log.d("EEEE", "path: " + path);
-//        if (path.endsWith(".xls")) {
-//            Log.d("EEEE", "read xls file.");
-//            return excelParser.readXlsCriteria(path);
-//        } else if (path.endsWith(".xlsx")) {
-//            Log.d("EEEE", "read xlsx file.");
-//            return excelParser.readXlsxCriteria(path);
-//        }
-//        return null;
-//    }
 //
-//    public void addStudent(ProjectInfo project, String number, String firstName,
-//                           String middleName, String surname, String email) {
-//        StudentInfo studentInfo = new StudentInfo(number, firstName, middleName, surname, email);
-//        project.addSingleStudent(studentInfo);
 //
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                communication.addStudent(project.getProjectName(), number,
-//                        firstName, middleName, surname, email);
-//                Log.d("addStudent", "success");
-//            }
-//        }).start();
-//    }
 //
-//    public void addStudentACK(String ack) {
-//        if (ack.equals("true")) {
-//            Log.d("EEEE", "add student successfully");
-//            handlerAllfunction.sendEmptyMessage(221);
-//        } else {
-//            Log.d("EEEE", "fail to add student");
-//            handlerAllfunction.sendEmptyMessage(222);
-//        }
-//    }
+
 //
-//    public int searchStudent(ProjectInfo project, String number) {
-//        ArrayList<StudentInfo> list = project.getStudentInfo();
 //
-//        //test
-//        System.out.println("list size in search student: " + list.size());
-//        for (int i = 0; i < list.size(); i++) {
-//            //test
-//            // System.out.println("The "+i+" student number: "+list.get(i).getNumber());
-//            if (number.equals(list.get(i).getNumber())) {
-//                return i;
-//            }
-//        }
-//        return -999;
-//    }
 //
-//    public void editStudent(ProjectInfo project, String number, String firstName,
-//                            String middleName, String surname, String email) {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                communication.editStudent(project.getProjectName(), number, firstName,
-//                        middleName, surname, email);
-//                Log.d("editStudent", "success");
-//            }
-//        }).start();
-//    }
 //
-//    public void editStudentACK(String ack) {
-//        if (ack.equals("true")) {
-//            Log.d("EEEE", "edit student successfully");
-//            handlerAllfunction.sendEmptyMessage(223);
-//        } else {
-//            Log.d("EEEE", "fail to edit student");
-//            handlerAllfunction.sendEmptyMessage(224);
-//        }
-//    }
-//
-//    public void deleteStudent(ProjectInfo project, String number) {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                communication.deleteStudent(project.getProjectName(), number);
-//                Log.d("deleteStudent", "success");
-//            }
-//        }).start();
-//    }
-//
-//    public void groupStudent(ProjectInfo project, String studentID, int groupNumber) {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                communication.groupStudent(project.getProjectName(), studentID, groupNumber);
-//                Log.d("groupStudent", "success");
-//            }
-//        }).start();
-//
-//    }
 //
 //    public int getMaxGroupNumber(int indexOfProject) {
 //        int max = 0;
@@ -458,27 +427,27 @@ public class AllFunctions {
 //    }
 //
 //
-//    public void sortStudent() {
-//        for (int i = 0; i < projectList.size(); i++) {
-//            Collections.sort(projectList.get(i).getStudentList(), new SortByGroup());
-//        }
-//    }
-//
-//    public class SortByGroup implements Comparator {
-//        public int compare(Object o1, Object o2) {
-//            Student s1 = (Student) o1;
-//            Student s2 = (Student) o2;
-//            if (s1.getGroup() > s2.getGroup() && s2.getGroup() == -999) {
-//                return -1;
-//            } else if (s1.getGroup() < s2.getGroup() && s1.getGroup() == -999) {
-//                return 1;
-//            } else if (s1.getGroup() > s2.getGroup()) {
-//                return 1;
-//            } else if (s1.getGroup() == s2.getGroup()) {
-//                return 1;
-//            } else return -1;
-//        }
-//    }
+    public void sortStudent() {
+        for (int i = 0; i < this.projectList.size(); i++) {
+            Collections.sort(this.projectList.get(i).getStudentList(), new SortByGroup());
+        }
+    }
+
+    public class SortByGroup implements Comparator {
+        public int compare(Object o1, Object o2) {
+            ProjectStudent s1 = (ProjectStudent) o1;
+            ProjectStudent s2 = (ProjectStudent) o2;
+            if (s1.getGroupNumber() > s2.getGroupNumber() && s2.getGroupNumber() == 0) {
+                return -1;
+            } else if (s1.getGroupNumber() < s2.getGroupNumber() && s1.getGroupNumber() == 0) {
+                return 1;
+            } else if (s1.getGroupNumber() > s2.getGroupNumber()) {
+                return 1;
+            } else if (s1.getGroupNumber() == s2.getGroupNumber()) {
+                return 1;
+            } else return -1;
+        }
+    }
 
 
 //    public void testSortGroup() {

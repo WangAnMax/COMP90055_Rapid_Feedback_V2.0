@@ -27,6 +27,9 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.apache.xmlbeans.impl.xb.xsdschema.All;
+
 import java.util.ArrayList;
 import main.AllFunctions;
 import newdbclass.Marker;
@@ -40,6 +43,7 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
     private String index;
     private int indexOfProject;
     private Project project;
+    private int projectId;
     private CheckBox mCheckBoxDeleteMarker;
     private Button mButtonInviteMarker;
     private ListView mListViewMarkers;
@@ -60,6 +64,7 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
         index = intent.getStringExtra("index");
         Log.d("EEEE", "Marker management's index: " + index);
         from = intent.getStringExtra("from");
+        Log.d("EEEE", "from: " + from);
         init();
     }
 
@@ -72,24 +77,40 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
         handler = new Handler() {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
-                    case 207:
+                    case 108:
+                        Toast.makeText(Activity_Marker_Management.this,
+                                "Sync success.", Toast.LENGTH_SHORT).show();
+                        init();
+                        break;
+                    case 109:
+                        Toast.makeText(Activity_Marker_Management.this,
+                                "Server error. Please try again", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 116:
                         Toast.makeText(Activity_Marker_Management.this,
                                 "The invitation has been sent.", Toast.LENGTH_SHORT).show();
                         mProgressbarInvitation.setVisibility(View.INVISIBLE);
                         dialog.dismiss();
                         mEditTextInvitee.setText("");
+                        AllFunctions.getObject().syncProjectList();
                         break;
-                    case 208:
+                    case 117:
                         Toast.makeText(Activity_Marker_Management.this,
-                                "The email has not been registered. Please check and try again.", Toast.LENGTH_SHORT).show();
+                                "Server error. Please try again.", Toast.LENGTH_SHORT).show();
+                        mProgressbarInvitation.setVisibility(View.INVISIBLE);
+                        break;
+                    case 118:
+                        Toast.makeText(Activity_Marker_Management.this,
+                                "Invalid marker ID. Please check and try again.", Toast.LENGTH_SHORT).show();
                         mProgressbarInvitation.setVisibility(View.INVISIBLE);
                         mEditTextInvitee.setText("");
                         break;
-                    case 309:
+                    case 119:
                         Toast.makeText(Activity_Marker_Management.this,
                                 "Successfully delete the marker", Toast.LENGTH_SHORT).show();
+                        AllFunctions.getObject().syncProjectList();
                         break;
-                    case 310:
+                    case 120:
                         Toast.makeText(Activity_Marker_Management.this,
                                 "Server error. Please try again.", Toast.LENGTH_SHORT).show();
                         init();
@@ -105,6 +126,7 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
         AllFunctions.getObject().setHandler(handler);
         projectList = AllFunctions.getObject().getProjectList();
         project = AllFunctions.getObject().getProjectList().get(Integer.parseInt(index));
+        projectId = project.getId();
         mCheckBoxDeleteMarker = findViewById(R.id.cb_marker_delete_management);
         mButtonInviteMarker = findViewById(R.id.button_marker_add_management);
         mListViewMarkers = findViewById(R.id.listView_marker_management);
@@ -176,7 +198,7 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
                             Toast.makeText(Activity_Marker_Management.this,
                                     "The email of an invitee cannot be empty.", Toast.LENGTH_SHORT).show();
                         else {
-                            AllFunctions.getObject().inviteMarker(Integer.parseInt(mEditTextInvitee.getText().toString()));
+                            AllFunctions.getObject().inviteMarker(Integer.parseInt(mEditTextInvitee.getText().toString()), projectId);
                             mProgressbarInvitation.setVisibility(View.VISIBLE);
                         }
                     }
@@ -209,7 +231,6 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
                 finish();
             }
         });
-//        mToolbar.inflateMenu(R.menu.menu_toolbar);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -227,6 +248,11 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
                 return true;
             }
         });
+    }
+
+    public void onBackPressed() {
+        setResult(Activity.RESULT_OK);
+        finish();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -308,14 +334,11 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    AllFunctions.getObject().deleteMarker(mMarkerList.get(position).getId());
-                    deleteIndex = position;
-                    mMarkerList.remove(position);
-                    adapterForMarkers.notifyDataSetChanged();
+                    AllFunctions.getObject().deleteMarker(mMarkerList.get(position).getId(), projectId);
                 }
             });
 
-            if (position == 0) {
+            if (project.getMarkerList().get(position).getId() == AllFunctions.getObject().getId()) {
                 button.setVisibility(View.INVISIBLE);
                 button.setEnabled(false);
             }
@@ -323,10 +346,10 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
         }
     }
 
-//    public void nextMarkerManagement(View view) {
-//        Intent intent = new Intent(Activity_Marker_Management.this, Activity_Student_Management.class);
-//        intent.putExtra("index", index);
-//        intent.putExtra("from", Activity_Assessment_Preparation.FROMNEWPROJECT);
-//        startActivity(intent);
-//    }
+    public void nextMarkerManagement(View view) {
+        Intent intent = new Intent(Activity_Marker_Management.this, Activity_Student_Management.class);
+        intent.putExtra("index", index);
+        intent.putExtra("from", Activity_Assessment_Preparation.FROMNEWPROJECT);
+        startActivity(intent);
+    }
 }

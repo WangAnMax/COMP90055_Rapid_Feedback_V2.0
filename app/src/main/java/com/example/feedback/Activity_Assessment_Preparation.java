@@ -30,6 +30,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import main.AllFunctions;
 import newdbclass.Criterion;
+import newdbclass.Marker;
 import newdbclass.Project;
 
 public class Activity_Assessment_Preparation extends AppCompatActivity implements AdapterView.OnItemClickListener {
@@ -40,6 +41,7 @@ public class Activity_Assessment_Preparation extends AppCompatActivity implement
     private MyAdapterForListView myAdapter;
     private int indexToSend = -999;
     private Project project;
+    private int projectId;
     private Handler handler;
     private Toolbar mToolbar;
     private CheckBox mDeleteCheckbox;
@@ -70,33 +72,19 @@ public class Activity_Assessment_Preparation extends AppCompatActivity implement
 
     protected void onNewIntent(Intent intent) {
         Log.d("EEEE", "Preparation: onNewIntent has been called!");
+        bindHandler();
         myAdapterDefaultlistView.notifyDataSetChanged();
         if (indexToSend == -999){
+            Log.d("EEEE", "new project");
             init();
         } else {
+            Log.d("EEEE", "old project");
             showOtherInfo(indexToSend);
         }
     }
 
     private void init() {
-        handler = new Handler() {
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case 108: //sync success
-                        Toast.makeText(Activity_Assessment_Preparation.this,
-                                "Sync success.", Toast.LENGTH_SHORT).show();
-                        updateProjectList();
-                        break;
-                    case 109: // sync fail
-                        Toast.makeText(Activity_Assessment_Preparation.this,
-                                "Server error. Please try again", Toast.LENGTH_SHORT).show();
-                        break;
-                    default:
-                        break;
-                }
-            }
-        };
-        AllFunctions.getObject().setHandler(handler);
+        bindHandler();
         textView_projectName = findViewById(R.id.project_name_inpreparation);
         textView_aboutDetail = findViewById(R.id.about_detail_inpreparation);
         textView_criteriaDetail = findViewById(R.id.criteria_detail__inpreparation);
@@ -230,11 +218,15 @@ public class Activity_Assessment_Preparation extends AppCompatActivity implement
         textView_criteriaDetail.setText(criteriaDetailString);
         textView_asseccorDetail = findViewById(R.id.asseccor_detail__inpreparation);
         String assessorDetailString = new String();
-        for (int i = 0; i < project.getMarkerList().size(); i++)
-            assessorDetailString = assessorDetailString + project.getMarkerList().get(i) + "\n";
+        for (int i = 0; i < project.getMarkerList().size(); i++) {
+            Marker marker = project.getMarkerList().get(i);
+            assessorDetailString = assessorDetailString + marker.getId() + " - " + marker.getFirstName()
+                    + " " + marker.getMiddleName() + " " + marker.getLastName() +"\n";
+        }
         textView_asseccorDetail.setText(assessorDetailString);
         this.project = AllFunctions.getObject().getProjectList().get(index);
-        Log.d("EEEE", "project's head marker id: " + this.project.getId());
+        projectId = project.getId();
+        Log.d("EEEE", "project's head marker id: " + this.project.getPrincipalId());
         Log.d("EEEE", "user id: " + AllFunctions.getObject().getId());
         if(this.project.getPrincipalId() != AllFunctions.getObject().getId()) {
             button_about.setOnClickListener(new View.OnClickListener() {
@@ -278,18 +270,18 @@ public class Activity_Assessment_Preparation extends AppCompatActivity implement
                     criteriaManagementAssessmentPreparation(view);
                 }
             });
-//            button_assessor.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    markerManagementAssessmentPreparation(view);
-//                }
-//            });
-//            button_student.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    studentManagementAssessmentPreparation(view);
-//                }
-//            });
+            button_assessor.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    markerManagementAssessmentPreparation(view);
+                }
+            });
+            button_student.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    studentManagementAssessmentPreparation(view);
+                }
+            });
         }
     }
 
@@ -335,39 +327,40 @@ public class Activity_Assessment_Preparation extends AppCompatActivity implement
 
     //plus button click function
     public void addProjectAssessmentPreparation(View view) {
+        indexToSend = -999;
         Intent intent = new Intent(this, Activity_About_New.class);
         intent.putExtra("index", "-999");
-        startActivityForResult(intent, 2);
+        startActivity(intent);
     }
 
     public void aboutAssessmentPreparation(View view) {
         Intent intent = new Intent(this, Activity_About.class);
         Log.d("EEEE", "old project indexToSend: " + indexToSend);
         intent.putExtra("index", String.valueOf(indexToSend));
-        startActivityForResult(intent, 3);
-        Log.d("EEEE", "strat activity for result 3");
+        startActivityForResult(intent, 2);
+        Log.d("EEEE", "strat activity for result 2");
     }
 
-//    public void studentManagementAssessmentPreparation(View view) {
-//        Intent intent = new Intent(this, Activity_Student_Management.class);
-//        intent.putExtra("index", String.valueOf(indexToSend));
-//        intent.putExtra("from", FROMPREVIOUSPROJECT);
-//        startActivity(intent);
-//    }
-
-    public void criteriaManagementAssessmentPreparation(View view) {
-        Intent intent = new Intent(this, Activity_Criteria.class);
+    public void studentManagementAssessmentPreparation(View view) {
+        Intent intent = new Intent(this, Activity_Student_Management.class);
         intent.putExtra("index", String.valueOf(indexToSend));
         intent.putExtra("from", FROMPREVIOUSPROJECT);
         startActivity(intent);
     }
 
-//    public void markerManagementAssessmentPreparation(View view) {
-//        Intent intent = new Intent(this, Activity_Marker_Management.class);
-//        intent.putExtra("index", String.valueOf(indexToSend));
-//        intent.putExtra("from", FROMPREVIOUSPROJECT);
-//        startActivityForResult(intent, 1);
-//    }
+    public void criteriaManagementAssessmentPreparation(View view) {
+        Intent intent = new Intent(this, Activity_Criteria.class);
+        intent.putExtra("index", String.valueOf(indexToSend));
+        intent.putExtra("from", FROMPREVIOUSPROJECT);
+        startActivityForResult(intent, 3);
+    }
+
+    public void markerManagementAssessmentPreparation(View view) {
+        Intent intent = new Intent(this, Activity_Marker_Management.class);
+        intent.putExtra("index", String.valueOf(indexToSend));
+        intent.putExtra("from", FROMPREVIOUSPROJECT);
+        startActivityForResult(intent, 1);
+    }
 
     public class MyAdapterDefaultlistView extends BaseAdapter {
 
@@ -439,7 +432,7 @@ public class Activity_Assessment_Preparation extends AppCompatActivity implement
                 @Override
                 public void onClick(View view) {
                     myAdapter.notifyDataSetChanged();
-                    allFunctions.deleteProject(mProjectList.get(position).getId());
+                    allFunctions.deleteProject(position, AllFunctions.getObject().getProjectList().get(position).getId());
                 }
             });
             return convertView;
@@ -451,30 +444,53 @@ public class Activity_Assessment_Preparation extends AppCompatActivity implement
     }
 
     public void updateProjectList(){
+        Log.d("EEEE", "sync success****");
         projectList = allFunctions.getProjectList();
 
         MyAdapterDefaultlistView mSyncAdapter = new MyAdapterDefaultlistView
                 (Activity_Assessment_Preparation.this, projectList);
         listView.setAdapter(mSyncAdapter);
         listView.setOnItemClickListener(this);
+        resetDetailView();
+    }
 
-        Log.d("EEEE", this.getClass().getSimpleName());
+    public void bindHandler() {
+        handler = new Handler() {
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case 108: //sync success
+                        Toast.makeText(Activity_Assessment_Preparation.this,
+                                "Sync success.", Toast.LENGTH_SHORT).show();
+                        updateProjectList();
+                        break;
+                    case 109: // sync fail
+                        Toast.makeText(Activity_Assessment_Preparation.this,
+                                "Server error. Please try again", Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+        AllFunctions.getObject().setHandler(handler);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == 1) {
             if(resultCode == Activity.RESULT_OK) {
+                bindHandler();
                 showOtherInfo(indexToSend);
             }
         } else if(requestCode == 2) {
             if(resultCode == Activity.RESULT_OK) {
-                Log.d("EEEE", "new project in assessment preparation.");
-                myAdapterDefaultlistView.notifyDataSetChanged();
-                resetDetailView();
+                Log.d("EEEE", "edit about of old project.");
+                bindHandler();
+                showOtherInfo(indexToSend);
             }
         } else if(requestCode == 3) {
             if(resultCode == Activity.RESULT_OK) {
-                Log.d("EEEE", "edit about of old project.");
+                Log.d("EEEE", "change criteria of old project.");
+                bindHandler();
                 showOtherInfo(indexToSend);
             }
         }

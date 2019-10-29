@@ -79,7 +79,7 @@
                         android:layout_alignBaseline="@id/textView3"
                         android:layout_toStartOf="@id/button_deleteStudent_instudentgroup"
                         android:background="@drawable/ic_edit_student"
-                        android:onClick="editStudent_inStudentManagement" />
+                        android:onClick="editStudentInStudentManagement" />
 
                     <Button
                         android:id="@+id/button_deleteStudent_instudentgroup"

@@ -1,21 +1,20 @@
 package main;
 
 import android.util.Log;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.feedback.Activity_Login;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import newdbclass.Criterion;
 import newdbclass.Project;
+import newdbclass.Student;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import util.JSONUtil;
-
 
 public class CommunicationForClient {
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
@@ -28,6 +27,7 @@ public class CommunicationForClient {
 
     public CommunicationForClient(AllFunctions functions) {
         host = "http://10.13.88.39:8080/RapidFeedback/";
+//        host = "http://101.173.157.78:8080/RapidFeedback/";
 //        host = "http://192.168.0.4:8080/RapidFeedback/";
         client = new OkHttpClient();
         this.functions = functions;
@@ -129,9 +129,9 @@ public class CommunicationForClient {
         }
     }
 
-    public void updateProject_About(String projectName, String subjectName,
+    public void updateProjectAbout(String projectName, String subjectName,
                                     String subjectCode, String description,
-                                    int durationSec, int warningSec, int userId) {
+                                    int durationSec, int warningSec, int userId, int projectId) {
         JSONObject jsonSend = new JSONObject();
         jsonSend.put("token", token);
         jsonSend.put("projectName", projectName);
@@ -141,6 +141,7 @@ public class CommunicationForClient {
         jsonSend.put("durationSec", durationSec);
         jsonSend.put("warningSec", warningSec);
         jsonSend.put("principalId", userId);
+        jsonSend.put("id", projectId);
         Log.d("EEEE", "Send: " + jsonSend.toJSONString()); //just for test
 
         RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
@@ -153,8 +154,8 @@ public class CommunicationForClient {
             Log.d("EEEE", "Receive: " + receive); //just for test
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             boolean updateProject_ACK = Boolean.parseBoolean(jsonReceive.get("updateProject_ACK").toString());
-            int projectId = Integer.parseInt(jsonReceive.get("projectId").toString());
-            functions.setAboutACK(updateProject_ACK, projectId);
+            int returnedProjectId = Integer.parseInt(jsonReceive.get("projectId").toString());
+            functions.setAboutACK(updateProject_ACK, returnedProjectId);
         } catch (Exception e1) {
             AllFunctions.getObject().exceptionWithServer();
         }
@@ -190,7 +191,7 @@ public class CommunicationForClient {
         jsonSend.put("token", token);
         jsonSend.put("projectId", projectId);
         String markedCriteriaListString = com.alibaba.fastjson.JSON.toJSONString(markedCriteriaList);
-        jsonSend.put("criteriaList", markedCriteriaListString);
+        jsonSend.put("criterionList", markedCriteriaListString);
         Log.d("EEEE", "Send: " + jsonSend.toJSONString()); //just for test
         RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
         Request request = new Request.Builder()
@@ -199,7 +200,9 @@ public class CommunicationForClient {
                 .build();
         try (Response response = client.newCall(request).execute()) {
             String receive = response.body().string();
-            System.out.println("Receive: " + receive); //just for test
+
+            Log.d("EEEE", "Receive: " + receive); //just for test
+
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             boolean updateProject_ACK = Boolean.parseBoolean(jsonReceive.get("updateProject_ACK").toString());
             functions.updateProjectCriteriaACK(updateProject_ACK);
@@ -216,11 +219,11 @@ public class CommunicationForClient {
         jsonSend.put("projectId", projectId);
         jsonSend.put("markerId", markerId);
 
-        Log.d("EEEE", "Send: " + jsonSend.toJSONString()); //just for test
+        System.out.println("Send: " + jsonSend.toJSONString()); //just for test
 
         RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
         Request request = new Request.Builder()
-                .url(host + "InviteAssessorServlet")
+                .url(host + "/InviteAssessorServlet")
                 .post(body)
                 .build();
 
@@ -228,21 +231,20 @@ public class CommunicationForClient {
         try (Response response = client.newCall(request).execute()) {
             String receive = response.body().string();
 
-            Log.d("EEEE", "Receive: " + receive); //just for test
+            System.out.println("Receive: " + receive); //just for test
 
             JSONObject jsonReceive = JSONObject.parseObject(receive);
-            String invite_ACK = jsonReceive.get("invite_ACK").toString();
-//            if (invite_ACK.equals("true")) {
-//                AllFunctions.getObject().inviteAssessor_Success(projectName, assessorEmail);
-//            } else {
-//                AllFunctions.getObject().inviteAssessor_Fail();
-//            }
+
+            Log.d("EEEE", "invite marker");
+            int invite_ACK = Integer.parseInt(jsonReceive.get("invite_ACK").toString());
+            AllFunctions.getObject().inviteMarkerACK(invite_ACK);
+
         } catch (Exception e1) {
             AllFunctions.getObject().exceptionWithServer();
         }
     }
 
-    public void updateMarker(int markerId, int projectId) {
+    public void deleteMarker(int markerId, int projectId) {
         //construct JSONObject to send
         JSONObject jsonSend = new JSONObject();
         jsonSend.put("token", token);
@@ -264,199 +266,108 @@ public class CommunicationForClient {
             System.out.println("Receive: " + receive); //just for test
 
             JSONObject jsonReceive = JSONObject.parseObject(receive);
-            String delete_ACK = jsonReceive.get("delete_ACK").toString();
-            functions.deleteAssessorACK(delete_ACK);
-            if (delete_ACK.equals("true")) {
-                ;
-            } else {
-                //失败跳出
-            }
+
+            Log.d("EEEE", "delete marker");
+            boolean delete_ACK = Boolean.parseBoolean(jsonReceive.get("delete_ACK").toString());
+            AllFunctions.getObject().deleteMarkerACK(delete_ACK);
+
         } catch (Exception e1) {
             AllFunctions.getObject().exceptionWithServer();
         }
     }
 
+    public void addStudent(int projectId, ArrayList<Student> studentList) {
+        //construct JSONObject to send
+        JSONObject jsonSend = new JSONObject();
+        jsonSend.put("token", token);
+        jsonSend.put("projectId", projectId);
+        jsonSend.put("studentList", com.alibaba.fastjson.JSON.toJSONString(studentList));
 
-//    public void updateProject_Time(String projectName, int durationMin, int durationSec,
-//                                   int warningMin, int warningSec) {
-//        JSONObject jsonSend = new JSONObject();
-//        jsonSend.put("token", token);
-//        jsonSend.put("projectName", projectName);
-//        jsonSend.put("durationMin", durationMin);
-//        jsonSend.put("durationSec", durationSec);
-//        jsonSend.put("warningMin", warningMin);
-//        jsonSend.put("warningSec", warningSec);
-//        System.out.println("Send: " + jsonSend.toJSONString()); //just for test
-//
-//        RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
-//        Request request = new Request.Builder()
-//                .url(host + "UpdateProject_Time_Servlet")
-//                .post(body)
-//                .build();
-//        try (Response response = client.newCall(request).execute()) {
-//            String receive = response.body().string();
-//            System.out.println("Receive: " + receive); //just for test
-//            JSONObject jsonReceive = JSONObject.parseObject(receive);
-//            String updateProject_ACK = jsonReceive.get("updateProject_ACK").toString();
-//            functions.setTimeACK(updateProject_ACK);
-//            if (updateProject_ACK.equals("true")) {
-//                ;
-//            } else {
-//                //失败跳出
-//            }
-//        } catch (Exception e1) {
-//            AllFunctions.getObject().exceptionWithServer();
-//        }
-//    }
-//
-//    public void addStudent(String projectName, String studentID, String firstName,
-//                           String middleName, String lastName, String email) {
-//        //construct JSONObject to send
-//        JSONObject jsonSend = new JSONObject();
-//        jsonSend.put("token", token);
-//        jsonSend.put("projectName", projectName);
-//        jsonSend.put("studentID", studentID);
-//        jsonSend.put("firstName", firstName);
-//        jsonSend.put("middleName", middleName);
-//        jsonSend.put("lastName", lastName);
-//        jsonSend.put("email", email);
-//
-//        System.out.println("Send: " + jsonSend.toJSONString()); //just for test
-//
-//        RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
-//        Request request = new Request.Builder()
-//                .url(host + "AddStudentServlet")
-//                .post(body)
-//                .build();
-//
-//        //get the JSONObject from response
-//        try (Response response = client.newCall(request).execute()) {
-//            String receive = response.body().string();
-//            System.out.println("Receive: " + receive); //just for test
-//            JSONObject jsonReceive = JSONObject.parseObject(receive);
-//            String updateStudent_ACK = jsonReceive.get("updateStudent_ACK").toString();
-//            functions.addStudentACK(updateStudent_ACK);
-//            if (updateStudent_ACK.equals("true")) {
-//                ;
-//            } else {
-//                //失败跳出
-//            }
-//        } catch (Exception e1) {
-//            AllFunctions.getObject().exceptionWithServer();
-//        }
-//    }
-//
-//    public void editStudent(String projectName, String studentID, String firstName,
-//                            String middleName, String lastName, String email) {
-//        //construct JSONObject to send
-//        JSONObject jsonSend = new JSONObject();
-//        jsonSend.put("token", token);
-//        jsonSend.put("projectName", projectName);
-//        jsonSend.put("studentID", studentID);
-//        jsonSend.put("firstName", firstName);
-//        jsonSend.put("middleName", middleName);
-//        jsonSend.put("lastName", lastName);
-//        jsonSend.put("email", email);
-//
-//        System.out.println("Send: " + jsonSend.toJSONString()); //just for test
-//
-//        RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
-//        Request request = new Request.Builder()
-//                .url(host + "EditStudentServlet")
-//                .post(body)
-//                .build();
-//
-//        //get the JSONObject from response
-//        try (Response response = client.newCall(request).execute()) {
-//            String receive = response.body().string();
-//
-//            System.out.println("Receive: " + receive); //just for test
-//
-//            JSONObject jsonReceive = JSONObject.parseObject(receive);
-//            String updateStudent_ACK = jsonReceive.get("updateStudent_ACK").toString();
-//            functions.editStudentACK(updateStudent_ACK);
-//            if (updateStudent_ACK.equals("true")) {
-//                ;
-//            } else {
-//                //失败跳出
-//            }
-//        } catch (Exception e1) {
-//            AllFunctions.getObject().exceptionWithServer();
-//        }
-//    }
-//
-//
-//    public void groupStudent(String projectName, String studentID, int groupNumber) {
-//        //construct JSONObject to send
-//        JSONObject jsonSend = new JSONObject();
-//        jsonSend.put("token", token);
-//        jsonSend.put("projectName", projectName);
-//        jsonSend.put("studentID", studentID);
-//        jsonSend.put("group", groupNumber);
-//
-//        System.out.println("Send in group student method: " + jsonSend.toJSONString()); //just for test
-//
-//        RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
-//        Request request = new Request.Builder()
-//                .url(host + "GroupStudentServlet")
-//                .post(body)
-//                .build();
-//
-//        //get the JSONObject from response
-//        try (Response response = client.newCall(request).execute()) {
-//            String receive = response.body().string();
-//
-//            System.out.println("Receive: " + receive); //just for test
-//
-//            JSONObject jsonReceive = JSONObject.parseObject(receive);
-//            String updateStudent_ACK = jsonReceive.get("updateStudent_ACK").toString();
-//            if (updateStudent_ACK.equals("true")) {
-//                ;
-//            } else {
-//                AllFunctions.getObject().exceptionWithServer();
-//            }
-//        } catch (Exception e1) {
-//            AllFunctions.getObject().exceptionWithServer();
-//        }
-//    }
-//
-//
-//    public void deleteStudent(String projectName, String studentID) {
-//        //construct JSONObject to send
-//        JSONObject jsonSend = new JSONObject();
-//        jsonSend.put("token", token);
-//        jsonSend.put("projectName", projectName);
-//        jsonSend.put("studentID", studentID);
-//
-//        System.out.println("Send: " + jsonSend.toJSONString()); //just for test
-//
-//        RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
-//        Request request = new Request.Builder()
-//                .url(host + "DeleteStudentServlet")
-//                .post(body)
-//                .build();
-//
-//        //get the JSONObject from response
-//        try (Response response = client.newCall(request).execute()) {
-//            String receive = response.body().string();
-//
-//            System.out.println("Receive: " + receive); //just for test
-//
-//            JSONObject jsonReceive = JSONObject.parseObject(receive);
-//            String updateStudent_ACK = jsonReceive.get("updateStudent_ACK").toString();
-//            if (updateStudent_ACK.equals("true")) {
-//                ;
-//            } else {
-//                //失败跳出
-//            }
-//        } catch (Exception e1) {
-//            AllFunctions.getObject().exceptionWithServer();
-//        }
-//    }
-//
-//
+        System.out.println("Send: " + jsonSend.toJSONString()); //just for test
 
-//
+        RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
+        Request request = new Request.Builder()
+                .url(host + "/AddStudentServlet")
+                .post(body)
+                .build();
+
+        //get the JSONObject from response
+        try (Response response = client.newCall(request).execute()) {
+            String receive = response.body().string();
+
+            System.out.println("Receive: " + receive); //just for test
+
+            JSONObject jsonReceive = JSONObject.parseObject(receive);
+            int updateStudent_ACK = Integer.parseInt(jsonReceive.get("updateStudent_ACK").toString());
+            functions.addStudentACK(updateStudent_ACK);
+        } catch (Exception e1) {
+            AllFunctions.getObject().exceptionWithServer();
+        }
+    }
+
+    public void editStudent(int studentId, int studentNumber, String firstName,
+                            String middleName, String lastName, String email, int groupNumber) {
+        //construct JSONObject to send
+        JSONObject jsonSend = new JSONObject();
+        jsonSend.put("token", token);
+        jsonSend.put("studentId", studentId);
+        jsonSend.put("studentNumber", studentNumber);
+        jsonSend.put("firstName", firstName);
+        jsonSend.put("middleName", middleName);
+        jsonSend.put("lastName", lastName);
+        jsonSend.put("email", email);
+        jsonSend.put("group", groupNumber);
+
+        System.out.println("Send: " + jsonSend.toJSONString()); //just for test
+
+        RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
+        Request request = new Request.Builder()
+                .url(host + "/EditStudentServlet")
+                .post(body)
+                .build();
+
+        //get the JSONObject from response
+        try (Response response = client.newCall(request).execute()) {
+            String receive = response.body().string();
+
+            System.out.println("Receive: " + receive); //just for test
+
+            JSONObject jsonReceive = JSONObject.parseObject(receive);
+            boolean updateStudent_ACK = Boolean.parseBoolean(jsonReceive.get("updateStudent_ACK").toString());
+            functions.editStudentACK(updateStudent_ACK);
+        } catch (Exception e1) {
+            AllFunctions.getObject().exceptionWithServer();
+        }
+    }
+
+    public void deleteStudent(int projectId, int studentId) {
+        //construct JSONObject to send
+        JSONObject jsonSend = new JSONObject();
+        jsonSend.put("token", token);
+        jsonSend.put("projectId", projectId);
+        jsonSend.put("studentId", studentId);
+
+        System.out.println("Send: " + jsonSend.toJSONString()); //just for test
+
+        RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
+        Request request = new Request.Builder()
+                .url(host + "/DeleteStudentServlet")
+                .post(body)
+                .build();
+
+        //get the JSONObject from response
+        try (Response response = client.newCall(request).execute()) {
+            String receive = response.body().string();
+
+            System.out.println("Receive: " + receive); //just for test
+
+            JSONObject jsonReceive = JSONObject.parseObject(receive);
+            boolean updateStudent_ACK = Boolean.parseBoolean(jsonReceive.get("updateStudent_ACK").toString());
+            functions.deleteStudentACK(updateStudent_ACK);
+        } catch (Exception e1) {
+            AllFunctions.getObject().exceptionWithServer();
+        }
+    }
 //
 ////    public void getMarks(ProjectInfo project, ArrayList<String> studentIDList) {
 ////        System.out.println("Communication的getMark方法被调用");

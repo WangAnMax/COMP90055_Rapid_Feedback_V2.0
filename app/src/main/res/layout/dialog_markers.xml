@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_below="@id/divider_dialog_marker_invitation"
-                android:hint="Enter email address"
+                android:hint="Enter marker ID"
                 android:layout_marginLeft="16dp"
                 android:textSize="22sp"
                 android:ems="20"

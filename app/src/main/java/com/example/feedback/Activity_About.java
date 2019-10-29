@@ -72,7 +72,6 @@ public class Activity_About extends AppCompatActivity {
                 discardWarning();
             }
         });
-//        mToolbar.inflateMenu(R.menu.menu_toolbar);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -247,8 +246,8 @@ public class Activity_About extends AppCompatActivity {
                     case 108:
                         Toast.makeText(Activity_About.this,
                                 "Sync success.", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Activity_About.this, Activity_Assessment_Preparation.class);
-                        startActivity(intent);
+                        setResult(Activity.RESULT_OK);
+                        finish();
                         break;
                     case 109:
                         Toast.makeText(Activity_About.this,
@@ -372,7 +371,7 @@ public class Activity_About extends AppCompatActivity {
                 totalWarningSec = 60 * warningMin + warningSec;
                 Log.d("EEEE", "save with index != -999 " + Integer.parseInt(index));
                 project = AllFunctions.getObject().getProjectList().get(Integer.parseInt(index));
-                AllFunctions.getObject().updateProject(projectName, subjectName, subjectCode, projectDes, totalDurationSec, totalWarningSec);
+                AllFunctions.getObject().updateProject(projectName, subjectName, subjectCode, projectDes, totalDurationSec, totalWarningSec, project.getId());
             }
         }
     }

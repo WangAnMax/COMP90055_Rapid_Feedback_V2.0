@@ -60,15 +60,21 @@ public class Activity_Display_Mark extends AppCompatActivity {
         handler = new Handler() {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
-                    case 301: //means getMark success
-                        Log.d("EEEE", "get mark success");
+                    case 108:
+                        Toast.makeText(Activity_Display_Mark.this,
+                                "Sync success.", Toast.LENGTH_SHORT).show();
                         init();
+                        break;
+                    case 109:
+                        Toast.makeText(Activity_Display_Mark.this,
+                                "Server error. Please try again", Toast.LENGTH_SHORT).show();
                         break;
                     default:
                         break;
                 }
             }
         };
+        AllFunctions.getObject().setHandler(handler);
 
         project = AllFunctions.getObject().getProjectList().get(indexOfProject);
         student = project.getStudentList().get(indexOfStudent);
@@ -92,12 +98,21 @@ public class Activity_Display_Mark extends AppCompatActivity {
         handler = new Handler() {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
-
+                    case 108:
+                        Toast.makeText(Activity_Display_Mark.this,
+                                "Sync success.", Toast.LENGTH_SHORT).show();
+                        init();
+                        break;
+                    case 109:
+                        Toast.makeText(Activity_Display_Mark.this,
+                                "Server error. Please try again", Toast.LENGTH_SHORT).show();
+                        break;
                     default:
                         break;
                 }
             }
         };
+        AllFunctions.getObject().setHandler(handler);
 
         project = AllFunctions.getObject().getProjectList().get(indexOfProject);
         student = project.getStudentList().get(indexOfStudent);
@@ -157,6 +172,9 @@ public class Activity_Display_Mark extends AppCompatActivity {
     private void init() {
         Log.d("EEEE", "display mark init");
         Log.d("EEEE", JSON.toJSONString(student.getRemarkList()));
+        project = AllFunctions.getObject().getProjectList().get(indexOfProject);
+        student = project.getStudentList().get(indexOfStudent);
+        Log.d("EEEE", "student list:" + JSON.toJSONString(student));
 
         for (int n = 0; n < project.getMarkerList().size(); n++) {
             boolean hasRemark = false;

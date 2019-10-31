@@ -248,7 +248,7 @@ public class Activity_Send_Report_Group extends AppCompatActivity {
         htmlString += "<h2 style=\"font-weight: normal\">MarkedCriteria</h2>" + "<p>";
         for (int i = 0; i < remark.getAssessmentList().size(); i++) {
             htmlString += "<h3 style=\"font-weight: normal\"><span style=\"float:left\">" + getCriterionName(remark.getAssessmentList().get(i)) + "</span>" +
-                    "<span style=\"float:right\">" + "  ---  " + getAverageCriterionMark(remarkList, i) + "/" + getCriterionMaxMark(remark.getAssessmentList().get(i)) + "</span></h3>";
+                    "<span style=\"float:right\">" + "  ---  " + getAverageCriterionMark(remarkList, remark.getAssessmentList().get(i).getCriterionId()) + "/" + getCriterionMaxMark(remark.getAssessmentList().get(i)) + "</span></h3>";
             for (int j = 0; j < remarkList.size(); j++) {
                 htmlString += "<h4 style=\"font-weight: normal;color: #014085\">" + "Marker " + (j + 1) + ":</h4>";
                 if (remarkList.get(j).getAssessmentList().size() > 0)
@@ -288,14 +288,13 @@ public class Activity_Send_Report_Group extends AppCompatActivity {
         return finalRemark;
     }
 
-    public double getAverageCriterionMark(ArrayList<Remark> remarkList, int assessmentIndex) {
+    public double getAverageCriterionMark(ArrayList<Remark> remarkList, int criterionId) {
         double sumMark = 0;
         double markers = remarkList.size();
-        int assessmentCriterionId = remarkList.get(assessmentIndex).getId();
         for (int i = 0; i < markers; i++) {
             Remark remark = remarkList.get(i);
             for (int j = 0; j < remark.getAssessmentList().size(); j++) {
-                if (remark.getAssessmentList().get(j).getCriterionId() == assessmentCriterionId) {
+                if (remark.getAssessmentList().get(j).getCriterionId() == criterionId) {
                     sumMark += remark.getAssessmentList().get(j).getScore();
                 }
             }

@@ -121,12 +121,12 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
             }
         };
 
-        initToolbar();
         indexOfProject = Integer.parseInt(index);
         AllFunctions.getObject().setHandler(handler);
         projectList = AllFunctions.getObject().getProjectList();
         project = AllFunctions.getObject().getProjectList().get(Integer.parseInt(index));
         projectId = project.getId();
+        initToolbar();
         mCheckBoxDeleteMarker = findViewById(R.id.cb_marker_delete_management);
         mButtonInviteMarker = findViewById(R.id.button_marker_add_management);
         mListViewMarkers = findViewById(R.id.listView_marker_management);
@@ -222,7 +222,7 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
 
     public void initToolbar() {
         mToolbar = findViewById(R.id.toolbar_project_marker_management);
-        mToolbar.setTitle("Project -- Welcome, " + AllFunctions.getObject().getUsername() + " [ID: " + AllFunctions.getObject().getId() + "]");
+        mToolbar.setTitle(project.getName() +  " -- Welcome, " + AllFunctions.getObject().getUsername() + " [ID: " + AllFunctions.getObject().getId() + "]");
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {

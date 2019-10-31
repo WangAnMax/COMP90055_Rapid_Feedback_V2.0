@@ -30,6 +30,10 @@
         </activity>
 
         <activity
+            android:name="assessment.Activity_Realtime_Assessment"
+            android:launchMode="singleTask"/>
+
+        <activity
             android:name=".Activity_Assessment_Preparation"
             android:launchMode="singleTask" />
 
@@ -42,6 +46,21 @@
         <activity android:name=".Activity_Marker_Management" />
         <activity android:name=".Activity_Student_Management" />
         <activity android:name=".Activity_Show_Comment_Mark_Allocation" />
+        <activity
+            android:name="assessment.Activity_Assessment"
+            android:launchMode="singleTop" />
+        <activity
+            android:name="assessment.Activity_Assessment_Comment"/>
+        <activity
+            android:name="assessment.Activity_Display_Mark"
+            android:launchMode="singleTask"/>
+        <activity android:name="assessment.Activity_Editable_Individual_Report" />
+        <activity android:name="assessment.Activity_Editable_Group_Report" />
+        <activity android:name="assessment.Activity_Send_Report_Individual" />
+        <activity android:name="assessment.Activity_Send_Report_Group" />
+        <activity
+            android:name="assessment.Activity_Review_Report"
+            android:launchMode="singleTask"/>
 
         <meta-data
             android:name="preloaded_fonts"

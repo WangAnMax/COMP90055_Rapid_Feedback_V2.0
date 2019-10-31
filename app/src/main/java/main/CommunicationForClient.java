@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import newdbclass.Criterion;
 import newdbclass.Project;
+import newdbclass.Remark;
 import newdbclass.Student;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -27,7 +28,6 @@ public class CommunicationForClient {
 
     public CommunicationForClient(AllFunctions functions) {
         host = "http://10.13.88.39:8080/RapidFeedback/";
-//        host = "http://101.173.157.78:8080/RapidFeedback/";
 //        host = "http://192.168.0.4:8080/RapidFeedback/";
         client = new OkHttpClient();
         this.functions = functions;
@@ -369,6 +369,98 @@ public class CommunicationForClient {
             AllFunctions.getObject().exceptionWithServer();
         }
     }
+
+    public void sendMark(int projectId, int studentId, Remark remark) {
+        //construct JSONObject to send
+        JSONObject jsonSend = new JSONObject();
+        jsonSend.put("token", token);
+        jsonSend.put("projectId", projectId);
+        jsonSend.put("studentId", studentId);
+        String remarkString = com.alibaba.fastjson.JSON.toJSONString(remark);
+        jsonSend.put("remark", remarkString);
+
+        Log.d("EEEE", "Send in method sendMark: " + jsonSend.toJSONString()); //just for test
+
+        RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
+        Request request = new Request.Builder()
+                .url(host + "/AddResultServlet")
+                .post(body)
+                .build();
+
+        //get the JSONObject from response
+        try (Response response = client.newCall(request).execute()) {
+            String receive = response.body().string();
+
+            System.out.println("Receive: " + receive); //just for test
+
+            JSONObject jsonReceive = JSONObject.parseObject(receive);
+            String mark_ACK = jsonReceive.get("ACK").toString();
+            functions.sendMarkACK(mark_ACK);
+        } catch (Exception e1) {
+            AllFunctions.getObject().exceptionWithServer();
+        }
+    }
+
+    public void sendEmail(int projectId, int studentId, int sendBoth) {
+        //construct JSONObject to send
+        JSONObject jsonSend = new JSONObject();
+        jsonSend.put("token", token);
+        jsonSend.put("projectId", projectId);
+        jsonSend.put("studentId", studentId);
+        jsonSend.put("sendBoth", sendBoth);
+
+        Log.d("EEEE", "Send in method sendPDF: " + jsonSend.toJSONString()); //just for test
+
+        RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
+        Request request = new Request.Builder()
+                .url(host + "/SendEmailServlet")
+                .post(body)
+                .build();
+
+        //get the JSONObject from response
+        try (Response response = client.newCall(request).execute()) {
+            String receive = response.body().string();
+
+            Log.d("EEEE", "Receive: " + receive); //just for test
+
+            JSONObject jsonReceive = JSONObject.parseObject(receive);
+            String sendMail_ACK = jsonReceive.get("sendMail_ACK").toString();
+        } catch (Exception e1) {
+            AllFunctions.getObject().exceptionWithServer();
+        }
+    }
+
+    public void sendFinalResult(int projectId, int studentId, double finalScore, String finalRemark) {
+        //construct JSONObject to send
+        JSONObject jsonSend = new JSONObject();
+        jsonSend.put("token", token);
+        jsonSend.put("projectId", projectId);
+        jsonSend.put("studentId", studentId);
+        jsonSend.put("finalScore", String.format("%.2f", finalScore));
+        jsonSend.put("finalRemark", finalRemark);
+
+        Log.d("EEEE", "Send in method sendFinalResult: " + jsonSend.toJSONString()); //just for test
+
+        RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
+        Request request = new Request.Builder()
+                .url(host + "/FinalResultServlet")
+                .post(body)
+                .build();
+
+        //get the JSONObject from response
+        try (Response response = client.newCall(request).execute()) {
+            String receive = response.body().string();
+
+            Log.d("EEEE", "Receive: " + receive); //just for test
+
+            JSONObject jsonReceive = JSONObject.parseObject(receive);
+            boolean sendFinalResultACK = Boolean.parseBoolean(jsonReceive.get("ACK").toString());
+            functions.sendFinalResultACK(sendFinalResultACK);
+        } catch (Exception e1) {
+            AllFunctions.getObject().exceptionWithServer();
+        }
+    }
+
 //
 ////    public void getMarks(ProjectInfo project, ArrayList<String> studentIDList) {
 ////        System.out.println("Communication的getMark方法被调用");

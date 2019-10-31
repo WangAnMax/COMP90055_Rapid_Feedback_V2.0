@@ -10,6 +10,7 @@ import java.util.Comparator;
 import newdbclass.Criterion;
 import newdbclass.Project;
 import newdbclass.ProjectStudent;
+import newdbclass.Remark;
 import newdbclass.Student;
 import util.ExcelParser;
 
@@ -340,19 +341,53 @@ public class AllFunctions {
         return null;
     }
 
+    public void sendMark(int projectId, int studentId, Remark remark) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                communication.sendMark(projectId, studentId, remark);
+            }
+        }).start();
+    }
 
-//    public void setMarkListForMarkPage(ArrayList<Mark> markList) {
-//        this.markListForMarkPage = markList;
-//        String json = new Gson().toJson(markList);
-//        Log.d("EEEE", "marklist: " + json);
-//        handlerAllfunction.sendEmptyMessage(301);
-//    }
-//
-//    public ArrayList<Mark> getMarkListForMarkPage() {
-//        return this.markListForMarkPage;
-//    }
-//
-//
+    public void sendMarkACK(String ack) {
+        if (ack.equals("true")) {
+            Log.d("EEEE", "send mark successfully");
+            handlerAllfunction.sendEmptyMessage(128);
+        } else {
+            Log.d("EEEE", "fail to send mark");
+            handlerAllfunction.sendEmptyMessage(129);
+        }
+    }
+
+    public void sendEmail(int projectId, int studentId, int sendBoth) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                communication.sendEmail(projectId, studentId, sendBoth);
+            }
+        }).start();
+    }
+
+    public void sendFinalResult(int projectId, int studentId, double finalScore, String finalRemark) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                communication.sendFinalResult(projectId, studentId, finalScore, finalRemark);
+           }
+        }).start();
+    }
+
+    public void sendFinalResultACK(boolean ack) {
+        if (ack) {
+            Log.d("EEEE", "send final result successfully");
+            handlerAllfunction.sendEmptyMessage(130);
+        } else {
+            Log.d("EEEE", "fail to send final result");
+            handlerAllfunction.sendEmptyMessage(131);
+        }
+    }
+
 //    public void getMarks(ProjectInfo project, int groupNum, String studentID) {
 //        System.out.println("getMark");
 //        ArrayList<String> studentIDList = new ArrayList<String>();
@@ -401,36 +436,9 @@ public class AllFunctions {
 //        return max;
 //    }
 //
-//    public void sendMark(ProjectInfo project, String studentID, Mark mark) {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                communication.sendMark(project, studentID, mark);
-//                Log.d("sendMark", "success");
-//            }
-//        }).start();
-//    }
 //
-//    public void sendMarkACK(String ack) {
-//        if (ack.equals("true")) {
-//            Log.d("EEEE", "send mark successfully");
-//            handlerAllfunction.sendEmptyMessage(351);
-//        } else {
-//            Log.d("EEEE", "fail to send mark");
-//            handlerAllfunction.sendEmptyMessage(352);
-//        }
-//    }
 //
-//    public void sendPDF(ProjectInfo project, String studentID, int sendBoth) {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                communication.sendPDF(project.getProjectName(),
-//                        studentID, sendBoth);
-//                Log.d("sendMark", "success");
-//            }
-//        }).start();
-//    }
+//
 //
 //
     public void sortStudent() {

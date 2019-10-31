@@ -250,7 +250,7 @@ public class Activity_Student_Management extends AppCompatActivity {
         public View getView(final int position, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_student_group, parent, false);
             TextView textView_groupNum = convertView.findViewById(R.id.textView_groupnum_instudentlist);
-            if (studentList.get(position).getGroupNumber() == -999) {
+            if (studentList.get(position).getGroupNumber() == 0) {
                 textView_groupNum.setText("");
             } else {
                 textView_groupNum.setText(String.valueOf(studentList.get(position).getGroupNumber()));
@@ -404,6 +404,9 @@ public class Activity_Student_Management extends AppCompatActivity {
                 surname = editTextFamilyname.getText().toString().trim();
                 email = editTextEmail.getText().toString().trim();
                 groupNumber = editTextGroup.getText().toString().trim();
+                if (groupNumber.equals("")) {
+                    groupNumber = "0";
+                }
 
                 String emailPattern = "[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\\.+[a-z]+";
 
@@ -514,9 +517,11 @@ public class Activity_Student_Management extends AppCompatActivity {
                 editTextEmail = view.findViewById(R.id.editText_email_addStudent);
                 editTextEmail.setText(students.get(indexOfStudent).getEmail());
                 editTextGroup = view.findViewById(R.id.editText_group_addStudent);
-                if (students.get(indexOfStudent).getGroupNumber() == -999) {
+                if (students.get(indexOfStudent).getGroupNumber() == 0) {
+                    Log.d("EEEE", "no group");
                     editTextGroup.setText("");
                 } else {
+                    Log.d("EEEE", "in group");
                     editTextGroup.setText(students.get(indexOfStudent).getGroupNumber() + "");
                 }
 
@@ -529,6 +534,9 @@ public class Activity_Student_Management extends AppCompatActivity {
                         surname = editTextFamilyname.getText().toString().trim();
                         email = editTextEmail.getText().toString().trim();
                         groupNumber = editTextGroup.getText().toString().trim();
+                        if (groupNumber.equals("")) {
+                            groupNumber = "0";
+                        }
 
                         String emailPattern = "[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\\.+[a-z]+";
 

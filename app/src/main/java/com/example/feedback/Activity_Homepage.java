@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import assessment.Activity_Realtime_Assessment;
+import assessment.Activity_Review_Report;
 import main.AllFunctions;
 import pl.droidsonroids.gif.GifImageView;
 
@@ -41,14 +43,13 @@ public class Activity_Homepage extends AppCompatActivity {
                         if (to.equals("part1")) {
                             Intent intent = new Intent(Activity_Homepage.this, Activity_Assessment_Preparation.class);
                             startActivity(intent);
+                        } else if (to.equals("part2")) {
+                            Intent intent = new Intent(Activity_Homepage.this, Activity_Realtime_Assessment.class);
+                            startActivity(intent);
+                        } else if (to.equals("part3")) {
+                            Intent intent = new Intent(Activity_Homepage.this, Activity_Review_Report.class);
+                            startActivity(intent);
                         }
-//                        } else if (to.equals("part2")) {
-//                            Intent intent = new Intent(Activity_Homepage.this, Activity_Realtime_Assessment.class);
-//                            startActivity(intent);
-//                        } else if (to.equals("part3")) {
-//                            Intent intent = new Intent(Activity_Homepage.this, Activity_Review_Report.class);
-//                            startActivity(intent);
-//                        }
                         break;
                     case 109:
                         Toast.makeText(Activity_Homepage.this,

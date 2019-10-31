@@ -134,7 +134,6 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
         if (from.equals(Activity_Assessment_Preparation.FROMPREVIOUSPROJECT)) {
             mButtonNextMarkers.setVisibility(View.INVISIBLE);
         }
-        mToolbar.setTitle(project.getName());
         AdapterForMarkerDisplay mAdapterDisplayMarkers = new AdapterForMarkerDisplay(
                 project.getMarkerList(), Activity_Marker_Management.this);
         mListViewMarkers.setAdapter(mAdapterDisplayMarkers);

@@ -171,11 +171,6 @@ public class Activity_Review_Report extends AppCompatActivity {
             Button button_viewReport = convertView.findViewById(R.id.button_start_studentsWithButton);
             button_viewReport.setText("report");
 
-//            if (studentList.get(position).getFinalScore() < 0.0) {
-//                button_viewReport.setEnabled(false);
-//                button_viewReport.setVisibility(View.INVISIBLE);
-//            }
-
             button_viewReport.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

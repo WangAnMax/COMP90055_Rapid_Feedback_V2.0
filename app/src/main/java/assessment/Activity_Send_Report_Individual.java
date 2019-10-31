@@ -236,13 +236,26 @@ public class Activity_Send_Report_Individual extends AppCompatActivity {
                     "<span style=\"float:right\">" + "  ---  " + getAverageCriterionMark(remarkList, remark.getAssessmentList().get(i).getCriterionId()) + "/" + getCriterionMaxMark(remark.getAssessmentList().get(i)) + "</span></h3>";
             for (int j = 0; j < remarkList.size(); j++) {
                 htmlString += "<h4 style=\"font-weight: normal;color: #014085\">" + "Marker " + (j + 1) + ":</h4>";
-                if (remarkList.get(j).getAssessmentList().size() > 0)
+                if (remarkList.get(j).getAssessmentList().size() > 0) {
                     for (int k = 0; k < remarkList.get(j).getAssessmentList().get(i).getSelectedCommentList().size(); k++) {
                         htmlString += "<p>" + getFieldName(remarkList.get(j).getAssessmentList().get(i).getSelectedCommentList().get(k)) +
                                 " : " + getExCommentName(remarkList.get(j).getAssessmentList().get(i).getSelectedCommentList().get(k)) + "</p >";
                     }
+                }
             }
             htmlString += "<br>";
+        }
+
+        for (int i = 0; i < remark.getAssessmentList().size(); i++) {
+            htmlString += "<h3 style=\"font-weight: normal\"><span style=\"float:left\">" + "Remark" + "</span></h3>";
+            for (int j = 0; j < remarkList.size(); j++) {
+                htmlString += "<h4 style=\"font-weight: normal;color: #014085\">" + "Marker " + (j + 1) + ":</h4>";
+                if (remarkList.get(j).getText() == null) {
+                    htmlString += "<p>" + "No remark." + "</p >";
+                } else {
+                    htmlString += "<p>" + remark.getText() + "</p >";
+                }
+            }
         }
 
         htmlString +=

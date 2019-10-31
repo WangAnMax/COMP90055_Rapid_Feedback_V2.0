@@ -190,6 +190,13 @@ public class Activity_Editable_Individual_Report extends AppCompatActivity {
             htmlString += "<br>";
         }
 
+        htmlString += "<h3 style=\"font-weight: normal\"><span style=\"float:left\">" + "Remark" + "</span></h3>";
+        if (remark.getText() == null) {
+            htmlString += "<p>" + "No remark." + "</p >";
+        } else {
+            htmlString += "<p>" + remark.getText() + "</p >";
+        }
+
         htmlString +=
                 "</div>" +
                         "</body>" +

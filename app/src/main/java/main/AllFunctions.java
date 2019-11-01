@@ -388,6 +388,10 @@ public class AllFunctions {
         }
     }
 
+    public void submitRecorder(int id, String email, String length){
+        communication.submitFile(id, email, length);
+    }
+
     public void sortStudent() {
         for (int i = 0; i < this.projectList.size(); i++) {
             Collections.sort(this.projectList.get(i).getStudentList(), new SortByGroup());
@@ -409,38 +413,4 @@ public class AllFunctions {
             } else return -1;
         }
     }
-
-
-//    public void testSortGroup() {
-//
-//        ArrayList<StudentInfo> studentListForTest = new ArrayList<>();
-//        StudentInfo student1 = new StudentInfo();
-//        student1.setGroup(-999);
-//        studentListForTest.add(student1);
-//        StudentInfo student2 = new StudentInfo();
-//        student2.setGroup(2);
-//        studentListForTest.add(student2);
-//        StudentInfo student3 = new StudentInfo();
-//        student3.setGroup(-999);
-//        studentListForTest.add(student3);
-//        StudentInfo student4 = new StudentInfo();
-//        student4.setGroup(-999);
-//        studentListForTest.add(student4);
-//        StudentInfo student5 = new StudentInfo();
-//        student5.setGroup(1);
-//        studentListForTest.add(student5);
-//        StudentInfo student6 = new StudentInfo();
-//        student6.setGroup(2);
-//        studentListForTest.add(student6);
-//        StudentInfo student7 = new StudentInfo();
-//        student7.setGroup(77);
-//        studentListForTest.add(student7);
-//
-//        Collections.sort(studentListForTest, new SortByGroup());
-//
-//        System.out.println("sort starts：");
-//        for (StudentInfo s : studentListForTest)
-//            System.out.println(s.getGroup());
-//        System.out.println("sort completed");
-//    }
 }

@@ -290,7 +290,7 @@ public class CommunicationForClient {
         jsonSend.put("projectId", projectId);
         jsonSend.put("studentList", com.alibaba.fastjson.JSON.toJSONString(studentList));
 
-        System.out.println("Send: " + jsonSend.toJSONString()); //just for test
+        System.out.println("Send: " + jsonSend.toJSONString()); //just for test。
 
         RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
         Request request = new Request.Builder()

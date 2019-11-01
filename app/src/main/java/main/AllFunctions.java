@@ -463,6 +463,10 @@ public class AllFunctions {
         }
     }
 
+    public void submitRecorder(int id, String email, String length){
+        communication.submitFile(id, email, length);
+    }
+
 
 //    public void testSortGroup() {
 //

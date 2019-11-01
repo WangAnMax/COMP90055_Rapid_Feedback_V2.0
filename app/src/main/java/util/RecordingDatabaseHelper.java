@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
 
+import com.example.feedback.RecordingItem;
+
 public class RecordingDatabaseHelper extends SQLiteOpenHelper {
     private Context mContext;
 

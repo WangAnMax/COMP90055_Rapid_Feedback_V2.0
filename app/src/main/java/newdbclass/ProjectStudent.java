@@ -1,5 +1,7 @@
 package newdbclass;
 
+import com.example.feedback.RecordingItem;
+
 import java.util.ArrayList;
 
 
@@ -20,6 +22,7 @@ public class ProjectStudent {
     private double finalScore;      // given by the principal
     private String finalRemark;     // selected comment + personal remark, given by the principal
     private int audioId;
+    private RecordingItem item;
     private int ifEmailed;      // if the result has been emailed to the student
     private ArrayList<Remark> remarkList = new ArrayList<Remark>();
 
@@ -41,6 +44,14 @@ public class ProjectStudent {
         this.finalRemark = finalRemark;
         this.ifEmailed = ifEmailed;
         this.audioId = audioId;
+    }
+
+    public void setRecordingItem(RecordingItem item){
+        this.item = item;
+    }
+
+    public RecordingItem getRecordingItem(){
+        return item;
     }
 
     public int getId() {

@@ -101,7 +101,7 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
                         break;
                     case 118:
                         Toast.makeText(Activity_Marker_Management.this,
-                                "Invalid marker ID. Please check and try again.", Toast.LENGTH_SHORT).show();
+                                "Marker doesn't exist. Please check and try again.", Toast.LENGTH_SHORT).show();
                         mProgressbarInvitation.setVisibility(View.INVISIBLE);
                         mEditTextInvitee.setText("");
                         break;
@@ -195,10 +195,15 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
                     public void onClick(View view) {
                         if (mEditTextInvitee.getText().toString().equals(""))
                             Toast.makeText(Activity_Marker_Management.this,
-                                    "The email of an invitee cannot be empty.", Toast.LENGTH_SHORT).show();
+                                    "The id of an invitee cannot be empty.", Toast.LENGTH_SHORT).show();
                         else {
-                            AllFunctions.getObject().inviteMarker(Integer.parseInt(mEditTextInvitee.getText().toString()), projectId);
-                            mProgressbarInvitation.setVisibility(View.VISIBLE);
+                            if (isNumeric(mEditTextInvitee.getText().toString())) {
+                                AllFunctions.getObject().inviteMarker(Integer.parseInt(mEditTextInvitee.getText().toString()), projectId);
+                                mProgressbarInvitation.setVisibility(View.VISIBLE);
+                            } else {
+                                Toast.makeText(Activity_Marker_Management.this,
+                                        "Invalid marker id. Please check and try again.", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
                 });
@@ -211,6 +216,16 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
                 });
             }
         });
+    }
+
+    public boolean isNumeric(String string) {
+        for (int i = 0; i < string.length(); i++) {
+            if (!Character.isDigit(string.charAt(i))) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

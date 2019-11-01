@@ -388,59 +388,6 @@ public class AllFunctions {
         }
     }
 
-//    public void getMarks(ProjectInfo project, int groupNum, String studentID) {
-//        System.out.println("getMark");
-//        ArrayList<String> studentIDList = new ArrayList<String>();
-//        if (groupNum == -999)
-//            studentIDList.add(studentID);
-//        else {
-//            for (int i = 0; i < project.getStudentInfo().size(); i++) {
-//                if (project.getStudentInfo().get(i).getGroup() == groupNum)
-//                    studentIDList.add(project.getStudentInfo().get(i).getNumber());
-//            }
-//        }
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                communication.getMarks(project, studentIDList);
-//            }
-//        }).start();
-//    }
-//
-//
-//    public void uploadStudentsACK(String ack) {
-//        if (ack.equals("true")) {
-//            Log.d("EEEE", "successfully upload students");
-//            handlerAllfunction.sendEmptyMessage(225);
-//        } else {
-//            Log.d("EEEE", "fail to upload students");
-//            handlerAllfunction.sendEmptyMessage(226);
-//        }
-//    }
-//
-//
-//
-//
-
-//
-//
-//
-//
-//
-//    public int getMaxGroupNumber(int indexOfProject) {
-//        int max = 0;
-//        for (StudentInfo student : projectList.get(indexOfProject).getStudentInfo()) {
-//            if (student.getGroup() > max)
-//                max = student.getGroup();
-//        }
-//        return max;
-//    }
-//
-//
-//
-//
-//
-//
     public void sortStudent() {
         for (int i = 0; i < this.projectList.size(); i++) {
             Collections.sort(this.projectList.get(i).getStudentList(), new SortByGroup());

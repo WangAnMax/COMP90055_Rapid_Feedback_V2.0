@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.feedback.Activity_Login;
+import com.example.feedback.Activity_Record_Voice;
 import com.example.feedback.R;
 
 import java.math.BigDecimal;
@@ -127,11 +128,11 @@ public class Activity_Send_Report_Individual extends AppCompatActivity {
         button_record.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(Activity_Send_Report_Individual.this, Activity_Record_Voice.class);
-//                intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
-//                intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
-//                intent.putExtra("from", from);
-//                startActivity(intent);
+                Intent intent = new Intent(Activity_Send_Report_Individual.this, Activity_Record_Voice.class);
+                intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                intent.putExtra("from", from);
+                startActivity(intent);
             }
         });
         Button button_sendSingle = findViewById(R.id.button_sendStudent_sendReportIndividual);

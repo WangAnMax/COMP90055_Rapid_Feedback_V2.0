@@ -1,3 +1,9 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package assessment;
 
 import android.content.Context;
@@ -24,6 +30,7 @@ import com.example.feedback.Activity_Login;
 import com.example.feedback.R;
 
 import java.util.ArrayList;
+
 import main.AllFunctions;
 import newdbclass.Project;
 import newdbclass.ProjectStudent;
@@ -56,7 +63,6 @@ public class Activity_Realtime_Assessment extends AppCompatActivity {
 
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Log.d("EEEE", "new realtime assessment");
         myAdapter.notifyDataSetChanged();
     }
 
@@ -187,7 +193,6 @@ public class Activity_Realtime_Assessment extends AppCompatActivity {
                     intent.putExtra("indexOfStudent", String.valueOf(position));
                     intent.putExtra("indexOfGroup", String.valueOf(studentList.get(position).getGroupNumber()));
                     intent.putExtra("from", FROMREALTIME);
-//                    resetStudentListView();
                     startActivity(intent);
                 }
             });

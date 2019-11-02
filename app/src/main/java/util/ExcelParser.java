@@ -1,3 +1,9 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package util;
 
 import android.util.Log;
@@ -83,12 +89,9 @@ public class ExcelParser {
                         newCriterion.setType(myCell.toString().trim());
                     }
                 }
-                Log.d("EEEE", "Cell Value: " + newCriterion.toString() + " Index :" + myRow.getRowNum());
                 criteriaList.add(newCriterion);
             }
-            Log.d("EEEE", criteriaList.toString());
             customisedCriteriaList = generateCriteriaList(criteriaList);
-            Log.d("EEEE", customisedCriteriaList.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -96,20 +99,16 @@ public class ExcelParser {
     }
 
     public ArrayList<Criterion> generateCriteriaList(ArrayList<CustomisedCriterion> criteriaList) {
-        Log.d("EEEE", "generate criteria list.");
         ArrayList<Criterion> customisedCriteriaList = new ArrayList<>();
-        for(int i = 0; i < criteriaList.size(); i++) {
-            Log.d("EEEE", "criteria size: " + criteriaList.size());
-            Log.d("EEEE", "criteria index: " + i);
+        for (int i = 0; i < criteriaList.size(); i++) {
             String newCriterionName = criteriaList.get(i).getCriterion().trim();
             String newFieldName = criteriaList.get(i).getField().trim();
             String newComment = criteriaList.get(i).getComment().trim();
             String newExpandedComment = criteriaList.get(i).getExpandedComment().trim();
             String newType = criteriaList.get(i).getType();
-            if(!(newCriterionName.equals("") || newFieldName.equals("") || newComment.equals("") || newExpandedComment.equals(""))) {
-//                Log.d("EEEE", newCriteriaName);
+            if (!(newCriterionName.equals("") || newFieldName.equals("") || newComment.equals("") || newExpandedComment.equals(""))) {
                 int criteriaIndex = checkCriteriaName(newCriterionName, customisedCriteriaList);
-                if(criteriaIndex == -1) {
+                if (criteriaIndex == -1) {
                     Criterion customisedCriteria = new Criterion();
                     customisedCriteria.setName(newCriterionName);
 
@@ -136,7 +135,6 @@ public class ExcelParser {
                     customisedCriteria.setFieldList(customisedSubSectionList);
                     customisedCriteriaList.add(customisedCriteria);
                 } else {
-//                    Log.d("EEEE", newSubsectionName);
                     ArrayList<Field> customisedSubSectionList = customisedCriteriaList.get(criteriaIndex).getFieldList();
                     int subsectionIndex = checkSubSectionName(newFieldName, customisedSubSectionList);
                     if (subsectionIndex == -1) {
@@ -159,11 +157,9 @@ public class ExcelParser {
                         customisedSubsection.setCommentList(customisedShortTextList);
                         customisedSubSectionList.add(customisedSubsection);
                     } else {
-//                        Log.d("EEEE", newShortText);
                         ArrayList<Comment> customisedShortTextList = customisedSubSectionList.get(subsectionIndex).getCommentList();
                         int shortTextIndex = checkShortText(newComment, newType, customisedShortTextList);
-                        Log.d("EEEE", newType + "");
-                        if(shortTextIndex == -1) {
+                        if (shortTextIndex == -1) {
                             Comment customisedShortText = new Comment();
                             customisedShortText.setText(newComment);
                             customisedShortText.setType(newType);
@@ -176,10 +172,9 @@ public class ExcelParser {
                             customisedShortText.setExpandedCommentList(customisedLongTextList);
                             customisedShortTextList.add(customisedShortText);
                         } else {
-//                            Log.d("EEEE", newLongText);
                             ArrayList<ExpandedComment> customisedLongTextList = customisedShortTextList.get(shortTextIndex).getExpandedCommentList();
                             int longTextIndex = checkLongText(newExpandedComment, customisedLongTextList);
-                            if(longTextIndex == -1) {
+                            if (longTextIndex == -1) {
                                 ExpandedComment customisedExComment = new ExpandedComment();
                                 customisedExComment.setText(newExpandedComment);
                                 customisedLongTextList.add(customisedExComment);
@@ -189,19 +184,19 @@ public class ExcelParser {
                 }
             }
         }
-        display(customisedCriteriaList);
+//        display(customisedCriteriaList);
         return customisedCriteriaList;
     }
 
     public void display(ArrayList<Criterion> customisedCriteriaList) {
-        for(int i = 0; i < customisedCriteriaList.size(); i++) {
+        for (int i = 0; i < customisedCriteriaList.size(); i++) {
             Log.d("EEEE", "criteria: " + customisedCriteriaList.get(i).getName());
-            for(int a = 0; a < customisedCriteriaList.get(i).getFieldList().size(); a++) {
+            for (int a = 0; a < customisedCriteriaList.get(i).getFieldList().size(); a++) {
                 Log.d("EEEE", "subsection: " + customisedCriteriaList.get(i).getFieldList().get(a).getName());
-                for(int b = 0; b < customisedCriteriaList.get(i).getFieldList().get(a).getCommentList().size(); b++) {
+                for (int b = 0; b < customisedCriteriaList.get(i).getFieldList().get(a).getCommentList().size(); b++) {
                     Log.d("EEEE", "shorttext: " + customisedCriteriaList.get(i).getFieldList().get(a).getCommentList().get(b).getText());
                     Log.d("EEEE", "shorttext grade: " + customisedCriteriaList.get(i).getFieldList().get(a).getCommentList().get(b).getType());
-                    for(int c = 0; c < customisedCriteriaList.get(i).getFieldList().get(a).getCommentList().get(b).getExpandedCommentList().size(); c++) {
+                    for (int c = 0; c < customisedCriteriaList.get(i).getFieldList().get(a).getCommentList().get(b).getExpandedCommentList().size(); c++) {
                         Log.d("EEEE", "longtext: " + customisedCriteriaList.get(i).getFieldList().get(a).getCommentList().get(b).getExpandedCommentList().get(c).getText());
                     }
                 }
@@ -210,12 +205,9 @@ public class ExcelParser {
     }
 
     public int checkCriteriaName(String newCriteriaName, ArrayList<Criterion> customisedCriteriaList) {
-        for(int i = 0; i < customisedCriteriaList.size(); i++) {
-//            Log.d("EEEE", "size:  " + customisedCriteriaList.size());
+        for (int i = 0; i < customisedCriteriaList.size(); i++) {
             String oldCriteriaName = customisedCriteriaList.get(i).getName();
-//            Log.d("EEEE", "old  " + oldCriteriaName);
-//            Log.d("EEEE", "new  " + newCriteriaName);
-            if(oldCriteriaName.equals(newCriteriaName)) {
+            if (oldCriteriaName.equals(newCriteriaName)) {
                 return i;
             }
         }
@@ -223,9 +215,9 @@ public class ExcelParser {
     }
 
     public int checkSubSectionName(String newSubsectionName, ArrayList<Field> customisedSubSectionList) {
-        for(int i = 0; i < customisedSubSectionList.size(); i++) {
+        for (int i = 0; i < customisedSubSectionList.size(); i++) {
             String oldSubsectionName = customisedSubSectionList.get(i).getName();
-            if(oldSubsectionName.equals(newSubsectionName)) {
+            if (oldSubsectionName.equals(newSubsectionName)) {
                 return i;
             }
         }
@@ -233,10 +225,10 @@ public class ExcelParser {
     }
 
     public int checkShortText(String newShortText, String newGrade, ArrayList<Comment> customisedShortTextList) {
-        for(int i = 0; i < customisedShortTextList.size(); i++) {
+        for (int i = 0; i < customisedShortTextList.size(); i++) {
             String oldShortText = customisedShortTextList.get(i).getText();
             String oldGrade = customisedShortTextList.get(i).getType();
-            if(oldShortText.equals(newShortText) && oldGrade.equals(newGrade)) {
+            if (oldShortText.equals(newShortText) && oldGrade.equals(newGrade)) {
                 return i;
             }
         }
@@ -244,9 +236,9 @@ public class ExcelParser {
     }
 
     public int checkLongText(String newLongText, ArrayList<ExpandedComment> customisedLongTextList) {
-        for(int i = 0; i < customisedLongTextList.size(); i++) {
+        for (int i = 0; i < customisedLongTextList.size(); i++) {
             String oldLongText = customisedLongTextList.get(i).getText();
-            if(oldLongText.equals(newLongText)) {
+            if (oldLongText.equals(newLongText)) {
                 return i;
             }
         }
@@ -303,13 +295,9 @@ public class ExcelParser {
                     if (myCell.getColumnIndex() == 4) {
                         newCriteria.setType(myCell.toString().trim());
                     }
-
-                    Log.d("EEEE", "Cell Value: " + newCriteria.toString() + " Index :" + myCell.getColumnIndex());
-
                 }
                 criteriaList.add(newCriteria);
             }
-            Log.d("EEEE", criteriaList.toString());
             customisedCriteriaList = generateCriteriaList(criteriaList);
         } catch (Exception e) {
             e.printStackTrace();
@@ -409,10 +397,8 @@ public class ExcelParser {
                     }
                 }
 
-                Log.d("EEEE", "Cell Value: " + newStudent.toString() + " Index :" + myRow.getRowNum());
                 if (!((newStudent.getStudentNumber() == 0) || (newStudent.getFirstName() == null) || (newStudent.getLastName() == null)
                         || (newStudent.getEmail() == null))) {
-                    Log.d("EEEE", "valid student info");
                     if (newStudent.getMiddleName() == null) {
                         newStudent.setMiddleName("");
                     }
@@ -420,7 +406,6 @@ public class ExcelParser {
                     students.add(newStudent);
                 }
             }
-            Log.d("EEEE", students.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -516,10 +501,8 @@ public class ExcelParser {
                     }
                 }
 
-                Log.d("EEEE", "Cell Value: " + newStudent.toString() + " Index :" + myRow.getRowNum());
                 if (!((newStudent.getStudentNumber() == 0) || (newStudent.getFirstName() == null) || (newStudent.getLastName() == null)
                         || (newStudent.getEmail() == null))) {
-                    Log.d("EEEE", "valid student info");
                     if (newStudent.getMiddleName() == null) {
                         newStudent.setMiddleName("");
                     }
@@ -527,7 +510,6 @@ public class ExcelParser {
                     students.add(newStudent);
                 }
             }
-            Log.d("EEEE", students.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }

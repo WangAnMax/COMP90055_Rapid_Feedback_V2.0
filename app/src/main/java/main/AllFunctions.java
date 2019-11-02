@@ -1,8 +1,15 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package main;
 
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -86,7 +93,7 @@ public class AllFunctions {
             handlerAllfunction.sendEmptyMessage(107);
     }
 
-//    public void submitRecorder() {
+    //    public void submitRecorder() {
 //        communication.submitFile();
 //    }
 //
@@ -148,17 +155,14 @@ public class AllFunctions {
             public void run() {
                 communication.updateProjectAbout(projectName, subjectName,
                         subjectCode, description, durationSec, warningSec, userId, projectId);
-                Log.d("createProject", "create new project success");
             }
         }).start();
     }
 
     public void setAboutACK(boolean ack, int projectId) {
         if (ack) {
-            Log.d("EEEE", "set about ack true");
             handlerAllfunction.sendEmptyMessage(110);
         } else {
-            Log.d("EEEE", "set about ack false");
             handlerAllfunction.sendEmptyMessage(111);
         }
     }
@@ -168,7 +172,6 @@ public class AllFunctions {
             @Override
             public void run() {
                 communication.deleteProject(projectId);
-                Log.d("deleteProject", "success");
             }
         }).start();
         projectList.remove(index);
@@ -262,7 +265,6 @@ public class AllFunctions {
 
     public void addStudentACK(int ack, String action) {
         if (ack == 1) { // add student success
-            Log.d("EEEE", "add student successfully");
             if (action.equals("single")) {
                 Message message = new Message();
                 message.what = 121;
@@ -274,12 +276,9 @@ public class AllFunctions {
                 message.obj = action;
                 handlerAllfunction.sendMessage(message);
             }
-        } else if (ack == 0){ // SQL exception
-            Log.d("EEEE", "server error");
+        } else if (ack == 0) { // SQL exception
             handlerAllfunction.sendEmptyMessage(122);
         } else if (ack < 0) { // add student fail
-            Log.d("EEEE", "fail to add student");
-//            handlerAllfunction.sendEmptyMessage(123);
             Message message = new Message();
             message.what = 123;
             message.arg1 = -ack;
@@ -294,17 +293,14 @@ public class AllFunctions {
             public void run() {
                 communication.editStudent(studentId, studentNumber, firstName,
                         middleName, surname, email, groupNumber, projectId);
-                Log.d("editStudent", "success");
             }
         }).start();
     }
 
     public void editStudentACK(boolean ack) {
         if (ack) {
-            Log.d("EEEE", "edit student successfully");
             handlerAllfunction.sendEmptyMessage(124);
         } else {
-            Log.d("EEEE", "fail to edit student");
             handlerAllfunction.sendEmptyMessage(125);
         }
     }
@@ -320,22 +316,17 @@ public class AllFunctions {
 
     public void deleteStudentACK(boolean ack) {
         if (ack) {
-            Log.d("EEEE", "delete student successfully");
             handlerAllfunction.sendEmptyMessage(126);
         } else {
-            Log.d("EEEE", "fail to delete student");
             handlerAllfunction.sendEmptyMessage(127);
         }
     }
 
     public ArrayList<Criterion> readCriteriaExcel(Project project, String path) {
         ExcelParser excelParser = new ExcelParser();
-        Log.d("EEEE", "path: " + path);
         if (path.endsWith(".xls")) {
-            Log.d("EEEE", "read xls file.");
             return excelParser.readXlsCriteria(path);
         } else if (path.endsWith(".xlsx")) {
-            Log.d("EEEE", "read xlsx file.");
             return excelParser.readXlsxCriteria(path);
         }
         return null;
@@ -352,10 +343,8 @@ public class AllFunctions {
 
     public void sendMarkACK(String ack) {
         if (ack.equals("true")) {
-            Log.d("EEEE", "send mark successfully");
             handlerAllfunction.sendEmptyMessage(128);
         } else {
-            Log.d("EEEE", "fail to send mark");
             handlerAllfunction.sendEmptyMessage(129);
         }
     }
@@ -374,21 +363,19 @@ public class AllFunctions {
             @Override
             public void run() {
                 communication.sendFinalResult(projectId, studentId, finalScore, finalRemark);
-           }
+            }
         }).start();
     }
 
     public void sendFinalResultACK(boolean ack) {
         if (ack) {
-            Log.d("EEEE", "send final result successfully");
             handlerAllfunction.sendEmptyMessage(130);
         } else {
-            Log.d("EEEE", "fail to send final result");
             handlerAllfunction.sendEmptyMessage(131);
         }
     }
 
-    public void submitRecorder(int id, String email, String length){
+    public void submitRecorder(int id, String email, String length) {
         communication.submitFile(id, email, length);
     }
 

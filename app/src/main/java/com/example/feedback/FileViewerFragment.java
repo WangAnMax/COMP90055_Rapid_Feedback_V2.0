@@ -1,3 +1,9 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package com.example.feedback;
 
 import android.os.Bundle;
@@ -16,9 +22,6 @@ import main.AllFunctions;
 import newdbclass.Project;
 import newdbclass.ProjectStudent;
 import util.RecordingDatabaseHelper;
-
-//import com.example.feedback.FileViewerAdapter;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -87,10 +90,10 @@ public class FileViewerFragment extends Fragment {
                     student.setRecordingItem(mDatabase.getItemAt(project.getSubjectCode(), email, recordingItem));
                     if (student.getRecordingItem() == null) {
                         Toast.makeText(getActivity(), "there is no file of your record", Toast.LENGTH_LONG).show();
-                    } else if(student.getRecordingItem().getName() == null){
+                    } else if (student.getRecordingItem().getName() == null) {
 
                         Toast.makeText(getActivity(), "there is no file of your record", Toast.LENGTH_LONG).show();
-                    }else {
+                    } else {
                         PlaybackFragment playbackFragment =
                                 new PlaybackFragment().newInstance(student.getRecordingItem());
 

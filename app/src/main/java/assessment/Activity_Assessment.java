@@ -1,3 +1,9 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package assessment;
 
 import android.content.Context;
@@ -24,20 +30,19 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.feedback.Activity_Login;
 import com.example.feedback.R;
 import com.google.gson.Gson;
 
-import org.apache.xmlbeans.impl.xb.xsdschema.All;
-
 import java.util.ArrayList;
+
 import main.AllFunctions;
 import newdbclass.Assessment;
 import newdbclass.Criterion;
 import newdbclass.Project;
 import newdbclass.Remark;
 import newdbclass.SelectedComment;
-
 
 public class Activity_Assessment extends AppCompatActivity implements View.OnClickListener {
 
@@ -102,11 +107,6 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
                     project.getStudentList().get(indexOfStudent).getMiddleName() + " " +
                     project.getStudentList().get(indexOfStudent).getLastName());
             studentList.add(indexOfStudent);
-            Log.d("EEEE", "index of student " + indexOfStudent);
-            Log.d("EEEE", "student NAME: " + project.getStudentList().get(indexOfStudent).getStudentNumber() + " --- " +
-                    project.getStudentList().get(indexOfStudent).getFirstName() + " " +
-                    project.getStudentList().get(indexOfStudent).getMiddleName() + " " +
-                    project.getStudentList().get(indexOfStudent).getLastName());
         } else {
             tv_assessment_student.setText("Group " + indexOfGroup);
             for (int i = 0; i < project.getStudentList().size(); i++) {
@@ -114,14 +114,9 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
                     studentList.add(i);
                 }
             }
-            Log.d("EEEE", "student list" + studentList);
         }
 
         tv_assessment_total_mark = findViewById(R.id.tv_assessment_total_mark);
-
-        String json = new Gson().toJson(project.getStudentList().get(studentList.get(0)));
-
-        Log.d("EEEE", "student's mark: " + json);
 
         ArrayList<Remark> remarkList = project.getStudentList().get(studentList.get(0)).getRemarkList();
         for (int i = 0; i < remarkList.size(); i++) {
@@ -167,7 +162,7 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
                 totalMark = remark.getAssessmentList().get(k).getScore();
             }
 
-            if (project.getStudentList().get(studentList.get(0)).getFinalScore() == -1){
+            if (project.getStudentList().get(studentList.get(0)).getFinalScore() == -1) {
                 tv_assessment_total_mark.setText("0%");
             } else {
                 tv_assessment_total_mark.setText(String.format("%.2f", project.getStudentList().get(studentList.get(0)).getFinalScore()) + "%");
@@ -301,7 +296,6 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
                     case 128:
                         Toast.makeText(Activity_Assessment.this,
                                 "Record mark success", Toast.LENGTH_SHORT).show();
-//                        dialog.dismiss();
                         AllFunctions.getObject().syncProjectList();
                         break;
                     case 129:
@@ -518,7 +512,6 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
             }
             for (int m = 0; m < newRemark.getAssessmentList().size(); m++) {
                 sum = sum + newRemark.getAssessmentList().get(m).getScore() * (100.0 / totalWeighting);
-                Log.d("EEEE", "sum score :" + sum);
             }
             totalMark = sum;
         }
@@ -660,21 +653,9 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
 
             for (int i = 0; i < studentList.size(); i++) {
                 int studentId = project.getStudentList().get(studentList.get(i)).getId();
-                Log.d("EEEE", "student NAME SEND MARK: " + project.getStudentList().get(studentList.get(i)).getStudentNumber() + " --- " +
-                        project.getStudentList().get(studentList.get(i)).getFirstName() + " " +
-                        project.getStudentList().get(studentList.get(i)).getMiddleName() + " " +
-                        project.getStudentList().get(studentList.get(i)).getLastName());
                 goBack = false;
                 AllFunctions.getObject().sendMark(project.getId(), studentId, remark);
             }
-
-//            LayoutInflater layoutInflater = LayoutInflater.from(Activity_Assessment.this);
-//            final View view2 = layoutInflater.from(Activity_Assessment.this).inflate(R.layout.dialog_record_mark, null);
-//            AlertDialog.Builder builder = new AlertDialog.Builder(Activity_Assessment.this);
-//            dialog = builder.create();
-//            dialog.setCancelable(false);
-//            dialog.setView(view2);
-//            dialog.show();
         } else {
             Toast.makeText(this, "You have one or more comments not selected", Toast.LENGTH_SHORT).show();
         }
@@ -686,10 +667,10 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
             return;
         }
         int totalHeight = 0;
-        for (int i = 0, len = listAdapter.getCount(); i < len; i++) { // listAdapter.getCount()返回数据项的数目
+        for (int i = 0, len = listAdapter.getCount(); i < len; i++) {
             View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(0, 0); // 计算子项View 的宽高
-            totalHeight += listItem.getMeasuredHeight(); // 统计所有子项的总高度
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
         }
         ViewGroup.LayoutParams params = listView.getLayoutParams();
         params.height = totalHeight
@@ -785,7 +766,7 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
             }
             for (int j = 0; j < project.getCriterionList().get(i).getFieldList().size(); j++) {
                 //field layer
-                int fieldId =  project.getCriterionList().get(i).getFieldList().get(j).getId();
+                int fieldId = project.getCriterionList().get(i).getFieldList().get(j).getId();
                 SelectedComment selectedComment = new SelectedComment();
                 for (int b = 0; b < assessment.getSelectedCommentList().size(); b++) {
                     if (assessment.getSelectedCommentList().get(b).getFieldId() == fieldId) {

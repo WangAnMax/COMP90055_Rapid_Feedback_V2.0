@@ -1,6 +1,13 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package main;
 
 import android.util.Log;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.feedback.Activity_Login;
@@ -9,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import newdbclass.Criterion;
 import newdbclass.Project;
 import newdbclass.Remark;
@@ -47,7 +55,6 @@ public class CommunicationForClient {
         jsonSend.put("lastName", lastName);
         jsonSend.put("email", email);
         jsonSend.put("password", password);
-        Log.d("EEEE", "Send: " + jsonSend.toJSONString()); //just for test
 
         RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
         Request request = new Request.Builder()
@@ -56,7 +63,6 @@ public class CommunicationForClient {
                 .build();
         try (Response response = client.newCall(request).execute()) {
             String receive = response.body().string();
-            Log.d("EEEE", "Receive: " + receive); //just for test
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             int register_ACK = Integer.parseInt(jsonReceive.get("id").toString());
             functions.registerACK(register_ACK);
@@ -70,8 +76,6 @@ public class CommunicationForClient {
         JSONObject jsonSend = new JSONObject();
         jsonSend.put("username", username);
         jsonSend.put("password", password);
-        Log.d("EEEE", "Send: " + jsonSend.toJSONString()); //just for test
-
         RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
         Request request = new Request.Builder()
                 .url(host + "/LoginServlet")
@@ -80,7 +84,6 @@ public class CommunicationForClient {
         try (Response response = client.newCall(request).execute()) {
             String receive = response.body().string();
             JSONUtil.write(receive);
-            Log.d("EEEE", "Receive: " + receive); //just for test
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             int login_ACK = Integer.parseInt(jsonReceive.get("login_ACK").toString());
             if (login_ACK > 0) {
@@ -94,7 +97,6 @@ public class CommunicationForClient {
                 arrayList.addAll(projectList);
                 functions.setUsername(firstName);
                 functions.setUserEmail(username);
-                Log.d("EEEE", "when login firstName received is: " + firstName);
                 token = jsonReceive.getString("token");
                 functions.setId(login_ACK);
                 functions.loginACK(login_ACK);
@@ -111,8 +113,6 @@ public class CommunicationForClient {
         JSONObject jsonSend = new JSONObject();
         jsonSend.put("userId", id);
         jsonSend.put("token", token);
-        Log.d("EEEE", "Send: " + jsonSend.toJSONString()); //just for test
-
         RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
         Request request = new Request.Builder()
                 .url(host + "/SyncProjectListServlet")
@@ -120,7 +120,6 @@ public class CommunicationForClient {
                 .build();
         try (Response response = client.newCall(request).execute()) {
             String receive = response.body().string();
-            Log.d("EEEE", "Receive: " + receive); //just for test
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             //get projectlist from jsonReceive
             String projectListString = jsonReceive.get("projectList").toString();
@@ -136,8 +135,8 @@ public class CommunicationForClient {
     }
 
     public void updateProjectAbout(String projectName, String subjectName,
-                                    String subjectCode, String description,
-                                    int durationSec, int warningSec, int userId, int projectId) {
+                                   String subjectCode, String description,
+                                   int durationSec, int warningSec, int userId, int projectId) {
         JSONObject jsonSend = new JSONObject();
         jsonSend.put("token", token);
         jsonSend.put("projectName", projectName);
@@ -148,8 +147,6 @@ public class CommunicationForClient {
         jsonSend.put("warningSec", warningSec);
         jsonSend.put("principalId", userId);
         jsonSend.put("id", projectId);
-        Log.d("EEEE", "Send: " + jsonSend.toJSONString()); //just for test
-
         RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
         Request request = new Request.Builder()
                 .url(host + "/UpdateProject_About_Servlet")
@@ -157,7 +154,6 @@ public class CommunicationForClient {
                 .build();
         try (Response response = client.newCall(request).execute()) {
             String receive = response.body().string();
-            Log.d("EEEE", "Receive: " + receive); //just for test
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             boolean updateProject_ACK = Boolean.parseBoolean(jsonReceive.get("updateProject_ACK").toString());
             int returnedProjectId = Integer.parseInt(jsonReceive.get("projectId").toString());
@@ -172,7 +168,6 @@ public class CommunicationForClient {
         JSONObject jsonSend = new JSONObject();
         jsonSend.put("token", token);
         jsonSend.put("projectId", projectId);
-        Log.d("EEEE", "Send: " + jsonSend.toJSONString()); //just for test
         RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
         Request request = new Request.Builder()
                 .url(host + "/DeleteProjectServlet")
@@ -182,7 +177,6 @@ public class CommunicationForClient {
         //get the JSONObject from response
         try (Response response = client.newCall(request).execute()) {
             String receive = response.body().string();
-            Log.d("EEEE", "Receive: " + receive); //just for test
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             boolean updateStudent_ACK = Boolean.parseBoolean(jsonReceive.get("updateProject_ACK").toString());
             functions.deleteACK(updateStudent_ACK);
@@ -198,7 +192,6 @@ public class CommunicationForClient {
         jsonSend.put("projectId", projectId);
         String markedCriteriaListString = com.alibaba.fastjson.JSON.toJSONString(markedCriteriaList);
         jsonSend.put("criterionList", markedCriteriaListString);
-        Log.d("EEEE", "Send: " + jsonSend.toJSONString()); //just for test
         RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
         Request request = new Request.Builder()
                 .url(host + "/CriteriaListServlet")
@@ -206,9 +199,6 @@ public class CommunicationForClient {
                 .build();
         try (Response response = client.newCall(request).execute()) {
             String receive = response.body().string();
-
-            Log.d("EEEE", "Receive: " + receive); //just for test
-
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             boolean updateProject_ACK = Boolean.parseBoolean(jsonReceive.get("updateProject_ACK").toString());
             functions.updateProjectCriteriaACK(updateProject_ACK);
@@ -224,9 +214,6 @@ public class CommunicationForClient {
         jsonSend.put("token", token);
         jsonSend.put("projectId", projectId);
         jsonSend.put("markerId", markerId);
-
-        System.out.println("Send: " + jsonSend.toJSONString()); //just for test
-
         RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
         Request request = new Request.Builder()
                 .url(host + "/InviteAssessorServlet")
@@ -236,12 +223,7 @@ public class CommunicationForClient {
         //get the JSONObject from response
         try (Response response = client.newCall(request).execute()) {
             String receive = response.body().string();
-
-            System.out.println("Receive: " + receive); //just for test
-
             JSONObject jsonReceive = JSONObject.parseObject(receive);
-
-            Log.d("EEEE", "invite marker");
             int invite_ACK = Integer.parseInt(jsonReceive.get("invite_ACK").toString());
             AllFunctions.getObject().inviteMarkerACK(invite_ACK);
 
@@ -256,9 +238,6 @@ public class CommunicationForClient {
         jsonSend.put("token", token);
         jsonSend.put("projectId", projectId);
         jsonSend.put("markerId", markerId);
-
-        System.out.println("Send: " + jsonSend.toJSONString()); //just for test
-
         RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
         Request request = new Request.Builder()
                 .url(host + "/InviteAssessorServlet")
@@ -268,12 +247,7 @@ public class CommunicationForClient {
         //get the JSONObject from response
         try (Response response = client.newCall(request).execute()) {
             String receive = response.body().string();
-
-            System.out.println("Receive: " + receive); //just for test
-
             JSONObject jsonReceive = JSONObject.parseObject(receive);
-
-            Log.d("EEEE", "delete marker");
             boolean delete_ACK = Boolean.parseBoolean(jsonReceive.get("delete_ACK").toString());
             AllFunctions.getObject().deleteMarkerACK(delete_ACK);
 
@@ -288,9 +262,6 @@ public class CommunicationForClient {
         jsonSend.put("token", token);
         jsonSend.put("projectId", projectId);
         jsonSend.put("studentList", com.alibaba.fastjson.JSON.toJSONString(studentList));
-
-        System.out.println("Send: " + jsonSend.toJSONString()); //just for test
-
         RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
         Request request = new Request.Builder()
                 .url(host + "/AddStudentServlet")
@@ -300,9 +271,6 @@ public class CommunicationForClient {
         //get the JSONObject from response
         try (Response response = client.newCall(request).execute()) {
             String receive = response.body().string();
-
-            System.out.println("Receive: " + receive); //just for test
-
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             int updateStudent_ACK = Integer.parseInt(jsonReceive.get("updateStudent_ACK").toString());
             functions.addStudentACK(updateStudent_ACK, action);
@@ -324,9 +292,6 @@ public class CommunicationForClient {
         jsonSend.put("email", email);
         jsonSend.put("group", groupNumber);
         jsonSend.put("projectId", projectId);
-
-        System.out.println("Send: " + jsonSend.toJSONString()); //just for test
-
         RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
         Request request = new Request.Builder()
                 .url(host + "/EditStudentServlet")
@@ -336,9 +301,6 @@ public class CommunicationForClient {
         //get the JSONObject from response
         try (Response response = client.newCall(request).execute()) {
             String receive = response.body().string();
-
-            System.out.println("Receive: " + receive); //just for test
-
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             boolean updateStudent_ACK = Boolean.parseBoolean(jsonReceive.get("updateStudent_ACK").toString());
             functions.editStudentACK(updateStudent_ACK);
@@ -353,9 +315,6 @@ public class CommunicationForClient {
         jsonSend.put("token", token);
         jsonSend.put("projectId", projectId);
         jsonSend.put("studentId", studentId);
-
-        System.out.println("Send: " + jsonSend.toJSONString()); //just for test
-
         RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
         Request request = new Request.Builder()
                 .url(host + "/DeleteStudentServlet")
@@ -365,9 +324,6 @@ public class CommunicationForClient {
         //get the JSONObject from response
         try (Response response = client.newCall(request).execute()) {
             String receive = response.body().string();
-
-            System.out.println("Receive: " + receive); //just for test
-
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             boolean updateStudent_ACK = Boolean.parseBoolean(jsonReceive.get("updateStudent_ACK").toString());
             functions.deleteStudentACK(updateStudent_ACK);
@@ -384,9 +340,6 @@ public class CommunicationForClient {
         jsonSend.put("studentId", studentId);
         String remarkString = com.alibaba.fastjson.JSON.toJSONString(remark);
         jsonSend.put("remark", remarkString);
-
-        Log.d("EEEE", "Send in method sendMark: " + jsonSend.toJSONString()); //just for test
-
         RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
         Request request = new Request.Builder()
                 .url(host + "/AddResultServlet")
@@ -396,9 +349,6 @@ public class CommunicationForClient {
         //get the JSONObject from response
         try (Response response = client.newCall(request).execute()) {
             String receive = response.body().string();
-
-            System.out.println("Receive: " + receive); //just for test
-
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             String mark_ACK = jsonReceive.get("ACK").toString();
             functions.sendMarkACK(mark_ACK);
@@ -414,9 +364,6 @@ public class CommunicationForClient {
         jsonSend.put("projectId", projectId);
         jsonSend.put("studentId", studentId);
         jsonSend.put("sendBoth", sendBoth);
-
-        Log.d("EEEE", "Send in method sendPDF: " + jsonSend.toJSONString()); //just for test
-
         RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
         Request request = new Request.Builder()
                 .url(host + "/SendEmailServlet")
@@ -426,9 +373,6 @@ public class CommunicationForClient {
         //get the JSONObject from response
         try (Response response = client.newCall(request).execute()) {
             String receive = response.body().string();
-
-            Log.d("EEEE", "Receive: " + receive); //just for test
-
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             String sendMail_ACK = jsonReceive.get("sendMail_ACK").toString();
         } catch (Exception e1) {
@@ -444,9 +388,6 @@ public class CommunicationForClient {
         jsonSend.put("studentId", studentId);
         jsonSend.put("finalScore", String.format("%.2f", finalScore));
         jsonSend.put("finalRemark", finalRemark);
-
-        Log.d("EEEE", "Send in method sendFinalResult: " + jsonSend.toJSONString()); //just for test
-
         RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
         Request request = new Request.Builder()
                 .url(host + "/FinalResultServlet")
@@ -456,9 +397,6 @@ public class CommunicationForClient {
         //get the JSONObject from response
         try (Response response = client.newCall(request).execute()) {
             String receive = response.body().string();
-
-            Log.d("EEEE", "Receive: " + receive); //just for test
-
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             boolean sendFinalResultACK = Boolean.parseBoolean(jsonReceive.get("ACK").toString());
             functions.sendFinalResultACK(sendFinalResultACK);
@@ -467,7 +405,7 @@ public class CommunicationForClient {
         }
     }
 
-    public void submitFile(int id, String email, String path){
+    public void submitFile(int id, String email, String path) {
         //test a existed file
         // File f = new File(Environment.getExternalStorageDirectory()+"/SoundRecorder"+"/My Recording_7.mp4");
         File f = new File(path);
@@ -477,9 +415,6 @@ public class CommunicationForClient {
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("filename", id + "_" + email, body)
                 .build();
-        //for test
-        Log.d("submit", "in");
-
         Request request = new Request.Builder()
                 .url(host + "AudioRecorderServlet")
                 .post(multipartBody)
@@ -490,6 +425,7 @@ public class CommunicationForClient {
             @Override
             public void onFailure(Call call, IOException e) {
             }
+
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 System.out.println("get back Parameter：\n" + response.body().string());

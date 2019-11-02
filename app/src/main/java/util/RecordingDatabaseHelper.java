@@ -1,3 +1,9 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package util;
 
 import android.content.ContentValues;
@@ -13,7 +19,7 @@ public class RecordingDatabaseHelper extends SQLiteOpenHelper {
     private Context mContext;
 
 
-    public  static final String CREATE_BOOK = "create table Recording ("
+    public static final String CREATE_BOOK = "create table Recording ("
             + "id integer primary key autoincrement,"
             + "student text,"
             + "filename text,"
@@ -48,7 +54,7 @@ public class RecordingDatabaseHelper extends SQLiteOpenHelper {
         db.insert("Recording", null, cv);
     }
 
-    public void deleteRecording(String project, String email){
+    public void deleteRecording(String project, String email) {
         SQLiteDatabase db = getWritableDatabase();
         db.delete("Recording", "project = ? and student = ?)", new String[]{project, email});
     }
@@ -56,8 +62,8 @@ public class RecordingDatabaseHelper extends SQLiteOpenHelper {
     public RecordingItem getItemAt(String project, String student, RecordingItem item) {
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("select filename, filepath, filelength from Recording where project = ? and student = ?",
-                                     new String[]{project, student});
-        while(c.moveToNext()){
+                new String[]{project, student});
+        while (c.moveToNext()) {
             item.setName(c.getString(c.getColumnIndex("filename")));
             item.setLength(c.getInt(c.getColumnIndex("filelength")));
             item.setFilePath(c.getString(c.getColumnIndex("filepath")));

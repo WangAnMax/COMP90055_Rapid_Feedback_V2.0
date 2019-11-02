@@ -1,3 +1,9 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package assessment;
 
 import android.content.Intent;
@@ -21,6 +27,7 @@ import com.example.feedback.R;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+
 import main.AllFunctions;
 import newdbclass.Assessment;
 import newdbclass.ExpandedComment;
@@ -33,12 +40,12 @@ public class Activity_Send_Report_Group extends AppCompatActivity {
     private int indexOfProject;
     private int indexOfGroup;
     private int indexOfStudent;
-//    private int indexOfMark;
+    //    private int indexOfMark;
     private ArrayList<ProjectStudent> studentInfoArrayList;
     private Toolbar mToolbar;
     private String from;
-    public static final String FROMREALTIMESEND= "realtime_send";
-    public static final String FROMREVIEWSEND= "review_send";
+    public static final String FROMREALTIMESEND = "realtime_send";
+    public static final String FROMREVIEWSEND = "review_send";
     private Handler handler;
     private Project project;
     private ProjectStudent student;
@@ -104,7 +111,6 @@ public class Activity_Send_Report_Group extends AppCompatActivity {
     }
 
     private void init() {
-        Log.d("EEEE", "send report group");
         handler = new Handler() {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
@@ -287,7 +293,7 @@ public class Activity_Send_Report_Group extends AppCompatActivity {
         Remark remark = new Remark();
         for (int i = 0; i < remarkList.size(); i++) {
             if (remarkList.get(i).getId() == project.getPrincipalId()) {
-                remark =  remarkList.get(i);
+                remark = remarkList.get(i);
             }
         }
 
@@ -314,12 +320,9 @@ public class Activity_Send_Report_Group extends AppCompatActivity {
                 }
             }
         }
-//        Log.d("EEEE", "sum of mark: " + sumMark);
-        double avgMark = sumMark/markers;
-//        Log.d("EEEE", "avg mark: " + avgMark);
+        double avgMark = sumMark / markers;
         BigDecimal bigDecimal = new BigDecimal(avgMark);
         avgMark = bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-//        Log.d("EEEE", "avg mark: " + avgMark);
         return avgMark;
     }
 
@@ -329,12 +332,9 @@ public class Activity_Send_Report_Group extends AppCompatActivity {
         for (int i = 0; i < markers; i++) {
             sumMark += getTotalMark(remarkList.get(i));
         }
-//        Log.d("EEEE", "sum of mark: " + sumMark);
-        double avgMark = sumMark/markers;
-//        Log.d("EEEE", "avg mark: " + avgMark);
+        double avgMark = sumMark / markers;
         BigDecimal bigDecimal = new BigDecimal(avgMark);
         avgMark = bigDecimal.setScale(0, BigDecimal.ROUND_HALF_UP).doubleValue();
-//        Log.d("EEEE", "avg mark: " + avgMark);
         return avgMark;
     }
 
@@ -357,8 +357,8 @@ public class Activity_Send_Report_Group extends AppCompatActivity {
         return sum;
     }
 
-    public String getCriterionName (Assessment assessment) {
-        for (int i = 0; i <project.getCriterionList().size(); i++) {
+    public String getCriterionName(Assessment assessment) {
+        for (int i = 0; i < project.getCriterionList().size(); i++) {
             if (project.getCriterionList().get(i).getId() == assessment.getCriterionId()) {
                 return project.getCriterionList().get(i).getName();
             }
@@ -401,7 +401,5 @@ public class Activity_Send_Report_Group extends AppCompatActivity {
         }
         return "";
     }
-
-
 }
 

@@ -1,3 +1,9 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package com.example.feedback;
 
 import android.app.AlertDialog;
@@ -21,10 +27,6 @@ import com.melnykov.fab.FloatingActionButton;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-
-/**
- * author NINGJIANG XIE
- */
 public class PlaybackFragment extends DialogFragment {
 
     private static final String LOG_TAG = "PlaybackFragment";
@@ -87,13 +89,13 @@ public class PlaybackFragment extends DialogFragment {
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if(mMediaPlayer != null && fromUser) {
+                if (mMediaPlayer != null && fromUser) {
                     mMediaPlayer.seekTo(progress);
                     mHandler.removeCallbacks(mRunnable);
                     long minutes = TimeUnit.MILLISECONDS.toMinutes(mMediaPlayer.getCurrentPosition());
                     long seconds = TimeUnit.MILLISECONDS.toSeconds(mMediaPlayer.getCurrentPosition())
                             - TimeUnit.MINUTES.toSeconds(minutes);
-                    mCurrentProgressTextView.setText(String.format("%02d:%02d", minutes,seconds));
+                    mCurrentProgressTextView.setText(String.format("%02d:%02d", minutes, seconds));
                     updateSeekBar();
                 } else if (mMediaPlayer == null && fromUser) {
                     prepareMediaPlayerFromPoint(progress);
@@ -103,7 +105,7 @@ public class PlaybackFragment extends DialogFragment {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                if(mMediaPlayer != null) {
+                if (mMediaPlayer != null) {
                     // remove message Handler from updating progress bar
                     mHandler.removeCallbacks(mRunnable);
                 }
@@ -117,7 +119,7 @@ public class PlaybackFragment extends DialogFragment {
                     long minutes = TimeUnit.MILLISECONDS.toMinutes(mMediaPlayer.getCurrentPosition());
                     long seconds = TimeUnit.MILLISECONDS.toSeconds(mMediaPlayer.getCurrentPosition())
                             - TimeUnit.MINUTES.toSeconds(minutes);
-                    mCurrentProgressTextView.setText(String.format("%02d:%02d", minutes,seconds));
+                    mCurrentProgressTextView.setText(String.format("%02d:%02d", minutes, seconds));
                     updateSeekBar();
                 }
             }
@@ -133,7 +135,7 @@ public class PlaybackFragment extends DialogFragment {
         });
 
         mFileNameTextView.setText(item.getName());
-        mFileLengthTextView.setText(String.format("%02d:%02d", minutes,seconds));
+        mFileLengthTextView.setText(String.format("%02d:%02d", minutes, seconds));
 
         builder.setView(view);
 
@@ -141,7 +143,7 @@ public class PlaybackFragment extends DialogFragment {
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
         return builder.create();
-}
+    }
 
     @Override
     public void onStart() {
@@ -177,10 +179,10 @@ public class PlaybackFragment extends DialogFragment {
     }
 
     // Play start/stop
-    private void onPlay(boolean isPlaying){
+    private void onPlay(boolean isPlaying) {
         if (!isPlaying) {
             //currently MediaPlayer is not playing audio
-            if(mMediaPlayer == null) {
+            if (mMediaPlayer == null) {
                 startPlaying(); //start from beginning
             } else {
                 resumePlaying(); //resume the currently paused MediaPlayer
@@ -279,7 +281,7 @@ public class PlaybackFragment extends DialogFragment {
     private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
-            if(mMediaPlayer != null){
+            if (mMediaPlayer != null) {
                 int mCurrentPosition = mMediaPlayer.getCurrentPosition();
                 mSeekBar.setProgress(mCurrentPosition);
                 long minutes = TimeUnit.MILLISECONDS.toMinutes(mCurrentPosition);

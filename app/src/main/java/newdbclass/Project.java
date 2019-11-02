@@ -1,13 +1,14 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package newdbclass;
 
 import java.util.ArrayList;
 
-/**
- * create by: Xiaozhong Liu
- * description: a class used for RETURN PROJECTS responds from BACK END
- * create time: 2019/9/22 5:36 PM
- */
-public class Project{
+public class Project {
 
     private int id;
     private String name;
@@ -24,12 +25,12 @@ public class Project{
     private ArrayList<Criterion> criterionList = new ArrayList<Criterion>();
     private ArrayList<ProjectStudent> studentList = new ArrayList<ProjectStudent>();
 
-    public Project () {
+    public Project() {
 
     }
 
-    public Project (int id, String name, String subjectName, String subjectCode,
-                    int durationSec, int warningSec, int principalId, String description){
+    public Project(int id, String name, String subjectName, String subjectCode,
+                   int durationSec, int warningSec, int principalId, String description) {
         this.id = id;
         this.name = name;
         this.subjectName = subjectName;

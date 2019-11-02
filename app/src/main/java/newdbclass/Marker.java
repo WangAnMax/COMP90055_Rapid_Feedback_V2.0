@@ -1,10 +1,11 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package newdbclass;
 
-/**
- * create by: Xiaozhong Liu
- * description: a class that stores information from Marker joint MarkerInProject table in database
- * create time: 2019/9/22 5:16 PM
- */
 public class Marker {
 
     private int id;
@@ -17,7 +18,7 @@ public class Marker {
 
     }
 
-    public Marker(int id, String email, String firstName, String middleName, String lastName){
+    public Marker(int id, String email, String firstName, String middleName, String lastName) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;

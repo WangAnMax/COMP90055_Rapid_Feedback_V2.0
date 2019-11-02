@@ -1,3 +1,9 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package com.example.feedback;
 
 import android.content.DialogInterface;
@@ -17,6 +23,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import main.AllFunctions;
 import newdbclass.Project;
 
@@ -54,7 +61,6 @@ public class Activity_About_New extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("EEEE", "new about edition start!");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
         Intent intent = getIntent();
@@ -148,14 +154,12 @@ public class Activity_About_New extends AppCompatActivity {
         editText_durationMin.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean isFocused) {
-                if(isFocused) {
-                    Log.d("EEEE", "focus");
+                if (isFocused) {
                     button_plus_duration_minutes.setEnabled(false);
                     button_plus_duration_minutes.setBackgroundResource(R.drawable.ic_add_disabled);
                     button_minus_duration_minutes.setEnabled(false);
                     button_minus_duration_minutes.setBackgroundResource(R.drawable.ic_delete_disabled);
                 } else {
-                    Log.d("EEEE", "no focus");
                     button_plus_duration_minutes.setEnabled(true);
                     button_plus_duration_minutes.setBackgroundResource(R.drawable.ic_add);
                     button_minus_duration_minutes.setEnabled(true);
@@ -167,7 +171,7 @@ public class Activity_About_New extends AppCompatActivity {
         editText_durationSec.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean isFocused) {
-                if(isFocused) {
+                if (isFocused) {
                     button_plus_duration_seconds.setEnabled(false);
                     button_plus_duration_seconds.setBackgroundResource(R.drawable.ic_add_disabled);
                     button_minus_duration_seconds.setEnabled(false);
@@ -184,7 +188,7 @@ public class Activity_About_New extends AppCompatActivity {
         editText_warningMin.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean isFocused) {
-                if(isFocused) {
+                if (isFocused) {
                     button_plus_warning_minutes.setEnabled(false);
                     button_plus_warning_minutes.setBackgroundResource(R.drawable.ic_add_disabled);
                     button_minus_warning_minutes.setEnabled(false);
@@ -201,7 +205,7 @@ public class Activity_About_New extends AppCompatActivity {
         editText_warningSec.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean isFocused) {
-                if(isFocused) {
+                if (isFocused) {
                     button_plus_warning_seconds.setEnabled(false);
                     button_plus_warning_seconds.setBackgroundResource(R.drawable.ic_add_disabled);
                     button_minus_warning_seconds.setEnabled(false);
@@ -234,7 +238,6 @@ public class Activity_About_New extends AppCompatActivity {
                         Intent intent = new Intent(Activity_About_New.this, Activity_Criteria.class);
                         int indextToSend = AllFunctions.getObject().getProjectList().size() - 1;
                         index = String.valueOf(indextToSend);
-                        Log.d("EEEE", "save with index = -999 " + Integer.parseInt(index));
                         intent.putExtra("index", String.valueOf(index));
                         intent.putExtra("from", Activity_Assessment_Preparation.FROMNEWPROJECT);
                         startActivity(intent);
@@ -244,13 +247,11 @@ public class Activity_About_New extends AppCompatActivity {
                                 "Server error. Please try again", Toast.LENGTH_SHORT).show();
                         break;
                     case 110:
-                        Log.d("EEEE", "Successfully create the information of the project.");
                         Toast.makeText(Activity_About_New.this,
                                 "Successfully create the new project.", Toast.LENGTH_SHORT).show();
                         AllFunctions.getObject().syncProjectList();
                         break;
                     case 111:
-                        Log.d("EEEE", "Fail to create the information of the project.");
                         Toast.makeText(Activity_About_New.this,
                                 "Fail to create the new project.", Toast.LENGTH_SHORT).show();
                         break;
@@ -261,7 +262,6 @@ public class Activity_About_New extends AppCompatActivity {
         };
 
         AllFunctions.getObject().setHandler(handler);
-        Log.d("EEEE", "bind handler in new about");
     }
 
     public void addDurationMin(View view) {
@@ -348,7 +348,7 @@ public class Activity_About_New extends AppCompatActivity {
         } else if (subjectName.equals("")) {
             Toast.makeText(getApplicationContext(), "Subject name cannot be empty", Toast.LENGTH_SHORT).show();
         } else {
-            if(checkTimeSetting()) {
+            if (checkTimeSetting()) {
                 totalDurationSec = 60 * durationMin + durationSec;
                 totalWarningSec = 60 * warningMin + warningSec;
                 AllFunctions.getObject().updateProject(projectName, subjectName, subjectCode, projectDesc, totalDurationSec, totalDurationSec, 0);
@@ -357,11 +357,11 @@ public class Activity_About_New extends AppCompatActivity {
     }
 
     private boolean checkTimeSetting() {
-        if(Integer.parseInt(editText_durationMin.getText().toString()) == 0
+        if (Integer.parseInt(editText_durationMin.getText().toString()) == 0
                 && Integer.parseInt(editText_durationSec.getText().toString()) == 0) {
             Toast.makeText(getApplicationContext(), "Duration time cannot be zero", Toast.LENGTH_SHORT).show();
             return false;
-        } else if(Integer.parseInt(editText_warningMin.getText().toString()) == 0
+        } else if (Integer.parseInt(editText_warningMin.getText().toString()) == 0
                 && Integer.parseInt(editText_warningSec.getText().toString()) == 0) {
             Toast.makeText(getApplicationContext(), "Warning time cannot be zero", Toast.LENGTH_SHORT).show();
             return false;

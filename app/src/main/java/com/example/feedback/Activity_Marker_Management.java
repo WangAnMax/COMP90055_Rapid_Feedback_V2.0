@@ -1,3 +1,9 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package com.example.feedback;
 
 import android.app.Activity;
@@ -31,6 +37,7 @@ import android.widget.Toast;
 import org.apache.xmlbeans.impl.xb.xsdschema.All;
 
 import java.util.ArrayList;
+
 import main.AllFunctions;
 import newdbclass.Marker;
 import newdbclass.Project;
@@ -59,18 +66,14 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marker_management);
-        Log.d("EEEE", "Marker Management: onCreate has been called!");
         Intent intent = getIntent();
         index = intent.getStringExtra("index");
-        Log.d("EEEE", "Marker management's index: " + index);
         from = intent.getStringExtra("from");
-        Log.d("EEEE", "from: " + from);
         init();
     }
 
     protected void onNewIntent(Intent intent) {
         init();
-        Log.d("EEEE", "Preparation: onNewIntent has been called!");
     }
 
     public void init() {
@@ -142,7 +145,7 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
         mCheckBoxDeleteMarker.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if(isChecked) {
+                if (isChecked) {
                     adapterForMarkers = new AdapterForMarkerDeletion(project.getMarkerList(),
                             Activity_Marker_Management.this);
                     mListViewMarkers.setAdapter(adapterForMarkers);
@@ -236,7 +239,7 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
 
     public void initToolbar() {
         mToolbar = findViewById(R.id.toolbar_project_marker_management);
-        mToolbar.setTitle(project.getName() +  " -- Welcome, " + AllFunctions.getObject().getUsername() + " [ID: " + AllFunctions.getObject().getId() + "]");
+        mToolbar.setTitle(project.getName() + " -- Welcome, " + AllFunctions.getObject().getUsername() + " [ID: " + AllFunctions.getObject().getId() + "]");
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {

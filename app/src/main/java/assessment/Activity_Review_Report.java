@@ -1,3 +1,9 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package assessment;
 
 import android.content.Context;
@@ -24,6 +30,7 @@ import com.example.feedback.Activity_Login;
 import com.example.feedback.R;
 
 import java.util.ArrayList;
+
 import main.AllFunctions;
 import newdbclass.Project;
 import newdbclass.ProjectStudent;
@@ -89,7 +96,6 @@ public class Activity_Review_Report extends AppCompatActivity {
 
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Log.d("EEEE", "new review report");
         myAdapter.notifyDataSetChanged();
     }
 
@@ -179,9 +185,6 @@ public class Activity_Review_Report extends AppCompatActivity {
                     intent.putExtra("indexOfStudent", String.valueOf(position));
                     intent.putExtra("indexOfGroup", String.valueOf(studentList.get(position).getGroupNumber()));
                     intent.putExtra("from", "review");
-                    Log.d("EEEE", "project: " + indexOfProject);
-                    Log.d("EEEE", "student: " + position);
-                    Log.d("EEEE", "group: " + studentList.get(position).getGroupNumber());
                     startActivity(intent);
                 }
             });

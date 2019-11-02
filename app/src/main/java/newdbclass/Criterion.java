@@ -1,13 +1,14 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package newdbclass;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-/**
- * create by: Xiaozhong Liu
- * description: a class that stores information from ProjectCriterion joint Criterion table in database
- * create time: 2019/9/22 5:57 PM
- */
 public class Criterion {
 
     private int id;     // set to 0 when add criterion, include when update criterion
@@ -17,7 +18,7 @@ public class Criterion {
     private double markIncrement; // either be 0.25, 0.5 or 1
     private ArrayList<Field> fieldList = new ArrayList<Field>();
 
-    public Criterion(int id, String name, double weight, double maximumMark, double markIncrement){
+    public Criterion(int id, String name, double weight, double maximumMark, double markIncrement) {
         this.id = id;
         this.name = name;
         this.weight = weight;

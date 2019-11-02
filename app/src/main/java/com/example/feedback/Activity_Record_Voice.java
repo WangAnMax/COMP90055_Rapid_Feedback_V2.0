@@ -1,3 +1,9 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package com.example.feedback;
 
 import android.Manifest;
@@ -24,7 +30,6 @@ public class Activity_Record_Voice extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("EEEE", "record audio!!!!!");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record_voice);
         pager = findViewById(R.id.pager);
@@ -38,7 +43,7 @@ public class Activity_Record_Voice extends AppCompatActivity {
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.RECORD_AUDIO }, 10);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 10);
         } else {
             Toast.makeText(this, "Start to record the audio", Toast.LENGTH_SHORT).show();
         }
@@ -57,16 +62,16 @@ public class Activity_Record_Voice extends AppCompatActivity {
     }
 
     // set two get method. it is convenient for acquire two index in the fragment
-    public int getIndexOfProject(){
+    public int getIndexOfProject() {
         return indexOfProject;
     }
 
-    public int getIndexOfStudent(){
+    public int getIndexOfStudent() {
         return indexOfStudent;
     }
 
     public class MyAdapter extends FragmentPagerAdapter {
-        private String[] titles = { getString(R.string.tab_title_record), getString(R.string.tab_title_saved_recordings) };
+        private String[] titles = {getString(R.string.tab_title_record), getString(R.string.tab_title_saved_recordings)};
 
         public MyAdapter(FragmentManager fm) {
             super(fm);
@@ -74,11 +79,11 @@ public class Activity_Record_Voice extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            switch(position){
-                case 0:{
+            switch (position) {
+                case 0: {
                     return RecordFragement.newInstance(position);
                 }
-                case 1:{
+                case 1: {
                     return FileViewerFragment.newInstance(position);
                 }
             }

@@ -1,3 +1,9 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package com.example.feedback;
 
 import android.Manifest;
@@ -28,9 +34,11 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import adapter.UserBeanAdapter;
 import bean.UserBean;
 import main.AllFunctions;
@@ -74,20 +82,16 @@ public class Activity_Login extends AppCompatActivity {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case 104: // login success
-                        Log.d("EEEE", "login!!!!!");
                         Intent intent = new Intent(Activity_Login.this, Activity_Homepage.class);
                         startActivityForResult(intent, 1);
                         break;
                     case 105: // worng password
-                        Log.d("EEEE", "wrong password");
                         Toast.makeText(Activity_Login.this, "The email and password do not match. Please check and try again.", Toast.LENGTH_SHORT).show();
                         break;
                     case 106: // email not registered
-                        Log.d("EEEE", "email not registered");
                         Toast.makeText(Activity_Login.this, "The email is not registered. Please check and try again.", Toast.LENGTH_SHORT).show();
                         break;
                     case 107: // server error
-                        Log.d("EEEE", "server error");
                         Toast.makeText(Activity_Login.this, "Server error. Please check and try again.", Toast.LENGTH_SHORT).show();
                         break;
                     default:
@@ -109,7 +113,7 @@ public class Activity_Login extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         for (int permission : grantResults) {
             if (permission == PackageManager.PERMISSION_DENIED) {
@@ -122,7 +126,6 @@ public class Activity_Login extends AppCompatActivity {
     private void init() {
         checkWriteAndReadPermission();
 
-        Log.d("EEEE", "start!!!!!");
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -216,7 +219,6 @@ public class Activity_Login extends AppCompatActivity {
     }
 
     public void login(View view) {
-        Log.d("EEEE", "click login!!!!");
         AllFunctions.getObject().setHandler(handler);
 
         String email = mEmailText.getText().toString();
@@ -270,13 +272,13 @@ public class Activity_Login extends AppCompatActivity {
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == 1) {
-            if(resultCode == Activity.RESULT_OK) {
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
                 boolean hasBackPressed = data.getBooleanExtra("hasBackPressed", true);
                 initVideoView();
             }
-        } else if(requestCode == 2) {
-            if(resultCode == Activity.RESULT_OK) {
+        } else if (requestCode == 2) {
+            if (resultCode == Activity.RESULT_OK) {
                 boolean hasBackPressed = data.getBooleanExtra("hasBackPressed", true);
                 initVideoView();
             }

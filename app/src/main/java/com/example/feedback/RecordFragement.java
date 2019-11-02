@@ -1,3 +1,9 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package com.example.feedback;
 
 import android.content.Intent;
@@ -19,13 +25,10 @@ import com.melnykov.fab.FloatingActionButton;
 
 import java.io.File;
 
-
 public class RecordFragement extends Fragment {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_POSITION = "position";
-    //private static final String LOG_TAG = RecordFragment.class.getSimpleName();
-
     private int position;
 
     //Recording controls
@@ -47,7 +50,6 @@ public class RecordFragement extends Fragment {
      * @return A new instance of fragment Record_Fragment.
      */
     public static RecordFragement newInstance(int position) {
-        Log.d("EEEE", "new record fragment");
         RecordFragement f = new RecordFragement();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
@@ -57,10 +59,9 @@ public class RecordFragement extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d("EEEE", "record fragment start");
         super.onCreate(savedInstanceState);
         position = getArguments().getInt(ARG_POSITION);
-        Activity_Record_Voice activity = (Activity_Record_Voice)getActivity();
+        Activity_Record_Voice activity = (Activity_Record_Voice) getActivity();
         indexOfProject = activity.getIndexOfProject();
         indexOfStudent = activity.getIndexOfStudent();
     }
@@ -94,7 +95,7 @@ public class RecordFragement extends Fragment {
         return recordView;
     }
 
-    private void onRecord(boolean start){
+    private void onRecord(boolean start) {
         Intent intent = new Intent(getActivity(), RecordingService.class);
         intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
         intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
@@ -102,7 +103,7 @@ public class RecordFragement extends Fragment {
             // start recording
             mRecordButton.setImageResource(R.drawable.ic_media_stop);
             mPauseButton.setVisibility(View.VISIBLE);
-            Toast.makeText(getActivity(), R.string.toast_recording_start,Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.toast_recording_start, Toast.LENGTH_SHORT).show();
             File folder = new File(Environment.getExternalStorageDirectory() + "/feedback");
             if (!folder.exists()) {
                 //folder /Feedback doesn't exist, create the folder
@@ -153,13 +154,13 @@ public class RecordFragement extends Fragment {
     private void onPauseRecord(boolean pause) {
         if (pause) {
             //pause recording
-            mPauseButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_media_play ,0 ,0 ,0);
+            mPauseButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_media_play, 0, 0, 0);
             mRecordingPrompt.setText(getString(R.string.resume_recording_button).toUpperCase());
             timeWhenPaused = mChronometer.getBase() - SystemClock.elapsedRealtime();
             mChronometer.stop();
         } else {
             //resume recording
-            mPauseButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_media_pause ,0 ,0 ,0);
+            mPauseButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_media_pause, 0, 0, 0);
             mRecordingPrompt.setText(getString(R.string.pause_recording_button).toUpperCase());
             mChronometer.setBase(SystemClock.elapsedRealtime() + timeWhenPaused);
             mChronometer.start();

@@ -1,12 +1,13 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package newdbclass;
 
 import java.util.ArrayList;
 
-/**
- * create by: Xiaozhong Liu
- * description: a class that stores information from Remark joint Marker table in database
- * create time: 2019/9/22 1:26 PM
- */
 public class Remark {
 
     private int id;            // one of the primary key, user cannot change it here
@@ -17,9 +18,9 @@ public class Remark {
 
     }
 
-    public Remark (int markerId, String text){
+    public Remark(int markerId, String text) {
         this.id = markerId;
-        this.text  = text;
+        this.text = text;
     }
 
     public int getId() {

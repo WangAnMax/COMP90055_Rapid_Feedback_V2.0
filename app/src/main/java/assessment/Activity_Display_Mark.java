@@ -1,3 +1,9 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package assessment;
 
 import android.content.Context;
@@ -21,11 +27,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
 import com.example.feedback.Activity_Login;
 import com.example.feedback.R;
 
 import java.util.ArrayList;
+
 import main.AllFunctions;
 import newdbclass.Assessment;
 import newdbclass.Project;
@@ -48,7 +54,6 @@ public class Activity_Display_Mark extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("EEEE", "new reaper mark activity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_mark);
         initToolbar();
@@ -97,7 +102,6 @@ public class Activity_Display_Mark extends AppCompatActivity {
         indexOfStudent = Integer.parseInt(intent.getStringExtra("indexOfStudent"));
         indexOfGroup = Integer.parseInt(intent.getStringExtra("indexOfGroup"));
         from = intent.getStringExtra("from");
-        Log.d("EEEE", "new display mark activity " + from);
         bindHandler();
         project = AllFunctions.getObject().getProjectList().get(indexOfProject);
         student = project.getStudentList().get(indexOfStudent);
@@ -155,11 +159,8 @@ public class Activity_Display_Mark extends AppCompatActivity {
     }
 
     private void init() {
-        Log.d("EEEE", "display mark init");
-        Log.d("EEEE", JSON.toJSONString(student.getRemarkList()));
         project = AllFunctions.getObject().getProjectList().get(indexOfProject);
         student = project.getStudentList().get(indexOfStudent);
-        Log.d("EEEE", "student list:" + JSON.toJSONString(student));
 
         for (int n = 0; n < project.getMarkerList().size(); n++) {
             boolean hasRemark = false;
@@ -191,7 +192,6 @@ public class Activity_Display_Mark extends AppCompatActivity {
             }
         }
 
-        Log.d("EEEE", "remark list: " + JSON.toJSONString(student.getRemarkList()));
         MyAdapterForGridView myAdapterForGridView = new MyAdapterForGridView(student.getRemarkList(), this);
         GridView gridViewMark = findViewById(R.id.listView_markItem_markPage);
         gridViewMark.setAdapter(myAdapterForGridView);
@@ -299,10 +299,8 @@ public class Activity_Display_Mark extends AppCompatActivity {
                 }
             });
 
-            Log.d("EEEE", "position: " + position);
             if (getTotalMark(remarkList.get(position)) < 0
                     || remarkList.get(position).getAssessmentList().size() == 0) {
-                Log.d("EEEE", "RRRRRRRR");
                 button_viewReport.setVisibility(View.INVISIBLE);
             }
 
@@ -365,8 +363,6 @@ public class Activity_Display_Mark extends AppCompatActivity {
                 if (project.getCriterionList().get(i).getId() == remarkItem.getAssessmentList().get(position).getCriterionId()) {
                     maximumMark = project.getCriterionList().get(i).getMaximumMark();
                     criterionName = project.getCriterionList().get(i).getName();
-//                    Log.d("EEEE", "maximummark: " + maximumMark);
-//                    Log.d("EEEE", "criterion name: " + criterionName);
                 }
             }
 

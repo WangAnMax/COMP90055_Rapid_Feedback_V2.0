@@ -1,3 +1,9 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package com.example.feedback;
 
 import android.app.Activity;
@@ -36,11 +42,11 @@ import com.alibaba.fastjson.JSON;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+
 import main.AllFunctions;
 import newdbclass.Project;
 import newdbclass.ProjectStudent;
 import newdbclass.Student;
-//import util.ExcelParser;
 import util.ExcelParser;
 import util.FileUtils;
 
@@ -49,7 +55,7 @@ public class Activity_Student_Management extends AppCompatActivity {
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE =
             {"android.permission.READ_EXTERNAL_STORAGE",
-            "android.permission.WRITE_EXTERNAL_STORAGE"};
+                    "android.permission.WRITE_EXTERNAL_STORAGE"};
     private MyAdapter myAdapter;
     private ArrayList<ProjectStudent> students;
     private ListView listView;
@@ -104,11 +110,9 @@ public class Activity_Student_Management extends AppCompatActivity {
                     case 121:
                         Toast.makeText(getApplicationContext(), "Successfully add a student.", Toast.LENGTH_SHORT).show();
                         String action = msg.obj.toString();
-                        Log.d("EEEE", "action: " + action);
                         if (action.equals("single")) {
                             dialog.dismiss();
                         }
-                        Log.d("EEEE", "add student");
                         AllFunctions.getObject().syncProjectList();
                         Collections.sort(project.getStudentList(), new SortByGroup());
                         break;
@@ -121,7 +125,6 @@ public class Activity_Student_Management extends AppCompatActivity {
                     case 124:
                         Toast.makeText(getApplicationContext(), "Successfully edit the info of a student.", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
-                        Log.d("EEEE", "edit student");
                         AllFunctions.getObject().syncProjectList();
                         Collections.sort(project.getStudentList(), new SortByGroup());
                         break;
@@ -130,7 +133,6 @@ public class Activity_Student_Management extends AppCompatActivity {
                         break;
                     case 126:
                         Toast.makeText(getApplicationContext(), "Successfully delete the student.", Toast.LENGTH_SHORT).show();
-                        Log.d("EEEE", "delete student");
                         AllFunctions.getObject().syncProjectList();
                         Collections.sort(project.getStudentList(), new SortByGroup());
                         break;
@@ -171,7 +173,6 @@ public class Activity_Student_Management extends AppCompatActivity {
                 finish();
             }
         });
-//        mToolbar.inflateMenu(R.menu.menu_toolbar);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -327,7 +328,6 @@ public class Activity_Student_Management extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     // Get the Uri of the selected file
                     Uri uri = data.getData();
-                    Log.d(TAG, "File Uri: " + uri.toString());
                     // Get the path
                     path = FileUtils.getPath(this, uri);
                     readStudentsExcel(project, path);
@@ -343,17 +343,13 @@ public class Activity_Student_Management extends AppCompatActivity {
     }
 
     public void readStudentsExcel(Project project, String path) {
-        Log.d("EEEE", "project name in allfunction for readstudentExcel: " + project.getName());
         ExcelParser excelParser = new ExcelParser();
         ArrayList<Student> students = new ArrayList<>();
         if (path.endsWith(".xls")) {
-            Log.d("EEEE", "read xls file.");
             students = excelParser.readXlsStudents(path);
         } else if (path.endsWith(".xlsx")) {
-            Log.d("EEEE", "read xlsx file.");
             students = excelParser.readXlsxStudents(path);
         }
-        Log.d("EEEE", "size of student list: " + students.size());
 
         studentsExcel = students;
         AllFunctions.getObject().addStudent(projectId, studentsExcel, "batch");
@@ -459,13 +455,6 @@ public class Activity_Student_Management extends AppCompatActivity {
         params.width = 1700;
         params.height = 800;
         dialog.getWindow().setAttributes(params);
-
-//        WindowManager windowManager = Activity_Student_Management.this.getWindowManager();
-//        DisplayMetrics displayMetrics = new DisplayMetrics();
-//        windowManager.getDefaultDisplay().getMetrics(displayMetrics);
-//        int screenWidth = displayMetrics.widthPixels;
-//        int screenHeight = displayMetrics.heightPixels;
-//        Log.d("EEEE", "screen width: " + screenWidth + " screen height: " + screenHeight);
     }
 
     public void editStudentInStudentManagement(View v) {

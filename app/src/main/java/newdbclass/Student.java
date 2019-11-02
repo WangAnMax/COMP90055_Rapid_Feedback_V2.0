@@ -1,10 +1,11 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package newdbclass;
 
-/**
- * create by: Xiaozhong Liu
- * description: a class for ADD STUDENT and UPDATE STUDENT requests from FRONT END
- * create time: 2019/9/22 2:06 PM
- */
 public class Student {
     private int id;     // set to 0 when add student, include when update student
     private String firstName;

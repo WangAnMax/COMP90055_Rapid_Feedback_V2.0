@@ -1,3 +1,9 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package assessment;
 
 import android.content.Intent;
@@ -20,6 +26,7 @@ import com.example.feedback.R;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+
 import main.AllFunctions;
 import newdbclass.Assessment;
 import newdbclass.ExpandedComment;
@@ -35,7 +42,7 @@ public class Activity_Editable_Individual_Report extends AppCompatActivity {
     private int indexOfGroup;
     private String from;
     private Toolbar mToolbar;
-    public static final String FROMREALTIMEEDIT= "realtime_edit";
+    public static final String FROMREALTIMEEDIT = "realtime_edit";
     public static final String FROMREVIEWEDIT = "review_edit";
     private Remark remark;
     private Project project;
@@ -89,8 +96,6 @@ public class Activity_Editable_Individual_Report extends AppCompatActivity {
     }
 
     private void init() {
-        Log.d("EEEE", "edit individual report");
-
         project = AllFunctions.getObject().getProjectList().get(indexOfProject);
         ProjectStudent student = AllFunctions.getObject().getProjectList().get(indexOfProject).getStudentList().get(indexOfStudent);
 
@@ -220,8 +225,8 @@ public class Activity_Editable_Individual_Report extends AppCompatActivity {
         return sum;
     }
 
-    public String getCriterionName (Assessment assessment) {
-        for (int i = 0; i <project.getCriterionList().size(); i++) {
+    public String getCriterionName(Assessment assessment) {
+        for (int i = 0; i < project.getCriterionList().size(); i++) {
             if (project.getCriterionList().get(i).getId() == assessment.getCriterionId()) {
                 return project.getCriterionList().get(i).getName();
             }
@@ -271,12 +276,9 @@ public class Activity_Editable_Individual_Report extends AppCompatActivity {
         for (int i = 0; i < markers; i++) {
             sumMark += getTotalMark(remarkList.get(i));
         }
-//        Log.d("EEEE", "sum of mark: " + sumMark);
-        double avgMark = sumMark/markers;
-//        Log.d("EEEE", "avg mark: " + avgMark);
+        double avgMark = sumMark / markers;
         BigDecimal bigDecimal = new BigDecimal(avgMark);
         avgMark = bigDecimal.setScale(0, BigDecimal.ROUND_HALF_UP).doubleValue();
-//        Log.d("EEEE", "avg mark: " + avgMark);
         return avgMark;
     }
 
@@ -284,7 +286,7 @@ public class Activity_Editable_Individual_Report extends AppCompatActivity {
         Remark remark = new Remark();
         for (int i = 0; i < remarkList.size(); i++) {
             if (remarkList.get(i).getId() == project.getPrincipalId()) {
-                remark =  remarkList.get(i);
+                remark = remarkList.get(i);
             }
         }
 

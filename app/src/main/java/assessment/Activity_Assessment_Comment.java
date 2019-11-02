@@ -1,3 +1,9 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package assessment;
 
 import android.content.Intent;
@@ -15,8 +21,10 @@ import android.widget.Toast;
 
 import com.example.feedback.Activity_Login;
 import com.example.feedback.R;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import adapter.OneTwoAdapter;
 import adapter.ThreeAdapter;
 import bean.OneBean;
@@ -116,7 +124,6 @@ public class Activity_Assessment_Comment extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-//        mToolbar.inflateMenu(R.menu.menu_toolbar);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -181,7 +188,6 @@ public class Activity_Assessment_Comment extends AppCompatActivity {
                     Activity_Assessment.saveCommentToMatrixCriteria(indexOfCriteria, threeListAdapter.getOneItemSelect(), threeListAdapter.getTwoItemSelect(), Integer.valueOf(TextUtils.join(", ", threeSelect)));
                 }
                 refreshComment();
-                Log.d("EEEE", subsectionIndex + " " + shortTextIndex + " " + longTextIndex);
             }
         }
 

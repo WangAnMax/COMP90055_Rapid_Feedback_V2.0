@@ -1,3 +1,9 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package com.example.feedback;
 
 import android.app.Notification;
@@ -26,9 +32,6 @@ import main.AllFunctions;
 import newdbclass.ProjectStudent;
 import util.RecordingDatabaseHelper;
 
-/**
- * author NINGJIANG XIE.
- */
 public class RecordingService extends Service {
 
     private static final String LOG_TAG = "RecordingService";

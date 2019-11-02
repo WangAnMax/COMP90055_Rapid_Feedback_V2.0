@@ -1,3 +1,9 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package com.example.feedback;
 
 import android.app.AlertDialog;
@@ -28,7 +34,9 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.util.ArrayList;
+
 import main.AllFunctions;
 import newdbclass.Comment;
 import newdbclass.Criterion;
@@ -71,7 +79,6 @@ public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
                 finish();
             }
         });
-//        mToolbar.inflateMenu(R.menu.menu_toolbar);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -110,7 +117,6 @@ public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
             @Override
             public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
                 Toast.makeText(getApplicationContext(), "Double Click", Toast.LENGTH_SHORT).show();
-                Log.d("EEEE", "comment child to gray");
                 for (int j = 0; j < expandableListView.getChildCount(); j++)
                     expandableListView.getChildAt(j).setBackgroundColor(Color.TRANSPARENT);
                 view.setBackgroundColor(Color.GRAY);
@@ -122,7 +128,6 @@ public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
             public void onGroupExpand(int groupPosition) {
                 for (int i = 0; i < criterion.getFieldList().size(); i++) {
                     if (i != groupPosition && expandableListView_comments_left.isGroupExpanded(groupPosition)) {
-                        Log.d("EEEE", "check");
                         expandableListView_comments_left.collapseGroup(i);
                     }
                 }
@@ -441,14 +446,11 @@ public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
                     listView_longText.setAdapter(myAdapterForLongText);
                     indexOfSubsection = groupPosition;
                     indexOfShortText = childPosition;
-                    Log.d("EEEE", "child position； " + childPosition);
-                    Log.d("EEEE", "child count: " + parent.getChildCount());
                     convertView2.setSelected(true);
                 }
             });
 
             if (convertView.isSelected()) {
-                Log.d("EEEE", "click shorttext");
                 convertView.setBackgroundColor(Color.GRAY);
             } else {
                 convertView.setBackgroundColor(Color.TRANSPARENT);
@@ -502,7 +504,6 @@ public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
                 }
             });
             if (listView_longText.isItemChecked(position)) {
-                Log.d("EEEE", "longtext is clicked");
                 convertView.setBackgroundColor(Color.GRAY);
             } else {
                 convertView.setBackgroundColor(Color.TRANSPARENT);

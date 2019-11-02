@@ -1,15 +1,15 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package newdbclass;
 
 import com.example.feedback.RecordingItem;
 
 import java.util.ArrayList;
 
-
-/**
- * create by: Xiaozhong Liu
- * description: a class that stores information from StudentInProject joint Student table in database
- * create time: 2019/9/22 2:06 PM
- */
 public class ProjectStudent {
 
     private int id;
@@ -142,11 +142,11 @@ public class ProjectStudent {
         this.remarkList = remarkList;
     }
 
-    public void setRecordingItem(RecordingItem item){
+    public void setRecordingItem(RecordingItem item) {
         this.item = item;
     }
 
-    public RecordingItem getRecordingItem(){
+    public RecordingItem getRecordingItem() {
         return item;
     }
 

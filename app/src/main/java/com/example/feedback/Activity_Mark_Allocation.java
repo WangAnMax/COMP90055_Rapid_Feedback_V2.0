@@ -1,3 +1,9 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package com.example.feedback;
 
 import android.app.Activity;
@@ -22,7 +28,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.util.ArrayList;
+
 import main.AllFunctions;
 import newdbclass.Comment;
 import newdbclass.Criterion;
@@ -52,7 +60,6 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
         indexOfProject = Integer.parseInt(intent.getStringExtra("index"));
         from = intent.getStringExtra("from");
         init();
-        Log.d("EEEE", "mark allocation start!");
     }
 
     public void init() {
@@ -70,12 +77,9 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
                                 "Server error. Please try again", Toast.LENGTH_SHORT).show();
                         break;
                     case 114:
-                        Log.d("EEEE", "Successfully update the criteria of the project.");
                         Toast.makeText(Activity_Mark_Allocation.this,
                                 "Successfully update the criteria of the project.", Toast.LENGTH_SHORT).show();
                         if (from.equals(Activity_Assessment_Preparation.FROMPREVIOUSPROJECT)) {
-//                            Intent intent = new Intent(Activity_Mark_Allocation.this, Activity_Assessment_Preparation.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                            startActivity(intent);
                             setResult(Activity.RESULT_OK);
                             finish();
                         } else if (from.equals(Activity_Assessment_Preparation.FROMNEWPROJECT)) {
@@ -86,7 +90,6 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
                         }
                         break;
                     case 115:
-                        Log.d("EEEE", "Fail to update the criteria of the project.");
                         Toast.makeText(Activity_Mark_Allocation.this,
                                 "Server error. Please try again.", Toast.LENGTH_SHORT).show();
                         break;
@@ -155,12 +158,12 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
     }
 
     public boolean isValidIncrementAndMaxMark() {
-        for(int i = 0; i < markingCriteriaList.size(); i++){
-            if(markingCriteriaList.get(i).getMarkIncrement() == 0) {
+        for (int i = 0; i < markingCriteriaList.size(); i++) {
+            if (markingCriteriaList.get(i).getMarkIncrement() == 0) {
                 markingCriteriaList.get(i).setMarkIncrement(0.25);
             }
 
-            if(markingCriteriaList.get(i).getMaximumMark() == 0) {
+            if (markingCriteriaList.get(i).getMaximumMark() == 0) {
                 Toast.makeText(Activity_Mark_Allocation.this, "Maximum mark cannot be zero.", Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -170,7 +173,7 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
 
     //button 'next'.
     public void nextMarkAllocation(View view) {
-        if(isValidIncrementAndMaxMark() == true) {
+        if (isValidIncrementAndMaxMark() == true) {
             if (isValidCriteriaList()) {
                 AllFunctions.getObject().updateProjectCriteria(project.getCriterionList(), projectId);
             } else {
@@ -180,7 +183,6 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
     }
 
     public boolean isValidCriteriaList() {
-        Log.d("EEEE", "check criteria list");
         ArrayList<Criterion> criteriaList = AllFunctions.getObject().getProjectList().get(indexOfProject).getCriterionList();
         for (int i = 0; i < criteriaList.size(); i++) {
             ArrayList<Field> fieldList = criteriaList.get(i).getFieldList();
@@ -195,7 +197,6 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
                         for (int m = 0; m < commentList.size(); m++) {
                             ArrayList<ExpandedComment> expandedCommentList = commentList.get(m).getExpandedCommentList();
                             if (expandedCommentList.size() == 0) {
-                                Log.d("EEEE", "empty expandedcomment list");
                                 return false;
                             }
                         }
@@ -234,7 +235,7 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             if (position < markedCriteriaNum) {
-                if(convertView == null)
+                if (convertView == null)
                     convertView = LayoutInflater.from(mContext).inflate(R.layout.grid_item_markallocation, parent, false);
 
                 TextView textView_criteriaName = convertView.findViewById(R.id.textView_criteriaName_gridItem);
@@ -242,7 +243,7 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
                 EditText editText_maxMark = convertView.findViewById(R.id.editText_maxMark_gridItem);
                 editText_maxMark.setText(String.valueOf((int) criteriaList.get(position).getMaximumMark()));
                 double markIncrement = criteriaList.get(position).getMarkIncrement();
-                if (markIncrement != 0){
+                if (markIncrement != 0) {
                     if (markIncrement == 0.25) {
                         RadioButton radioButton_quarter = convertView.findViewById(R.id.radioButton_quarter_gridItem);
                         radioButton_quarter.setChecked(true);
@@ -280,7 +281,6 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         int mark = Integer.parseInt(editText_maxMark.getText().toString());
-                        Log.d("EEEE", Integer.parseInt(editText_maxMark.getText().toString()) + "");
                         markingCriteriaList.get(position).setMaximumMark(mark + 1);
                         editText_maxMark.setText(String.valueOf(mark + 1));
                     }
@@ -291,7 +291,7 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         int mark = Integer.parseInt(editText_maxMark.getText().toString());
-                        if(mark > 0) {
+                        if (mark > 0) {
                             markingCriteriaList.get(position).setMaximumMark(mark - 1);
                             editText_maxMark.setText(String.valueOf(mark - 1));
                         }
@@ -304,8 +304,8 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(Activity_Mark_Allocation.this, Activity_Show_Comment_Mark_Allocation.class);
-                        intent.putExtra("indexOfProject",String.valueOf(indexOfProject));
-                        intent.putExtra("indexOfCriteria",String.valueOf(position));
+                        intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                        intent.putExtra("indexOfCriteria", String.valueOf(position));
                         startActivity(intent);
                     }
                 });
@@ -320,8 +320,8 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(Activity_Mark_Allocation.this, Activity_Show_Comment_Mark_Allocation.class);
-                        intent.putExtra("indexOfProject",String.valueOf(indexOfProject));
-                        intent.putExtra("indexOfCriteria",String.valueOf(position));
+                        intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                        intent.putExtra("indexOfCriteria", String.valueOf(position));
                         startActivity(intent);
                     }
                 });

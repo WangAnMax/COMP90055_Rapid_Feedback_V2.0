@@ -1,11 +1,9 @@
-/*
- * AUTHOR：Yolanda.
+/**
+ * Created by: Android frontend team
  *
- * DESCRIPTION：create the File, and add the content.
- *
- * Copyright © ZhiMore. All Rights Reserved.
- *
+ * Team Member: Wang AN, NingJiang XIE
  */
+
 package adapter;
 
 import android.content.Context;

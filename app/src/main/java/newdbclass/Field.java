@@ -1,12 +1,13 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package newdbclass;
 
 import java.util.ArrayList;
 
-/**
- * create by: Xiaozhong Liu
- * description: a class that stores information from Field table in database
- * create time: 2019/9/22 5:58 PM
- */
 public class Field {
 
     private int id;
@@ -17,7 +18,7 @@ public class Field {
 
     }
 
-    public Field (int id, String name){
+    public Field(int id, String name) {
         this.id = id;
         this.name = name;
     }

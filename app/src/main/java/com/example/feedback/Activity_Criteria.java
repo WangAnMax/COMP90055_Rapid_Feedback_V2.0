@@ -1,3 +1,9 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package com.example.feedback;
 
 import android.app.Activity;
@@ -17,7 +23,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,14 +36,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.alibaba.fastjson.JSON;
+
 import java.util.ArrayList;
+
 import main.AllFunctions;
 import newdbclass.Criterion;
 import newdbclass.Project;
 import util.DefaultCriteriaList;
 import util.FileUtils;
-import util.IdFinder;
 
 public class Activity_Criteria extends AppCompatActivity {
 
@@ -57,23 +62,21 @@ public class Activity_Criteria extends AppCompatActivity {
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private String from;
     private static String[] PERMISSIONS_STORAGE = {"android.permission.READ_EXTERNAL_STORAGE",
-    "android.permission.WRITE_EXTERNAL_STORAGE"};
+            "android.permission.WRITE_EXTERNAL_STORAGE"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_criteria);
-        Log.d("EEEE", "criteriaList interface onCreate");
         Intent intent = getIntent();
         indexOfProject = Integer.parseInt(intent.getStringExtra("index"));
         from = intent.getStringExtra("from");
-        Log.d("EEEE", "from: " + from);
         init();
     }
 
     private void initToolbar() {
         mToolbar = findViewById(R.id.toolbar_project_criteria);
-        mToolbar.setTitle(project.getName() +  " -- Welcome, " + AllFunctions.getObject().getUsername() + " [ID: " + AllFunctions.getObject().getId() + "]");
+        mToolbar.setTitle(project.getName() + " -- Welcome, " + AllFunctions.getObject().getUsername() + " [ID: " + AllFunctions.getObject().getId() + "]");
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -81,7 +84,6 @@ public class Activity_Criteria extends AppCompatActivity {
                 if (from.equals(Activity_Assessment_Preparation.FROMPREVIOUSPROJECT)) {
                     discardWarning();
                 } else if (from.equals(Activity_Assessment_Preparation.FROMNEWPROJECT)) {
-                    Log.d("EEEE", "new criteria");
                     AllFunctions.getObject().deleteProject(indexOfProject, projectId);
                 }
             }
@@ -111,14 +113,12 @@ public class Activity_Criteria extends AppCompatActivity {
     }
 
     protected void onNewIntent(Intent intent) {
-        Log.d("EEEE", "criteriaList interface onNewIntent");
         Intent intent2 = getIntent();
         indexOfProject = Integer.parseInt(intent2.getStringExtra("index"));
         init();
     }
 
     private void init() {
-        Log.d("EEEE", "criteria list init");
         handler = new Handler() {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
@@ -134,13 +134,11 @@ public class Activity_Criteria extends AppCompatActivity {
                         dialog.dismiss();
                         break;
                     case 112:
-                        Log.d("EEEE", "Successfully delete the project.");
                         Toast.makeText(Activity_Criteria.this,
                                 "Successfully delete the project.", Toast.LENGTH_SHORT).show();
                         finish();
                         break;
                     case 113:
-                        Log.d("EEEE", "Fail to delete the project.");
                         Toast.makeText(Activity_Criteria.this,
                                 "Fail to delete the project. Please try again.", Toast.LENGTH_SHORT).show();
                     default:
@@ -150,9 +148,7 @@ public class Activity_Criteria extends AppCompatActivity {
         };
         AllFunctions.getObject().setHandler(handler);
         project = AllFunctions.getObject().getProjectList().get(indexOfProject);
-        Log.d("EEEE", "project criteria: " + JSON.toJSONString(project.getCriterionList()));
         projectId = project.getId();
-        Log.d("EEEE", "project id: " + projectId);
         defaultCriteriaList = DefaultCriteriaList.getDefaultCriteriaList();
         defaultCriteriaList.removeAll(project.getCriterionList());
         listView_criteriaDefault = findViewById(R.id.listView_CriteriaList_inCriteriaList);
@@ -172,16 +168,13 @@ public class Activity_Criteria extends AppCompatActivity {
 
     //button next.
     public void nextCriteria(View view) {
-        Log.d("EEEE", project.getCriterionList() + "");
-        if(project.getCriterionList().size() == 0){
-            Log.d("EEEE", "empty criteria list.");
+        if (project.getCriterionList().size() == 0) {
             Toast.makeText(Activity_Criteria.this, "Marking criteria cannot be empty", Toast.LENGTH_SHORT).show();
         } else {
             Intent intent = new Intent(this, Activity_Mark_Allocation.class);
             intent.putExtra("index", String.valueOf(indexOfProject));
             intent.putExtra("from", from);
             startActivityForResult(intent, 1);
-            Log.d("EEEE", "Go to mark allocation.");
         }
     }
 
@@ -291,7 +284,6 @@ public class Activity_Criteria extends AppCompatActivity {
         public boolean onDrag(View v, DragEvent event) {
             // Defines a variable to store the action type for the incoming event
             final int action = event.getAction();
-//            Log.d("EEEE", "default listView ondrag listener start");
             // Handles each of the expected events
             switch (action) {
                 case DragEvent.ACTION_DRAG_STARTED:
@@ -323,14 +315,9 @@ public class Activity_Criteria extends AppCompatActivity {
                         case 0:
                             break;
                         case 1:
-//                            Log.d("EEEE", "1->0");
                             Criterion criteria_Temporary = project.getCriterionList().get(source_criteriaIndex);
-                            Log.d("EEEE", criteria_Temporary.getName());
                             project.getCriterionList().remove(source_criteriaIndex);
                             defaultCriteriaList.add(criteria_Temporary);
-                            for(int i = 0; i < defaultCriteriaList.size(); i++) {
-                                Log.d("EEEE", "default criteria list: " + defaultCriteriaList.get(i).getName());
-                            }
                             break;
                         default:
                             break;
@@ -342,7 +329,6 @@ public class Activity_Criteria extends AppCompatActivity {
                     // Returns true. DragEvent.getResult() will return true.
                     return true;
                 case DragEvent.ACTION_DRAG_ENDED:
-                    Log.d("EEEE", "drag ended");
                     // Turns off any color tinting
                     // Invalidates the view to force a redraw
                     v.invalidate();
@@ -350,7 +336,6 @@ public class Activity_Criteria extends AppCompatActivity {
                     return true;
                 // An unknown action type was received.
                 default:
-                    Log.e("DragDrop Example", "Unknown action type received by OnDragListener.");
                     break;
             }
             return false;
@@ -391,7 +376,6 @@ public class Activity_Criteria extends AppCompatActivity {
                     int whichList = findWhichCriteriaList_itbelongs(source_criteriaName);
                     switch (whichList) {
                         case 0:
-//                            Log.d("EEEE", "0->1");
                             Criterion criteria_Temporary = defaultCriteriaList.get(source_criteriaIndex);
                             defaultCriteriaList.remove(source_criteriaIndex);
                             project.getCriterionList().add(criteria_Temporary);
@@ -415,7 +399,6 @@ public class Activity_Criteria extends AppCompatActivity {
                     return true;
                 // An unknown action type was received.
                 default:
-                    Log.e("DragDrop Example", "Unknown action type received by OnDragListener.");
                     break;
             }
             return false;
@@ -529,18 +512,16 @@ public class Activity_Criteria extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     // Get the Uri of the selected file
                     Uri uri = data.getData();
-                    Log.d("EEEE", "File Uri: " + uri.toString());
                     // Get the path
                     path = FileUtils.getPath(this, uri);
                     ArrayList<Criterion> uploadCriteriaList = new ArrayList<>();
                     uploadCriteriaList = AllFunctions.getObject().readCriteriaExcel(project, path);
-                    Log.d("EEEE", "call the readCriteriaExcel method: " + path);
                     defaultCriteriaList.addAll(uploadCriteriaList);
                     myAdapter1.notifyDataSetChanged();
                 }
                 break;
             case 1:
-                if(resultCode == Activity.RESULT_OK) {
+                if (resultCode == Activity.RESULT_OK) {
                     setResult(Activity.RESULT_OK);
                     finish();
                 }

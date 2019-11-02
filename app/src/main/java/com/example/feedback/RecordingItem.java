@@ -1,13 +1,14 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package com.example.feedback;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * author NINGJIANG XIEi
- * Recording items must be transmitted between two fragments. the formate is praceble
- * so, we have to use parcelable interface and override two method below.
- */
 public class RecordingItem implements Parcelable {
     private String mName; // file name
     private String mFilePath; //file path

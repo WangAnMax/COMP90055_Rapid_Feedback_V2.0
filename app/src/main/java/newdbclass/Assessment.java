@@ -1,14 +1,14 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package newdbclass;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-
-/**
- * create by: Xiaozhong Liu
- * description: a class that stores information from Assessment table in database
- * create time: 2019/9/22 12:57 PM
- */
 public class Assessment {
     private int criterionId;    // one of the primary key, user cannot change it here
     private double score;       // score for a criterion
@@ -18,7 +18,7 @@ public class Assessment {
 
     }
 
-    public Assessment (int criterionId, double score){
+    public Assessment(int criterionId, double score) {
         this.criterionId = criterionId;
         this.score = score;
     }

@@ -1,12 +1,13 @@
+/**
+ * Created by: Android frontend team
+ *
+ * Team Member: Wang AN, NingJiang XIE
+ */
+
 package newdbclass;
 
 import java.util.ArrayList;
 
-/**
- * create by: Xiaozhong Liu
- * description: a class that stores information from Comment table in database
- * create time: 2019/9/22 5:57 PM
- */
 public class Comment {
 
     private int id;
@@ -18,7 +19,7 @@ public class Comment {
 
     }
 
-    public Comment(int id, String text, String type){
+    public Comment(int id, String text, String type) {
         this.id = id;
         this.text = text;
         this.type = type;

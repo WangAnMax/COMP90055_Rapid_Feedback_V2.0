@@ -43,6 +43,7 @@ public class Activity_Send_Report_Group extends AppCompatActivity {
     private Project project;
     private ProjectStudent student;
     private Remark remark;
+    private ArrayList<Remark> remarkList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +72,7 @@ public class Activity_Send_Report_Group extends AppCompatActivity {
 
     private void initToolbar() {
         mToolbar = findViewById(R.id.toolbar_send_report_group);
-        mToolbar.setTitle("Report -- Welcome, " + AllFunctions.getObject().getUsername());
+        mToolbar.setTitle("Report -- Welcome, " + AllFunctions.getObject().getUsername() + " [ID: " + AllFunctions.getObject().getId() + "]");
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -108,10 +109,10 @@ public class Activity_Send_Report_Group extends AppCompatActivity {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case 130:
-
+                        Toast.makeText(Activity_Send_Report_Group.this, "Successfully send end final result", Toast.LENGTH_SHORT).show();
                         break;
                     case 131:
-
+                        Toast.makeText(Activity_Send_Report_Group.this, "Fail to send the final result", Toast.LENGTH_SHORT).show();
                         break;
                     default:
                         break;
@@ -121,7 +122,7 @@ public class Activity_Send_Report_Group extends AppCompatActivity {
         AllFunctions.getObject().setHandler(handler);
 
         student = AllFunctions.getObject().getProjectList().get(indexOfProject).getStudentList().get(indexOfStudent);
-        ArrayList<Remark> remarkList = student.getRemarkList();
+        remarkList = student.getRemarkList();
 
         for (int i = 0; i < remarkList.size(); i++) {
             if (remarkList.get(i).getId() == AllFunctions.getObject().getId()) {
@@ -199,9 +200,9 @@ public class Activity_Send_Report_Group extends AppCompatActivity {
         button_finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for (int i = 0; i < studentInfoArrayList.size(); i++) {
-                    AllFunctions.getObject().sendFinalResult(project.getId(), studentInfoArrayList.get(i).getId(), getAverageMark(remarkList), getFinalRemark(student.getRemarkList()));
-                }
+//                for (int i = 0; i < studentInfoArrayList.size(); i++) {
+//                    AllFunctions.getObject().sendFinalResult(project.getId(), studentInfoArrayList.get(i).getId(), getAverageMark(remarkList), getFinalRemark(student.getRemarkList()));
+//                }
                 if (from.equals(Activity_Editable_Group_Report.FROMREALTIMEEDIT)) {
                     Intent intent = new Intent(Activity_Send_Report_Group.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
@@ -342,15 +343,17 @@ public class Activity_Send_Report_Group extends AppCompatActivity {
 
         double totalWeight = 0;
         int totalWeighting = 0;
+
         for (int j = 0; j < project.getCriterionList().size(); j++) {
-            totalWeight = totalWeighting + project.getCriterionList().get(j).getMaximumMark();
+            totalWeight = totalWeight + project.getCriterionList().get(j).getMaximumMark();
         }
         totalWeighting = Double.valueOf(totalWeight).intValue();
 
         for (int m = 0; m < remark.getAssessmentList().size(); m++) {
-            sum = sum + remark.getAssessmentList().get(m).getScore() * (100.0 / totalWeighting);
-//            Log.d("EEEE", "sum score :" + sum);
+            sum = sum + remark.getAssessmentList().get(m).getScore();
         }
+        sum = sum * (100.0 / totalWeighting);
+
         return sum;
     }
 

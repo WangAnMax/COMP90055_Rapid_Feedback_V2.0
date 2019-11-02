@@ -33,8 +33,8 @@ public class CommunicationForClient {
     public static final MediaType MEDIA_TYPE_MARKDOWN = MediaType.parse("audio/mpeg");
 
     public CommunicationForClient(AllFunctions functions) {
-        host = "http://10.13.88.39:8080/RapidFeedback/";
-//        host = "http://192.168.0.4:8080/RapidFeedback/";
+//        host = "http://10.13.88.39:8080/RapidFeedback/";
+        host = "http://192.168.0.7:8080/RapidFeedback/";
         client = new OkHttpClient();
         this.functions = functions;
     }

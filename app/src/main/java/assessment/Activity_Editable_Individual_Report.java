@@ -2,6 +2,8 @@ package assessment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 import com.example.feedback.Activity_Login;
 import com.example.feedback.R;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import main.AllFunctions;
 import newdbclass.Assessment;
@@ -58,7 +61,7 @@ public class Activity_Editable_Individual_Report extends AppCompatActivity {
 
     private void initToolbar() {
         mToolbar = findViewById(R.id.toolbar_editable_individual_report);
-        mToolbar.setTitle("Report -- Welcome, " + AllFunctions.getObject().getUsername());
+        mToolbar.setTitle("Report -- Welcome, " + AllFunctions.getObject().getUsername() + " [ID: " + AllFunctions.getObject().getId() + "]");
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -87,6 +90,7 @@ public class Activity_Editable_Individual_Report extends AppCompatActivity {
 
     private void init() {
         Log.d("EEEE", "edit individual report");
+
         project = AllFunctions.getObject().getProjectList().get(indexOfProject);
         ProjectStudent student = AllFunctions.getObject().getProjectList().get(indexOfProject).getStudentList().get(indexOfStudent);
 
@@ -102,6 +106,7 @@ public class Activity_Editable_Individual_Report extends AppCompatActivity {
         button_finalReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                AllFunctions.getObject().sendFinalResult(project.getId(), student.getId(), getAverageMark(remarkList), getFinalRemark(student.getRemarkList()));
                 if (from.equals(Activity_Display_Mark.FROMREALTIME)) {
                     Intent intent = new Intent(Activity_Editable_Individual_Report.this, Activity_Send_Report_Individual.class);
                     intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
@@ -125,15 +130,6 @@ public class Activity_Editable_Individual_Report extends AppCompatActivity {
             button_finalReport.setVisibility(View.INVISIBLE);
         }
 
-//        if (student.getRemarkList().size() < project.getMarkerList().size()) {
-//            button_finalReport.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    Toast.makeText(Activity_Editable_Individual_Report.this,
-//                            "Other markers are still marking. Please wait for a moment.", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//        }
         for (int i = 0; i < remarkList.size(); i++) {
             if (getTotalMark(remarkList.get(i)) < 0) {
                 button_finalReport.setOnClickListener(new View.OnClickListener() {
@@ -210,15 +206,17 @@ public class Activity_Editable_Individual_Report extends AppCompatActivity {
 
         double totalWeight = 0;
         int totalWeighting = 0;
+
         for (int j = 0; j < project.getCriterionList().size(); j++) {
-            totalWeight = totalWeighting + project.getCriterionList().get(j).getMaximumMark();
+            totalWeight = totalWeight + project.getCriterionList().get(j).getMaximumMark();
         }
         totalWeighting = Double.valueOf(totalWeight).intValue();
 
         for (int m = 0; m < remark.getAssessmentList().size(); m++) {
-            sum = sum + remark.getAssessmentList().get(m).getScore() * (100.0 / totalWeighting);
-//            Log.d("EEEE", "sum score :" + sum);
+            sum = sum + remark.getAssessmentList().get(m).getScore();
         }
+        sum = sum * (100.0 / totalWeighting);
+
         return sum;
     }
 
@@ -265,5 +263,40 @@ public class Activity_Editable_Individual_Report extends AppCompatActivity {
             }
         }
         return "";
+    }
+
+    public double getAverageMark(ArrayList<Remark> remarkList) {
+        double sumMark = 0;
+        double markers = remarkList.size();
+        for (int i = 0; i < markers; i++) {
+            sumMark += getTotalMark(remarkList.get(i));
+        }
+//        Log.d("EEEE", "sum of mark: " + sumMark);
+        double avgMark = sumMark/markers;
+//        Log.d("EEEE", "avg mark: " + avgMark);
+        BigDecimal bigDecimal = new BigDecimal(avgMark);
+        avgMark = bigDecimal.setScale(0, BigDecimal.ROUND_HALF_UP).doubleValue();
+//        Log.d("EEEE", "avg mark: " + avgMark);
+        return avgMark;
+    }
+
+    public String getFinalRemark(ArrayList<Remark> remarkList) {
+        Remark remark = new Remark();
+        for (int i = 0; i < remarkList.size(); i++) {
+            if (remarkList.get(i).getId() == project.getPrincipalId()) {
+                remark =  remarkList.get(i);
+            }
+        }
+
+        String finalRemark = "";
+        for (int i = 0; i < remark.getAssessmentList().size(); i++) {
+            finalRemark += "Critrion" + (i + 1) + ": " + getCriterionName(remark.getAssessmentList().get(i));
+            finalRemark += "\n";
+            for (int k = 0; k < remark.getAssessmentList().get(i).getSelectedCommentList().size(); k++) {
+                finalRemark += getFieldName(remark.getAssessmentList().get(i).getSelectedCommentList().get(k)) +
+                        " : " + getExCommentName(remark.getAssessmentList().get(i).getSelectedCommentList().get(k)) + "\n";
+            }
+        }
+        return finalRemark;
     }
 }

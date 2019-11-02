@@ -380,9 +380,11 @@ public class Activity_About extends AppCompatActivity {
         if(Integer.parseInt(editText_durationMin.getText().toString()) == 0
                 && Integer.parseInt(editText_durationSec.getText().toString()) == 0) {
             Toast.makeText(getApplicationContext(), "Duration time cannot be zero", Toast.LENGTH_SHORT).show();
+            return false;
         } else if(Integer.parseInt(editText_warningMin.getText().toString()) == 0
                 && Integer.parseInt(editText_warningSec.getText().toString()) == 0) {
             Toast.makeText(getApplicationContext(), "Warning time cannot be zero", Toast.LENGTH_SHORT).show();
+            return false;
         } else {
             durationMin = Integer.parseInt(editText_durationMin.getText().toString());
             durationSec = Integer.parseInt(editText_durationSec.getText().toString());
@@ -390,14 +392,16 @@ public class Activity_About extends AppCompatActivity {
             warningSec = Integer.parseInt(editText_warningSec.getText().toString());
             if (durationMin < 0 || durationMin > 59 || durationSec < 0 || durationSec > 59 || warningMin < 0 || warningMin > 59 || warningSec < 0 || warningSec > 59) {
                 Toast.makeText(getApplicationContext(), "Minutes & Seconds must between 0~59", Toast.LENGTH_SHORT).show();
+                return false;
             } else if (durationMin < warningMin) {
                 Toast.makeText(getApplicationContext(), "Duration time cannot be less that warning time", Toast.LENGTH_SHORT).show();
+                return false;
             } else if (durationMin == warningMin && durationSec < warningSec) {
                 Toast.makeText(getApplicationContext(), "Duration time cannot be less that warning time", Toast.LENGTH_SHORT).show();
+                return false;
             }
             return true;
         }
-        return false;
     }
 
     public void onBackPressed() {

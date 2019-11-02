@@ -57,25 +57,7 @@ public class Activity_Display_Mark extends AppCompatActivity {
         indexOfStudent = Integer.parseInt(intent.getStringExtra("indexOfStudent"));
         indexOfGroup = Integer.parseInt(intent.getStringExtra("indexOfGroup"));
         from = intent.getStringExtra("from");
-        handler = new Handler() {
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case 108:
-                        Toast.makeText(Activity_Display_Mark.this,
-                                "Sync success.", Toast.LENGTH_SHORT).show();
-                        init();
-                        break;
-                    case 109:
-                        Toast.makeText(Activity_Display_Mark.this,
-                                "Server error. Please try again", Toast.LENGTH_SHORT).show();
-                        break;
-                    default:
-                        break;
-                }
-            }
-        };
-        AllFunctions.getObject().setHandler(handler);
-
+        bindHandler();
         project = AllFunctions.getObject().getProjectList().get(indexOfProject);
         student = project.getStudentList().get(indexOfStudent);
         init();
@@ -88,13 +70,7 @@ public class Activity_Display_Mark extends AppCompatActivity {
         AllFunctions.getObject().setHandler(handler);
     }
 
-    public void onNewIntent(Intent intent) {
-        initToolbar();
-        indexOfProject = Integer.parseInt(intent.getStringExtra("indexOfProject"));
-        indexOfStudent = Integer.parseInt(intent.getStringExtra("indexOfStudent"));
-        indexOfGroup = Integer.parseInt(intent.getStringExtra("indexOfGroup"));
-        from = intent.getStringExtra("from");
-        Log.d("EEEE", "new display mark activity " + from);
+    public void bindHandler() {
         handler = new Handler() {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
@@ -113,7 +89,16 @@ public class Activity_Display_Mark extends AppCompatActivity {
             }
         };
         AllFunctions.getObject().setHandler(handler);
+    }
 
+    public void onNewIntent(Intent intent) {
+        initToolbar();
+        indexOfProject = Integer.parseInt(intent.getStringExtra("indexOfProject"));
+        indexOfStudent = Integer.parseInt(intent.getStringExtra("indexOfStudent"));
+        indexOfGroup = Integer.parseInt(intent.getStringExtra("indexOfGroup"));
+        from = intent.getStringExtra("from");
+        Log.d("EEEE", "new display mark activity " + from);
+        bindHandler();
         project = AllFunctions.getObject().getProjectList().get(indexOfProject);
         student = project.getStudentList().get(indexOfStudent);
         for (int i = 0; i < student.getRemarkList().size(); i++) {
@@ -313,7 +298,11 @@ public class Activity_Display_Mark extends AppCompatActivity {
                     }
                 }
             });
-            if (getTotalMark(remarkList.get(position)) < 0) {
+
+            Log.d("EEEE", "position: " + position);
+            if (getTotalMark(remarkList.get(position)) < 0
+                    || remarkList.get(position).getAssessmentList().size() == 0) {
+                Log.d("EEEE", "RRRRRRRR");
                 button_viewReport.setVisibility(View.INVISIBLE);
             }
 
@@ -326,15 +315,17 @@ public class Activity_Display_Mark extends AppCompatActivity {
 
         double totalWeight = 0;
         int totalWeighting = 0;
+
         for (int j = 0; j < project.getCriterionList().size(); j++) {
-            totalWeight = totalWeighting + project.getCriterionList().get(j).getMaximumMark();
+            totalWeight = totalWeight + project.getCriterionList().get(j).getMaximumMark();
         }
         totalWeighting = Double.valueOf(totalWeight).intValue();
 
         for (int m = 0; m < remark.getAssessmentList().size(); m++) {
-            sum = sum + remark.getAssessmentList().get(m).getScore() * (100.0 / totalWeighting);
-//            Log.d("EEEE", "sum score :" + sum);
+            sum = sum + remark.getAssessmentList().get(m).getScore();
         }
+        sum = sum * (100.0 / totalWeighting);
+
         return sum;
     }
 

@@ -106,7 +106,7 @@ public class Activity_Assessment_Comment extends AppCompatActivity {
 
     private void initToolbar() {
         mToolbar = findViewById(R.id.toolbar_assessment_comment);
-        mToolbar.setTitle("Project -- Welcome, " + AllFunctions.getObject().getUsername());
+        mToolbar.setTitle("Project -- Welcome, " + AllFunctions.getObject().getUsername() + " [ID: " + AllFunctions.getObject().getId() + "]");
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {

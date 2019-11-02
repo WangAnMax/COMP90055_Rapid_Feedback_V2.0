@@ -1,6 +1,6 @@
 # COMP90055_Rapid_Feedback_V2.0
 
-This application is the deliver of COMP90055 Computing Project and is designed on the Android Studio platform. The app is designed to help markers give rapid feedback for students' presentations. According to the requiremnts of the client, the current app contains four main features which will be introduced in the following contents.
+This application is the deliver of COMP90055 Computing Project and is developed on the Android Studio platform. The app is designed to help markers give rapid feedback for students' presentations. According to the requirments of the client, the current app contains four main features which will be introduced in the following contents.
 
 ## Authors
 

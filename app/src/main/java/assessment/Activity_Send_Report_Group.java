@@ -40,7 +40,6 @@ public class Activity_Send_Report_Group extends AppCompatActivity {
     private int indexOfProject;
     private int indexOfGroup;
     private int indexOfStudent;
-    //    private int indexOfMark;
     private ArrayList<ProjectStudent> studentInfoArrayList;
     private Toolbar mToolbar;
     private String from;
@@ -63,7 +62,6 @@ public class Activity_Send_Report_Group extends AppCompatActivity {
         indexOfStudent = Integer.parseInt(intent.getStringExtra("indexOfStudent"));
         project = AllFunctions.getObject().getProjectList().get(indexOfProject);
         from = intent.getStringExtra("from");
-//        indexOfMark = Integer.parseInt(intent.getStringExtra("indexOfMark"));
         studentInfoArrayList = new ArrayList<ProjectStudent>();
         for (int i = 0; i < project.getStudentList().size(); i++) {
             if (project.getStudentList().get(i).getGroupNumber() == indexOfGroup)
@@ -206,9 +204,6 @@ public class Activity_Send_Report_Group extends AppCompatActivity {
         button_finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                for (int i = 0; i < studentInfoArrayList.size(); i++) {
-//                    AllFunctions.getObject().sendFinalResult(project.getId(), studentInfoArrayList.get(i).getId(), getAverageMark(remarkList), getFinalRemark(student.getRemarkList()));
-//                }
                 if (from.equals(Activity_Editable_Group_Report.FROMREALTIMEEDIT)) {
                     Intent intent = new Intent(Activity_Send_Report_Group.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
@@ -269,15 +264,13 @@ public class Activity_Send_Report_Group extends AppCompatActivity {
             htmlString += "<br>";
         }
 
-        for (int i = 0; i < remark.getAssessmentList().size(); i++) {
-            htmlString += "<h3 style=\"font-weight: normal\"><span style=\"float:left\">" + "Remark" + "</span></h3>";
-            for (int j = 0; j < remarkList.size(); j++) {
-                htmlString += "<h4 style=\"font-weight: normal;color: #014085\">" + "Marker " + (j + 1) + ":</h4>";
-                if (remarkList.get(j).getText() == null) {
-                    htmlString += "<p>" + "No remark." + "</p >";
-                } else {
-                    htmlString += "<p>" + remark.getText() + "</p >";
-                }
+        htmlString += "<h3 style=\"font-weight: normal\"><span style=\"float:left\">" + "Remark" + "</span></h3>";
+        for (int j = 0; j < remarkList.size(); j++) {
+            htmlString += "<h4 style=\"font-weight: normal;color: #014085\">" + "Marker " + (j + 1) + ":</h4>";
+            if (remarkList.get(j).getText() == null) {
+                htmlString += "<p>" + "No remark." + "</p >";
+            } else {
+                htmlString += "<p>" + remarkList.get(j).getText() + "</p >";
             }
         }
 

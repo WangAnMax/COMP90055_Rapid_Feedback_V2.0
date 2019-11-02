@@ -109,12 +109,7 @@ public class Activity_Editable_Group_Report extends AppCompatActivity {
         ProjectStudent student = AllFunctions.getObject().getProjectList().get(indexOfProject).getStudentList().get(indexOfStudent);
 
         ArrayList<Remark> remarkList = student.getRemarkList();
-        for (int i = 0; i < remarkList.size(); i++) {
-            if (remarkList.get(i).getId() == AllFunctions.getObject().getId()) {
-                remark = remarkList.get(i);
-                break;
-            }
-        }
+        remark = remarkList.get(indexOfMark);
 
         Button button_finalReport = findViewById(R.id.button_finalReport_groupReport);
         button_finalReport.setOnClickListener(new View.OnClickListener() {
@@ -162,7 +157,7 @@ public class Activity_Editable_Group_Report extends AppCompatActivity {
         button_edit.setVisibility(View.INVISIBLE);
 
         TextView textView_totalMark = findViewById(R.id.textView_totalMark_report);
-        textView_totalMark.setText("Mark:" + String.format("%.2f", getTotalMark(remark)) + "%");
+        textView_totalMark.setText("Mark: " + String.format("%.2f", getTotalMark(remark)) + "%");
         TextView textView_assessorName = findViewById(R.id.textView_assessorName_report);
 
         String lecturerName = "";

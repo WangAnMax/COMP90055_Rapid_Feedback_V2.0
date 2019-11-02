@@ -6,7 +6,7 @@ This application is the deliver of COMP90055 Computing Project and is developed 
 
 + **Wang AN**
 
-+ **Ningjing XIE**
++ **Ningjiang XIE**
 
 ## Prerequisites
 

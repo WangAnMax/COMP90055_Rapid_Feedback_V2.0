@@ -31,6 +31,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.example.feedback.Activity_Login;
 import com.example.feedback.R;
 import com.google.gson.Gson;
@@ -471,11 +472,8 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
                                 break;
                             }
                         }
-                        if (assessment.getScore() == 0.0) {
-                            assessment.setScore(progressDisplay);
-                        } else {
-                            assessment.setScore(progressDisplay);
-                        }
+
+                        assessment.setScore(progressDisplay);
                     }
 
                     double totalMark = totalMark();
@@ -650,14 +648,25 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
 
         if (checkAllCriteria()) {
             addSubsectionToMarkObject();
+            setAssessmentScores(remark);
 
             for (int i = 0; i < studentList.size(); i++) {
                 int studentId = project.getStudentList().get(studentList.get(i)).getId();
+                Remark newRemark = getRemark(project.getStudentList().get(studentList.get(i)).getRemarkList());
+                remark.setText(newRemark.getText());
                 goBack = false;
-                AllFunctions.getObject().sendMark(project.getId(), studentId, remark);
+                AllFunctions.getObject().sendMark(project.getId(), studentId, JSON.toJSONString(remark));
             }
         } else {
             Toast.makeText(this, "You have one or more comments not selected", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void setAssessmentScores(Remark remark) {
+        for (int i = 0; i < remark.getAssessmentList().size(); i++) {
+            if (remark.getAssessmentList().get(i).getScore() == -1) {
+                remark.getAssessmentList().get(i).setScore(0);
+            }
         }
     }
 

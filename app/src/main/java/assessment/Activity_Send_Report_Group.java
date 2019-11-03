@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.example.feedback.Activity_Login;
 import com.example.feedback.Activity_Record_Voice;
 import com.example.feedback.R;
@@ -249,7 +250,7 @@ public class Activity_Send_Report_Group extends AppCompatActivity {
                 "<br><br><br><hr>" +
                 "<div>";
 
-        htmlString += "<h2 style=\"font-weight: normal\">MarkedCriteria</h2>" + "<p>";
+        htmlString += "<h2 style=\"font-weight: normal\">Grading Criteria</h2>" + "<p>";
         for (int i = 0; i < remark.getAssessmentList().size(); i++) {
             htmlString += "<h3 style=\"font-weight: normal\"><span style=\"float:left\">" + getCriterionName(remark.getAssessmentList().get(i)) + "</span>" +
                     "<span style=\"float:right\">" + "  ---  " + getAverageCriterionMark(remarkList, remark.getAssessmentList().get(i).getCriterionId()) + "/" + getCriterionMaxMark(remark.getAssessmentList().get(i)) + "</span></h3>";
@@ -265,13 +266,16 @@ public class Activity_Send_Report_Group extends AppCompatActivity {
             htmlString += "<br>";
         }
 
-        htmlString += "<h3 style=\"font-weight: normal\"><span style=\"float:left\">" + "Remark" + "</span></h3>";
-        for (int j = 0; j < remarkList.size(); j++) {
-            htmlString += "<h4 style=\"font-weight: normal;color: #014085\">" + "Marker " + (j + 1) + ":</h4>";
-            if (remarkList.get(j).getText() == null) {
-                htmlString += "<p>" + "No remark." + "</p >";
-            } else {
-                htmlString += "<p>" + remarkList.get(j).getText() + "</p >";
+        htmlString += "<h2 style=\"font-weight: normal\"><span style=\"float:left\">" + "Remark" + "</span></h2>";
+        for (int i = 0; i < studentInfoArrayList.size(); i++) {
+            htmlString += "<h3 style=\"font-weight: normal\"><span style=\"float:left\">" + "For " + getStudentName(studentInfoArrayList.get(i)) + "</span></h3>";
+            for (int j = 0; j < studentInfoArrayList.get(i).getRemarkList().size(); j++) {
+                htmlString += "<h4 style=\"font-weight: normal;color: #014085\">" + "Marker " + (j + 1) + ":</h4>";
+                if (studentInfoArrayList.get(i).getRemarkList().get(j).getText() == null) {
+                    htmlString += "<p>" + "No remark." + "</p >";
+                } else {
+                    htmlString += "<p>" + studentInfoArrayList.get(i).getRemarkList().get(j).getText() + "</p >";
+                }
             }
         }
 
@@ -281,6 +285,10 @@ public class Activity_Send_Report_Group extends AppCompatActivity {
                         "</html>";
         TextView textView_pdfContent = findViewById(R.id.textView_pdfContent_sendReportGroup);
         textView_pdfContent.setText(Html.fromHtml(htmlString));
+    }
+
+    public String getStudentName(ProjectStudent student) {
+        return student.getLastName() + " " + student.getMiddleName() + " " + student.getFirstName();
     }
 
     public String getFinalRemark(ArrayList<Remark> remarkList) {

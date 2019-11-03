@@ -175,7 +175,7 @@ public class Activity_Editable_Individual_Report extends AppCompatActivity {
                 "</p >" +
                 "<br><br><br><hr>" +
                 "<div>" +
-                "<h2 style=\"font-weight: normal\">MarkedCriteria</h2>" + "<p>";
+                "<h2 style=\"font-weight: normal\">Grading Criteria</h2>" + "<p>";
         for (int i = 0; i < remark.getAssessmentList().size(); i++) {
             htmlString += "<h3 style=\"font-weight: normal\"><span style=\"float:left\">" + getCriterionName(remark.getAssessmentList().get(i)) + "</span>" +
                     "<span style=\"float:right\">" + "  ---  " + remark.getAssessmentList().get(i).getScore() + "/" + getCriterionMaxMark(remark.getAssessmentList().get(i)) + "</span></h3>";

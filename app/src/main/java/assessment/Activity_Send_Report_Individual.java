@@ -238,7 +238,7 @@ public class Activity_Send_Report_Individual extends AppCompatActivity {
                 "<br><br><br><hr>" +
                 "<div>";
 
-        htmlString += "<h2 style=\"font-weight: normal\">MarkedCriteria</h2>" + "<p>";
+        htmlString += "<h2 style=\"font-weight: normal\"> Criteria</h2>" + "<p>";
         for (int i = 0; i < remark.getAssessmentList().size(); i++) {
             htmlString += "<h3 style=\"font-weight: normal\"><span style=\"float:left\">" + getCriterionName(remark.getAssessmentList().get(i)) + "</span>" +
                     "<span style=\"float:right\">" + "  ---  " + getAverageCriterionMark(remarkList, remark.getAssessmentList().get(i).getCriterionId()) + "/" + getCriterionMaxMark(remark.getAssessmentList().get(i)) + "</span></h3>";

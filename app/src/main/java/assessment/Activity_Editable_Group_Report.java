@@ -191,7 +191,7 @@ public class Activity_Editable_Group_Report extends AppCompatActivity {
                 "<br><br><br><hr>" +
                 "<div>";
 
-        htmlString += "<h2 style=\"font-weight: normal\">CommentOnlyCriteria</h2>" + "<p>";
+        htmlString += "<h2 style=\"font-weight: normal\">Grading Criteria</h2>" + "<p>";
         for (int i = 0; i < remark.getAssessmentList().size(); i++) {
             htmlString += "<h3 style=\"font-weight: normal\"><span style=\"float:left\">" + getCriterionName(remark.getAssessmentList().get(i)) + "</span>" +
                     "<span style=\"float:right\">" + "  ---  " + remark.getAssessmentList().get(i).getScore() + "/" + getCriterionMaxMark(remark.getAssessmentList().get(i)) + "</span></h3>";

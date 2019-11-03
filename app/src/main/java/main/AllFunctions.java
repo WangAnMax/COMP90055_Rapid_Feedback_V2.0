@@ -332,7 +332,7 @@ public class AllFunctions {
         return null;
     }
 
-    public void sendMark(int projectId, int studentId, Remark remark) {
+    public void sendMark(int projectId, int studentId, String remark) {
         new Thread(new Runnable() {
             @Override
             public void run() {

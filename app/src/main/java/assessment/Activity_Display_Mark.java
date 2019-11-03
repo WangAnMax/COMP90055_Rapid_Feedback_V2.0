@@ -233,7 +233,7 @@ public class Activity_Display_Mark extends AppCompatActivity {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.grid_item_mark_markpage, parent, false);
 
             TextView textView_totalMark = convertView.findViewById(R.id.textView_totalMark_gridItemMark);
-            if (getTotalMark(remarkList.get(position)) > 0) {
+            if (getTotalMark(remarkList.get(position)) >= 0) {
                 textView_totalMark.setText(String.format("%.2f", getTotalMark(remarkList.get(position))) + "%");
             } else {
                 textView_totalMark.setText("Marking...");

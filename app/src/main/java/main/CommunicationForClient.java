@@ -41,8 +41,8 @@ public class CommunicationForClient {
 
     public CommunicationForClient(AllFunctions functions) {
 //        host = "http://10.13.88.39:8080/RapidFeedback/";
-        host = "http://121.221.0.43:8080/RapidFeedback/";
-//        host = "http://192.168.0.7:8080/RapidFeedback/";
+//        host = "http://121.221.0.43:8080/RapidFeedback/";
+        host = "http://192.168.0.7:8080/RapidFeedback/";
         client = new OkHttpClient();
         this.functions = functions;
     }
@@ -332,14 +332,13 @@ public class CommunicationForClient {
         }
     }
 
-    public void sendMark(int projectId, int studentId, Remark remark) {
+    public void sendMark(int projectId, int studentId, String remark) {
         //construct JSONObject to send
         JSONObject jsonSend = new JSONObject();
         jsonSend.put("token", token);
         jsonSend.put("projectId", projectId);
         jsonSend.put("studentId", studentId);
-        String remarkString = com.alibaba.fastjson.JSON.toJSONString(remark);
-        jsonSend.put("remark", remarkString);
+        jsonSend.put("remark", remark);
         RequestBody body = RequestBody.create(JSON, jsonSend.toJSONString());
         Request request = new Request.Builder()
                 .url(host + "/AddResultServlet")

@@ -95,7 +95,6 @@ public class FileViewerFragment extends Fragment {
                     if (student.getRecordingItem() == null) {
                         Toast.makeText(getActivity(), "there is no file of your record", Toast.LENGTH_LONG).show();
                     } else if (student.getRecordingItem().getName() == null) {
-
                         Toast.makeText(getActivity(), "there is no file of your record", Toast.LENGTH_LONG).show();
                     } else {
                         PlaybackFragment playbackFragment =
@@ -107,7 +106,6 @@ public class FileViewerFragment extends Fragment {
 
                         playbackFragment.show(transaction, "dialog_playback");
                     }
-
                 } catch (Exception e) {
                     Log.e(LOG_TAG, "exception", e);
                 }
@@ -115,6 +113,4 @@ public class FileViewerFragment extends Fragment {
         });
         return v;
     }
-
-
 }

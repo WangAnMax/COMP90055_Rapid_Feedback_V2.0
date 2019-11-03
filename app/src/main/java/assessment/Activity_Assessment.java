@@ -511,9 +511,9 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
                 }
             }
             for (int m = 0; m < newRemark.getAssessmentList().size(); m++) {
-                sum = sum + newRemark.getAssessmentList().get(m).getScore() * (100.0 / totalWeighting);
+                sum = sum + newRemark.getAssessmentList().get(m).getScore();
             }
-            totalMark = sum;
+            totalMark = sum * (100.0 / totalWeighting);
         }
         return totalMark;
     }

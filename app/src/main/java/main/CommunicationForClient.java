@@ -41,7 +41,8 @@ public class CommunicationForClient {
     public static final MediaType MEDIA_TYPE_MARKDOWN = MediaType.parse("audio/mpeg");
 
     public CommunicationForClient(AllFunctions functions) {
-        host = "http://10.13.88.39:8080/RapidFeedback/";
+//        host = "http://10.13.88.39:8080/RapidFeedback/";
+        host = "http://121.221.0.43:8080/RapidFeedback/";
 //        host = "http://192.168.0.7:8080/RapidFeedback/";
         client = new OkHttpClient();
         this.functions = functions;
@@ -405,15 +406,16 @@ public class CommunicationForClient {
         }
     }
 
-    public void submitFile(int id, int student_id, String path) {
+    public void submitFile(int projectId, int studentId, String path) {
         //test a existed file
         // File f = new File(Environment.getExternalStorageDirectory()+"/SoundRecorder"+"/My Recording_7.mp4");
         File f = new File(path);
+        Log.d("EEEE", "path:" + path);
         RequestBody body = RequestBody.create(MEDIA_TYPE_MARKDOWN, f);
         MultipartBody multipartBody = new MultipartBody.Builder()
                 // set type as "multipart/form-data"，otherwise cannot upload file
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("filename", id + "_" + student_id, body)
+                .addFormDataPart("filename", projectId + "_" + studentId, body)
                 .build();
         Request request = new Request.Builder()
                 .url(host + "AudioRecorderServlet")

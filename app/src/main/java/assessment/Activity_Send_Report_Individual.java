@@ -138,6 +138,7 @@ public class Activity_Send_Report_Individual extends AppCompatActivity {
                 Intent intent = new Intent(Activity_Send_Report_Individual.this, Activity_Record_Voice.class);
                 intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
                 intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
                 intent.putExtra("from", from);
                 startActivity(intent);
             }

@@ -375,8 +375,8 @@ public class AllFunctions {
         }
     }
 
-    public void submitRecorder(int id, String email, String length) {
-        communication.submitFile(id, email, length);
+    public void submitRecorder(int projectId, int studentId, String length) {
+        communication.submitFile(projectId, studentId, length);
     }
 
     public void sortStudent() {

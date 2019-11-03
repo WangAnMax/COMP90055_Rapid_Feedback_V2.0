@@ -18,30 +18,26 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import main.AllFunctions;
 import newdbclass.Project;
 import newdbclass.ProjectStudent;
 import util.RecordingDatabaseHelper;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FileViewerFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FileViewerFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class FileViewerFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
     private static final String LOG_TAG = "FileViewerFragment";
     private int indexOfProject;
     private int indexOfStudent;
+    private int indexOfGroup;
     private int position;
     private ProjectStudent student;
     private Project project;
     private RecordingDatabaseHelper mDatabase;
     private static RecordingItem recordingItem;
+    private ArrayList<ProjectStudent> studentInfoArrayList;
 
     public static FileViewerFragment newInstance(int position) {
         FileViewerFragment f = new FileViewerFragment();
@@ -58,10 +54,16 @@ public class FileViewerFragment extends Fragment {
         Activity_Record_Voice activity = (Activity_Record_Voice) getActivity();
         indexOfProject = activity.getIndexOfProject();
         indexOfStudent = activity.getIndexOfStudent();
+        indexOfGroup = activity.getIndexOfGroup();
         student = AllFunctions.getObject().getProjectList().
                 get(indexOfProject).getStudentList().
                 get(indexOfStudent);
         project = AllFunctions.getObject().getProjectList().get(indexOfProject);
+        studentInfoArrayList = new ArrayList<ProjectStudent>();
+        for (int i = 0; i < project.getStudentList().size(); i++) {
+            if (project.getStudentList().get(i).getGroupNumber() == indexOfGroup)
+                studentInfoArrayList.add(project.getStudentList().get(i));
+        }
         mDatabase = new RecordingDatabaseHelper(getContext(), "RecordingStore", null, 1);
     }
 
@@ -73,7 +75,9 @@ public class FileViewerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
-                    AllFunctions.getObject().submitRecorder(project.getId(), student.getEmail(), student.getRecordingItem().getFilePath());
+                    for (int i = 0; i < studentInfoArrayList.size(); i++) {
+                        AllFunctions.getObject().submitRecorder(project.getId(), studentInfoArrayList.get(i).getId(), student.getRecordingItem().getFilePath());
+                    }
                 } catch (Exception e) {
 
                 }

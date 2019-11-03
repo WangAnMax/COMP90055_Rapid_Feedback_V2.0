@@ -21,12 +21,20 @@ import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 
+import java.util.ArrayList;
+
+import main.AllFunctions;
+import newdbclass.Project;
+import newdbclass.ProjectStudent;
+
 public class Activity_Record_Voice extends AppCompatActivity {
 
     private PagerSlidingTabStrip tabs;
     private ViewPager pager;
     int indexOfProject;
     int indexOfStudent;
+    int indexOfGroup;
+    private Project project;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +48,8 @@ public class Activity_Record_Voice extends AppCompatActivity {
         Intent intent = getIntent();
         indexOfProject = Integer.parseInt(intent.getStringExtra("indexOfProject"));
         indexOfStudent = Integer.parseInt(intent.getStringExtra("indexOfStudent"));
+        indexOfGroup = Integer.parseInt(intent.getStringExtra("indexOfGroup"));
+        project = AllFunctions.getObject().getProjectList().get(indexOfProject);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -68,6 +78,10 @@ public class Activity_Record_Voice extends AppCompatActivity {
 
     public int getIndexOfStudent() {
         return indexOfStudent;
+    }
+
+    public int getIndexOfGroup() {
+        return indexOfGroup;
     }
 
     public class MyAdapter extends FragmentPagerAdapter {

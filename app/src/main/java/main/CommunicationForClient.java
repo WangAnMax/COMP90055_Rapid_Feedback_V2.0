@@ -36,7 +36,6 @@ public class CommunicationForClient {
     private String host;
     private OkHttpClient client;
     private String token;
-    //private String myUsername;
     AllFunctions functions;
     public static final MediaType MEDIA_TYPE_MARKDOWN = MediaType.parse("audio/mpeg");
 
@@ -410,7 +409,6 @@ public class CommunicationForClient {
         //test a existed file
         // File f = new File(Environment.getExternalStorageDirectory()+"/SoundRecorder"+"/My Recording_7.mp4");
         File f = new File(path);
-        Log.d("EEEE", "path:" + path);
         RequestBody body = RequestBody.create(MEDIA_TYPE_MARKDOWN, f);
         MultipartBody multipartBody = new MultipartBody.Builder()
                 // set type as "multipart/form-data"，otherwise cannot upload file

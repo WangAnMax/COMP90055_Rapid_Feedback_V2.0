@@ -507,10 +507,8 @@ public class Activity_Student_Management extends AppCompatActivity {
                 editTextEmail.setText(students.get(indexOfStudent).getEmail());
                 editTextGroup = view.findViewById(R.id.editText_group_addStudent);
                 if (students.get(indexOfStudent).getGroupNumber() == 0) {
-                    Log.d("EEEE", "no group");
                     editTextGroup.setText("");
                 } else {
-                    Log.d("EEEE", "in group");
                     editTextGroup.setText(students.get(indexOfStudent).getGroupNumber() + "");
                 }
 

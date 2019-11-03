@@ -122,7 +122,6 @@ public class RecordingService extends Service {
                             get(indexOfStudent).getFirstName() + ".mp4";
             mFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
             mFilePath += "/feedback/" + mFileName;
-            Log.d("EEEE", "audio path: " + mFilePath);
             fileIsExists(mFilePath);
             f = new File(mFilePath);
         } while (f.exists() && !f.isDirectory());
